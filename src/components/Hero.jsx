@@ -38,11 +38,12 @@ function RotatingBadge() {
 
 export default function Hero({ started }) {
   const ref = useRef(null);
-  const { collect } = useEgg();
+  const { collect, curious } = useEgg();
 
   function onBeanClick(e) {
     e.stopPropagation();
     collect("hero");
+    curious();
   }
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yTitle = useTransform(scrollYProgress, [0, 1], [0, 160]);

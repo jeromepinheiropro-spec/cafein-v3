@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +26,7 @@ const EggContext = createContext({
   decaf: false,
   found: [],
   collect: () => {},
+  curious: () => {},
 });
 
 export const useEgg = () => useContext(EggContext);
@@ -49,6 +51,16 @@ export function EggProvider({ children }) {
   });
   const [toast, setToast] = useState(null);
   const [allFound, setAllFound] = useState(false);
+  const [hint, setHint] = useState(false);
+  const curiousClicks = useRef(0);
+
+  /* 3 clics sur le grain du i → indice vers le jeu caché */
+  const curious = useCallback(() => {
+    curiousClicks.current += 1;
+    if (curiousClicks.current % 3 === 0) {
+      setHint(true);
+    }
+  }, []);
 
   /* Collecte d'un grain caché */
   const collect = useCallback(
@@ -127,7 +139,7 @@ export function EggProvider({ children }) {
   }, [overdrive, decaf]);
 
   return (
-    <EggContext.Provider value={{ overdrive, decaf, found, collect }}>
+    <EggContext.Provider value={{ overdrive, decaf, found, collect, curious }}>
       {children}
       <EggLayer
         overdrive={overdrive}
@@ -137,6 +149,8 @@ export function EggProvider({ children }) {
         toast={toast}
         allFound={allFound}
         found={found}
+        hint={hint}
+        onCloseHint={() => setHint(false)}
       />
     </EggContext.Provider>
   );
@@ -309,12 +323,73 @@ function KonamiArcade() {
   );
 }
 
+/* ── Carte indice « Curieux mais malin ! » (3 clics sur le grain) ── */
+function CuriousHint({ onClose }) {
+  const keys = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9650] bg-espresso/60 backdrop-blur-sm flex items-center justify-center px-6"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.6, rotate: -6, y: 40, opacity: 0 }}
+        animate={{ scale: 1, rotate: 0, y: 0, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 16 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative bg-cream border-[3px] border-ink rounded-3xl px-8 py-8 shadow-[8px_8px_0_#1FCE8A] text-center max-w-md"
+      >
+        <motion.div
+          animate={{ rotate: [0, 14, -14, 0] }}
+          transition={{ repeat: Infinity, duration: 2.4 }}
+          className="mx-auto w-14 h-14 grid place-items-center rounded-full bg-mint border-[3px] border-ink mb-4"
+        >
+          <Bean className="w-8 h-8" fill="#141A17" />
+        </motion.div>
+        <p className="font-display font-extrabold text-2xl md:text-3xl text-ink">
+          Curieux… mais malin !
+        </p>
+        <p className="mt-3 font-medium text-ink/75 leading-relaxed">
+          Trois clics sur le même grain, on aime ça. Il existe un <b>jeu caché</b> quelque part :
+          remportez-le et c'est <b className="text-mint-dark">10% sur votre offre de prix</b> — ou un café offert.
+        </p>
+        <p className="mt-5 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50">
+          Indice — au clavier, quelque part sur ce site :
+        </p>
+        <div className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Konami code">
+          {keys.map((k, i) => (
+            <motion.span
+              key={i}
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 + i * 0.09, type: "spring", stiffness: 300, damping: 15 }}
+              className="grid place-items-center min-w-8 h-8 px-2 rounded-lg bg-ink text-mint font-mono text-sm font-bold border-2 border-mint/50"
+            >
+              {k}
+            </motion.span>
+          ))}
+        </div>
+        <button
+          onClick={onClose}
+          className="mt-6 rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
+        >
+          Compris, motus ☕
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ── Calques + HUD ────────────────────────────────────────────── */
-function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found }) {
+function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hint, onCloseHint }) {
   return (
     <>
       <AnimatePresence>{blast && <OverdriveBlast key="blast" />}</AnimatePresence>
       <AnimatePresence>{konami && <KonamiArcade key="konami" />}</AnimatePresence>
+      <AnimatePresence>{hint && <CuriousHint key="hint" onClose={onCloseHint} />}</AnimatePresence>
       <AnimatePresence>
         {allFound && (
           <BeanRain

@@ -3,18 +3,18 @@ import { motion } from "framer-motion";
 import { Spark } from "../lib/ui.jsx";
 import { useEgg } from "./EasterEggs.jsx";
 
-const WORDS = ["Sites web", "SEO", "GEO", "Communication", "Luxembourg"];
+const DEFAULT_WORDS = ["Sites web", "SEO", "GEO", "Communication", "Luxembourg"];
 
 /*
   Bande défilante infinie, légèrement inclinée.
   La vitesse augmente au survol ? Non — elle s'inverse ! (petit plaisir)
 */
-export default function Marquee({ tilt = -2, dark = false }) {
+export default function Marquee({ tilt = -2, dark = false, words = DEFAULT_WORDS }) {
   const { overdrive, decaf } = useEgg();
   const duration = overdrive ? 4 : decaf ? 55 : 18;
   const row = (
     <div className="flex items-center shrink-0">
-      {WORDS.map((w) => (
+      {words.map((w) => (
         <span key={w} className="flex items-center">
           <span className={`font-display font-extrabold uppercase text-2xl md:text-4xl px-6 ${dark ? "text-cream" : "text-espresso"}`}>
             {w}

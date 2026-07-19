@@ -1,9 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { LeafMark } from "../lib/ui.jsx";
 import { HuntBean } from "./EasterEggs.jsx";
 
-const LINKS = ["Création", "SEO & GEO", "Communication", "Contact", "Blog", "Lexique"];
+const LINKS = [
+  { label: "Création", to: "/creation-site-web" },
+  { label: "SEO & GEO", to: "/seo-geo" },
+  { label: "Communication", to: "/communication" },
+  { label: "Lexique", to: "/lexique" },
+  { label: "Blog", to: "/#blog" },
+  { label: "Contact", to: "/#contact" },
+];
 const WORD = ["C", "A", "F", "E", "I", "N"];
 
 export default function Footer() {
@@ -13,13 +21,13 @@ export default function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             {LINKS.map((l) => (
-              <a
-                key={l}
-                href={l === "Contact" ? "#contact" : l === "Blog" ? "#blog" : "#services"}
+              <Link
+                key={l.label}
+                to={l.to}
                 className="font-mono text-[11px] md:text-xs tracking-[0.25em] uppercase text-cream/50 hover:text-mint transition-colors"
               >
-                {l}
-              </a>
+                {l.label}
+              </Link>
             ))}
           </div>
           <div className="flex items-center gap-4">
