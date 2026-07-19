@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 
@@ -6,25 +7,22 @@ import Cursor from "./components/Cursor.jsx";
 import { EggProvider } from "./components/EasterEggs.jsx";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
-import Hero from "./components/Hero.jsx";
-import Marquee from "./components/Marquee.jsx";
-import Manifesto from "./components/Manifesto.jsx";
-import Services from "./components/Services.jsx";
-import Stats from "./components/Stats.jsx";
-import Process from "./components/Process.jsx";
-import Showcase from "./components/Showcase.jsx";
-import Why from "./components/Why.jsx";
-import Blog from "./components/Blog.jsx";
-import Faq from "./components/Faq.jsx";
-import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
+
+import Home from "./pages/Home.jsx";
+import CreationSite from "./pages/CreationSite.jsx";
+import SeoGeo from "./pages/SeoGeo.jsx";
+import Communication from "./pages/Communication.jsx";
+import Lexique from "./pages/Lexique.jsx";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   /* Défilement doux (Lenis) + ancres */
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+    window.__lenis = lenis;
     let raf;
     function loop(time) {
       lenis.raf(time);
@@ -50,6 +48,20 @@ export default function App() {
     };
   }, []);
 
+  /* Retour en haut à chaque changement de page (+ ancre éventuelle) */
+  useEffect(() => {
+    const lenis = window.__lenis;
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el && lenis) {
+        setTimeout(() => lenis.scrollTo(el, { offset: -80, duration: 1.2 }), 150);
+        return;
+      }
+    }
+    if (lenis) lenis.scrollTo(0, { immediate: true });
+    else window.scrollTo(0, 0);
+  }, [location.pathname, location.hash]);
+
   /* Bloque le scroll pendant le préloader */
   useEffect(() => {
     document.body.style.overflow = loading ? "hidden" : "";
@@ -65,18 +77,14 @@ export default function App() {
 
       <Nav />
       <main>
-        <Hero started={!loading} />
-        <Marquee />
-        <Manifesto />
-        <Services />
-        <Stats />
-        <Process />
-        <Marquee tilt={2} dark />
-        <Showcase />
-        <Why />
-        <Blog />
-        <Faq />
-        <Contact />
+        <Routes>
+          <Route path="/" element={<Home started={!loading} />} />
+          <Route path="/creation-site-web" element={<CreationSite />} />
+          <Route path="/seo-geo" element={<SeoGeo />} />
+          <Route path="/communication" element={<Communication />} />
+          <Route path="/lexique" element={<Lexique />} />
+          <Route path="*" element={<Home started={!loading} />} />
+        </Routes>
       </main>
       <Footer />
     </div>
