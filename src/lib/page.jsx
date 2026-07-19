@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Magnetic, ArrowUpRight, Spark, Bean, SectionLabel } from "./ui.jsx";
+import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* ── Hero de page intérieure (V3 : clair, joyeux, autocollants) ── */
 export function PageHero({ n, tag, title, subtitle, children }) {
+  const eggSpeed = useEggSpeed();
   return (
     <section className="relative bg-cream pt-36 pb-16 md:pt-44 md:pb-24 overflow-hidden">
       {/* blobs décoratifs */}
@@ -18,7 +20,7 @@ export function PageHero({ n, tag, title, subtitle, children }) {
         <motion.div
           key={i}
           animate={{ y: [0, -14, 0], rotate: [0, 20, 0] }}
-          transition={{ repeat: Infinity, duration: 5 + i, delay: b.delay }}
+          transition={{ repeat: Infinity, duration: (5 + i) / eggSpeed, delay: b.delay }}
           className="absolute pointer-events-none opacity-40 hidden md:block"
           style={{ top: b.top, left: b.left, right: b.right }}
           aria-hidden
@@ -38,7 +40,7 @@ export function PageHero({ n, tag, title, subtitle, children }) {
             <motion.span
               initial={{ rotate: -12 }}
               animate={{ rotate: [-12, -6, -12] }}
-              transition={{ repeat: Infinity, duration: 4 }}
+              transition={{ repeat: Infinity, duration: (4) / eggSpeed }}
               className="grid place-items-center w-12 h-12 rounded-full bg-ink text-mint font-display font-bold border-[3px] border-mint shadow-[3px_3px_0_#1FCE8A]"
             >
               {n}
