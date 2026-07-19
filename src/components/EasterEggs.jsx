@@ -359,19 +359,24 @@ function CuriousHint({ onClose }) {
         <p className="mt-5 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50">
           Indice — au clavier, quelque part sur ce site :
         </p>
-        <div className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Konami code">
+        <div className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Indice">
           {keys.map((k, i) => (
             <motion.span
               key={i}
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 + i * 0.09, type: "spring", stiffness: 300, damping: 15 }}
-              className="grid place-items-center min-w-8 h-8 px-2 rounded-lg bg-ink text-mint font-mono text-sm font-bold border-2 border-mint/50"
+              className={`grid place-items-center min-w-8 h-8 px-2 rounded-lg font-mono text-sm font-bold border-2 ${
+                i < 2 ? "bg-ink text-mint border-mint/50" : "bg-ink/10 text-ink/40 border-ink/20"
+              }`}
             >
-              {k}
+              {i < 2 ? k : "?"}
             </motion.span>
           ))}
         </div>
+        <p className="mt-3 font-medium text-sm text-ink/60 italic">
+          La suite ? Les joueurs d'arcade des années 80 la connaissent par cœur…
+        </p>
         <button
           onClick={onClose}
           className="mt-6 rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
