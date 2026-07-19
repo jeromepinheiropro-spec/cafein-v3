@@ -131,6 +131,22 @@ body {
   .egg-overdrive .egg-scope { animation: none; }
 }
 
+
+/* Écran arcade Konami : scanlines CRT */
+.egg-scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(31, 206, 138, 0.05) 0px,
+    rgba(31, 206, 138, 0.05) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
 .noise-card {
   position: relative;
   overflow: hidden;
