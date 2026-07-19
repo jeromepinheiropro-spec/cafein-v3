@@ -110,7 +110,16 @@ body {
   animation-duration: 3.5s !important;
 }
 
-/* Mode surcaféiné : tout s'accélère + micro-tremblement du hero */
+/* Mode surcaféiné : TOUT s'accélère + micro-tremblement */
+.egg-overdrive .egg-scope *,
+.egg-overdrive .egg-scope *::before,
+.egg-overdrive .egg-scope *::after {
+  animation-duration: 0.4s !important;
+  transition-duration: 0.12s !important;
+}
+.egg-overdrive .egg-scope::before {
+  animation-duration: 1.2s !important;
+}
 .egg-overdrive .animate-ping {
   animation-duration: 0.35s !important;
 }
