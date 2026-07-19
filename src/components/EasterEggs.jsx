@@ -159,40 +159,65 @@ export function EggProvider({ children }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [launchKonami]);
 
-  /* Konami au doigt : glissez ↑ ↑ ↓ ↓ ← → ← → sur l'écran */
+  /* Konami au doigt : glissez ↑ ↑ ↓ ↓ ← → ← → sur l'écran.
+     On suit le doigt via touchmove et on valide aussi sur touchcancel :
+     sur Android, le navigateur « vole » le geste pour scroller et
+     n'envoie jamais touchend — c'est le cas le plus courant. */
   useEffect(() => {
     const SEQ = ["up", "up", "down", "down", "left", "right", "left", "right"];
     let idx = 0;
-    let sx = 0, sy = 0, st = 0, lastEnd = 0;
+    let sx = 0, sy = 0, lx = 0, ly = 0, st = 0, lastEnd = 0, tracking = false;
 
     function onStart(e) {
       const t = e.touches[0];
-      sx = t.clientX;
-      sy = t.clientY;
+      sx = lx = t.clientX;
+      sy = ly = t.clientY;
       st = Date.now();
+      tracking = true;
     }
-    function onEnd(e) {
-      const t = e.changedTouches[0];
-      const dx = t.clientX - sx;
-      const dy = t.clientY - sy;
+    function onMove(e) {
+      if (!tracking) return;
+      const t = e.touches[0];
+      lx = t.clientX;
+      ly = t.clientY;
+    }
+    function finish() {
+      if (!tracking) return;
+      tracking = false;
+      const dx = lx - sx;
+      const dy = ly - sy;
       const ax = Math.abs(dx), ay = Math.abs(dy);
       if (Math.max(ax, ay) < 30) return; /* simple tap : on ignore */
-      if (Date.now() - st > 2000) return; /* drag très lent : ignoré, la série continue */
+      if (Date.now() - st > 2500) return; /* drag très lent : ignoré, la série continue */
       /* série interrompue trop longtemps → on repart de zéro */
-      if (lastEnd && Date.now() - lastEnd > 5000) idx = 0;
+      if (lastEnd && Date.now() - lastEnd > 6000) idx = 0;
       lastEnd = Date.now();
       const dir = ax > ay ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
       idx = dir === SEQ[idx] ? idx + 1 : dir === SEQ[0] ? 1 : 0;
+      if (idx > 0) {
+        try { navigator.vibrate && navigator.vibrate(idx === SEQ.length ? [60, 40, 60] : 15); } catch { /* iOS */ }
+      }
       if (idx === SEQ.length) {
         idx = 0;
         launchKonami();
       }
     }
+    function onEnd(e) {
+      if (e.changedTouches && e.changedTouches[0]) {
+        lx = e.changedTouches[0].clientX;
+        ly = e.changedTouches[0].clientY;
+      }
+      finish();
+    }
     window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchmove", onMove, { passive: true });
     window.addEventListener("touchend", onEnd, { passive: true });
+    window.addEventListener("touchcancel", finish, { passive: true });
     return () => {
       window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onEnd);
+      window.removeEventListener("touchcancel", finish);
     };
   }, [launchKonami]);
 
@@ -226,6 +251,7 @@ export function EggProvider({ children }) {
         found={found}
         hint={hint}
         onCloseHint={() => setHint(false)}
+        onLaunchKonami={launchKonami}
       />
     </EggContext.Provider>
   );
@@ -399,8 +425,9 @@ function KonamiArcade() {
 }
 
 /* ── Carte indice « Curieux mais malin ! » (3 clics sur le grain) ── */
-function CuriousHint({ onClose }) {
+function CuriousHint({ onClose, onLaunch }) {
   const keys = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
+  const isTouch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -452,24 +479,34 @@ function CuriousHint({ onClose }) {
         <p className="mt-3 font-medium text-sm text-ink/60 italic">
           La suite ? Les joueurs d'arcade des années 80 la connaissent par cœur…
         </p>
-        <button
-          onClick={onClose}
-          className="mt-6 rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
-        >
-          Compris, motus ☕
-        </button>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {isTouch && (
+            <button
+              onClick={() => { onClose(); onLaunch(); }}
+              className="rounded-full bg-mint text-ink font-semibold text-sm px-6 py-2.5 border-2 border-ink shadow-[3px_3px_0_#0A0F0D] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
+            >
+              🕹️ Insérer un jeton
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
+          >
+            Compris, motus ☕
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   );
 }
 
 /* ── Calques + HUD ────────────────────────────────────────────── */
-function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hint, onCloseHint }) {
+function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hint, onCloseHint, onLaunchKonami }) {
   return (
     <>
       <AnimatePresence>{blast && <OverdriveBlast key="blast" />}</AnimatePresence>
       <AnimatePresence>{konami && <KonamiArcade key="konami" />}</AnimatePresence>
-      <AnimatePresence>{hint && <CuriousHint key="hint" onClose={onCloseHint} />}</AnimatePresence>
+      <AnimatePresence>{hint && <CuriousHint key="hint" onClose={onCloseHint} onLaunch={onLaunchKonami} />}</AnimatePresence>
       <AnimatePresence>
         {allFound && (
           <BeanRain
