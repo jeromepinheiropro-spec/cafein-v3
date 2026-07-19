@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionLabel, Cup } from "../lib/ui.jsx";
-import { HuntBean } from "./EasterEggs.jsx";
+import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
 
 const STEPS = [
   {
@@ -30,6 +30,7 @@ const WEEKS = [
 ];
 
 export default function Process() {
+  const eggSpeed = useEggSpeed();
   const barRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: barRef, offset: ["start 0.85", "end 0.5"] });
   const width = useTransform(scrollYProgress, [0, 1], ["4%", "100%"]);
@@ -93,7 +94,7 @@ export default function Process() {
               <motion.div style={{ left: cupX }} className="absolute -top-7 -translate-x-1/2">
                 <motion.div
                   animate={{ rotate: [-6, 6, -6] }}
-                  transition={{ repeat: Infinity, duration: 1.2 }}
+                  transition={{ repeat: Infinity, duration: (1.2) / eggSpeed }}
                 >
                   <Cup className="w-10 h-10" />
                 </motion.div>

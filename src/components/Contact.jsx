@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel, Magnetic, LeafMark, ArrowUpRight } from "../lib/ui.jsx";
+import { useEggSpeed } from "./EasterEggs.jsx";
 
 /* Confettis maison : petites particules qui explosent au succès */
 function Confetti() {
@@ -60,6 +61,7 @@ function Field({ label, id, type = "text", as = "input", value, onChange, requir
 }
 
 export default function Contact() {
+  const eggSpeed = useEggSpeed();
   const [form, setForm] = useState({ nom: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | done
 
@@ -79,7 +81,7 @@ export default function Contact() {
       <motion.div
         aria-hidden
         animate={{ y: [0, -16, 0], rotate: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 7 }}
+        transition={{ repeat: Infinity, duration: (7) / eggSpeed }}
         className="absolute top-24 right-[10%] hidden lg:block opacity-60"
       >
         <LeafMark className="h-16 w-auto" />
@@ -173,7 +175,7 @@ export default function Contact() {
                       <>
                         <motion.span
                           animate={{ rotate: 360 }}
-                          transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                          transition={{ repeat: Infinity, duration: (0.8) / eggSpeed, ease: "linear" }}
                           className="w-5 h-5 rounded-full border-[3px] border-ink border-t-transparent"
                         />
                         Envoi…

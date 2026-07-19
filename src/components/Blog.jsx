@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SectionLabel, ArrowUpRight, Bean, Spark, Cup } from "../lib/ui.jsx";
+import { useEggSpeed } from "./EasterEggs.jsx";
 
 const POSTS = [
   {
@@ -30,6 +31,7 @@ const POSTS = [
 ];
 
 function Deco({ kind }) {
+  const eggSpeed = useEggSpeed();
   if (kind === "seo")
     return (
       <motion.div whileHover={{ rotate: 8 }} className="flex items-end gap-1.5 h-16">
@@ -51,14 +53,14 @@ function Deco({ kind }) {
       <div className="relative h-16 w-24">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+          transition={{ repeat: Infinity, duration: (8) / eggSpeed, ease: "linear" }}
           className="absolute inset-0 grid place-items-center"
         >
           <Spark className="w-8 h-8 text-ink" />
         </motion.div>
         <motion.div
           animate={{ rotate: -360 }}
-          transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+          transition={{ repeat: Infinity, duration: (12) / eggSpeed, ease: "linear" }}
           className="absolute inset-0"
         >
           <Bean className="w-5 h-5 absolute top-0 right-2" fill="#0A0F0D" />

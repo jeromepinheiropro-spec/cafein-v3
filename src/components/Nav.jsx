@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { Link, NavLink } from "react-router-dom";
 import { LeafMark, Wordmark, Magnetic } from "../lib/ui.jsx";
+import { useEgg } from "./EasterEggs.jsx";
 
 const LINKS = [
   { label: "Création de site", to: "/creation-site-web" },
@@ -18,6 +19,28 @@ export default function Nav() {
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { toggleOverdrive, toggleDecaf } = useEgg();
+
+  /* Eggs mobiles : 5 taps rapides sur le logo → surcaféiné ; appui long → décaféiné */
+  const taps = useRef({ n: 0, t: 0 });
+  const pressTimer = useRef(null);
+
+  function onLogoClick(e) {
+    const now = Date.now();
+    taps.current = now - taps.current.t < 500 ? { n: taps.current.n + 1, t: now } : { n: 1, t: now };
+    if (taps.current.n > 1) e.preventDefault(); /* on reste sur place pendant la série */
+    if (taps.current.n >= 5) {
+      taps.current = { n: 0, t: 0 };
+      toggleOverdrive();
+    }
+  }
+  function onLogoPressStart() {
+    clearTimeout(pressTimer.current);
+    pressTimer.current = setTimeout(() => toggleDecaf(), 1100);
+  }
+  function onLogoPressEnd() {
+    clearTimeout(pressTimer.current);
+  }
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -33,7 +56,18 @@ export default function Nav() {
         className="fixed top-0 inset-x-0 z-[500] px-4 md:px-8 pt-4"
       >
         <div className="mx-auto max-w-7xl flex items-center justify-between rounded-2xl bg-cream/80 backdrop-blur-xl border-2 border-ink/10 px-4 md:px-6 py-3 shadow-[0_8px_30px_rgba(10,15,13,0.08)]">
-          <Link to="/" className="flex items-center gap-2" data-cursor="Hello" aria-label="Cafein — accueil">
+          <Link
+            to="/"
+            className="flex items-center gap-2 select-none"
+            style={{ WebkitTouchCallout: "none" }}
+            data-cursor="Hello"
+            aria-label="Cafein — accueil"
+            onClick={onLogoClick}
+            onTouchStart={onLogoPressStart}
+            onTouchEnd={onLogoPressEnd}
+            onTouchMove={onLogoPressEnd}
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <motion.div whileHover={{ rotate: -14, scale: 1.1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }}>
               <LeafMark className="h-6 w-auto" leaf2="#0A0F0D" />
             </motion.div>

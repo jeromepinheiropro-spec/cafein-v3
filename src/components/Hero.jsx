@@ -7,16 +7,17 @@ import {
   useSpring,
 } from "framer-motion";
 import { Magnetic, Bean, Spark, ArrowUpRight, Cup } from "../lib/ui.jsx";
-import { useEgg } from "./EasterEggs.jsx";
+import { useEgg, useEggSpeed } from "./EasterEggs.jsx";
 
 const letters = ["C", "a", "f", "e", "i", "n"];
 
 /* Badge circulaire qui tourne */
 function RotatingBadge() {
+  const eggSpeed = useEggSpeed();
   return (
     <motion.div
       animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 14, ease: "linear" }}
+      transition={{ repeat: Infinity, duration: (14) / eggSpeed, ease: "linear" }}
       className="relative w-28 h-28 md:w-36 md:h-36"
     >
       <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -35,6 +36,7 @@ function RotatingBadge() {
 }
 
 export default function Hero({ started }) {
+  const eggSpeed = useEggSpeed();
   const ref = useRef(null);
   const { collect, curious } = useEgg();
 
@@ -77,34 +79,34 @@ export default function Hero({ started }) {
         aria-hidden
         className="absolute -top-32 -right-40 w-[38rem] h-[38rem] rounded-full bg-mint/15 blur-3xl"
         animate={{ scale: [1, 1.15, 1] }}
-        transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
+        transition={{ repeat: Infinity, duration: (9) / eggSpeed, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
         className="absolute -bottom-40 -left-40 w-[34rem] h-[34rem] rounded-full bg-caramel/15 blur-3xl"
         animate={{ scale: [1.1, 1, 1.1] }}
-        transition={{ repeat: Infinity, duration: 11, ease: "easeInOut" }}
+        transition={{ repeat: Infinity, duration: (11) / eggSpeed, ease: "easeInOut" }}
       />
 
       {/* Grains flottants */}
       <motion.div aria-hidden style={{ y: yBeans }} className="absolute inset-0 pointer-events-none">
         <motion.div style={beanStyle(40, 30)} className="absolute top-[15%] left-[40%] hidden sm:block">
-          <motion.div animate={{ y: [0, -14, 0], rotate: [0, 14, 0] }} transition={{ repeat: Infinity, duration: 5 }}>
+          <motion.div animate={{ y: [0, -14, 0], rotate: [0, 14, 0] }} transition={{ repeat: Infinity, duration: (5) / eggSpeed }}>
             <Bean className="w-9 h-9 md:w-12 md:h-12 opacity-90" />
           </motion.div>
         </motion.div>
         <motion.div style={beanStyle(-55, 45)} className="absolute top-[26%] right-[12%]">
-          <motion.div animate={{ y: [0, 16, 0], rotate: [0, -18, 0] }} transition={{ repeat: Infinity, duration: 6.5 }}>
+          <motion.div animate={{ y: [0, 16, 0], rotate: [0, -18, 0] }} transition={{ repeat: Infinity, duration: (6.5) / eggSpeed }}>
             <Bean className="w-7 h-7 md:w-10 md:h-10 opacity-80" fill="#F4A259" />
           </motion.div>
         </motion.div>
         <motion.div style={beanStyle(30, -40)} className="absolute bottom-[30%] right-[22%] hidden md:block">
-          <motion.div animate={{ y: [0, -10, 0], rotate: [0, 24, 0] }} transition={{ repeat: Infinity, duration: 7 }}>
+          <motion.div animate={{ y: [0, -10, 0], rotate: [0, 24, 0] }} transition={{ repeat: Infinity, duration: (7) / eggSpeed }}>
             <Bean className="w-8 h-8 opacity-70" fill="#FFD166" />
           </motion.div>
         </motion.div>
         <motion.div style={beanStyle(-35, -25)} className="absolute bottom-[22%] left-[16%] hidden md:block">
-          <motion.div animate={{ rotate: [0, 360] }} transition={{ repeat: Infinity, duration: 16, ease: "linear" }}>
+          <motion.div animate={{ rotate: [0, 360] }} transition={{ repeat: Infinity, duration: (16) / eggSpeed, ease: "linear" }}>
             <Spark className="w-6 h-6 text-mint" />
           </motion.div>
         </motion.div>
@@ -165,7 +167,7 @@ export default function Hero({ started }) {
                         >
                           <motion.span
                             animate={{ rotate: [0, 360] }}
-                            transition={{ repeat: Infinity, duration: 10, ease: "linear", delay: 1.6 }}
+                            transition={{ repeat: Infinity, duration: (10) / eggSpeed, ease: "linear", delay: 1.6 }}
                             className="block w-full h-full"
                           >
                             <Bean className="w-full h-full" />
@@ -244,7 +246,7 @@ export default function Hero({ started }) {
         <span className="hidden sm:block">Sites web — SEO/GEO — Communication</span>
         <motion.span
           animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6 }}
+          transition={{ repeat: Infinity, duration: (1.6) / eggSpeed }}
           className="flex items-center gap-2"
         >
           Scroll

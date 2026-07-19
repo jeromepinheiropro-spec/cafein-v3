@@ -24,12 +24,17 @@ const ALL_BEANS = ["hero", "methode", "resultats", "footer"];
 const EggContext = createContext({
   overdrive: false,
   decaf: false,
+  speed: 1,
   found: [],
   collect: () => {},
   curious: () => {},
+  toggleOverdrive: () => {},
+  toggleDecaf: () => {},
 });
 
 export const useEgg = () => useContext(EggContext);
+/* Facteur de vitesse global (surcaféiné ×5, décaféiné ×0.35) */
+export const useEggSpeed = () => useContext(EggContext).speed || 1;
 
 const KONAMI = [
   "arrowup", "arrowup", "arrowdown", "arrowdown",
@@ -60,6 +65,31 @@ export function EggProvider({ children }) {
     if (curiousClicks.current % 3 === 0) {
       setHint(true);
     }
+  }, []);
+
+  /* Bascules réutilisables (clavier + gestes mobiles) */
+  const toggleOverdrive = useCallback(() => {
+    setDecaf(false);
+    setOverdrive((v) => {
+      const on = !v;
+      if (on) {
+        setBlast(true);
+        setTimeout(() => setBlast(false), 1500);
+      }
+      return on;
+    });
+  }, []);
+
+  const toggleDecaf = useCallback(() => {
+    setOverdrive(false);
+    setDecaf((v) => !v);
+  }, []);
+
+  const launchKonami = useCallback(() => {
+    setKonami(true);
+    setTimeout(() => {
+      window.location.href = GAME_URL + "?from=konami";
+    }, 3200);
   }, []);
 
   /* Collecte d'un grain caché */
@@ -98,11 +128,7 @@ export function EggProvider({ children }) {
         konamiIdx++;
         if (konamiIdx === KONAMI.length) {
           konamiIdx = 0;
-          setKonami(true);
-          /* redirection vers le jeu après la séquence arcade */
-          setTimeout(() => {
-            window.location.href = GAME_URL + "?from=konami";
-          }, 3200);
+          launchKonami();
         }
       } else {
         konamiIdx = key === KONAMI[0] ? 1 : 0;
@@ -131,7 +157,44 @@ export function EggProvider({ children }) {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [launchKonami]);
+
+  /* Konami au doigt : glissez ↑ ↑ ↓ ↓ ← → ← → sur l'écran */
+  useEffect(() => {
+    const SEQ = ["up", "up", "down", "down", "left", "right", "left", "right"];
+    let idx = 0;
+    let sx = 0, sy = 0, st = 0, lastEnd = 0;
+
+    function onStart(e) {
+      const t = e.touches[0];
+      sx = t.clientX;
+      sy = t.clientY;
+      st = Date.now();
+    }
+    function onEnd(e) {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx;
+      const dy = t.clientY - sy;
+      const ax = Math.abs(dx), ay = Math.abs(dy);
+      if (Date.now() - st > 900) { idx = 0; return; }
+      if (Math.max(ax, ay) < 40) return; /* simple tap : on ignore */
+      /* série interrompue trop longtemps → on repart de zéro */
+      if (lastEnd && Date.now() - lastEnd > 2500) idx = 0;
+      lastEnd = Date.now();
+      const dir = ax > ay ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
+      idx = dir === SEQ[idx] ? idx + 1 : dir === SEQ[0] ? 1 : 0;
+      if (idx === SEQ.length) {
+        idx = 0;
+        launchKonami();
+      }
+    }
+    window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchend", onEnd);
+    };
+  }, [launchKonami]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("egg-overdrive", overdrive);
@@ -139,8 +202,20 @@ export function EggProvider({ children }) {
   }, [overdrive, decaf]);
 
   return (
-    <EggContext.Provider value={{ overdrive, decaf, found, collect, curious }}>
-      {children}
+    <EggContext.Provider
+      value={{
+        overdrive,
+        decaf,
+        speed: overdrive ? 5 : decaf ? 0.35 : 1,
+        found,
+        collect,
+        curious,
+        toggleOverdrive,
+        toggleDecaf,
+      }}
+    >
+      {/* key = vitesse : au changement de mode, toutes les boucles repartent à la nouvelle allure */}
+      <React.Fragment key={overdrive ? "over" : decaf ? "decaf" : "normal"}>{children}</React.Fragment>
       <EggLayer
         overdrive={overdrive}
         decaf={decaf}
@@ -357,7 +432,7 @@ function CuriousHint({ onClose }) {
           remportez-le et c'est <b className="text-mint-dark">10% sur votre offre de prix</b> — ou un café offert.
         </p>
         <p className="mt-5 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50">
-          Indice — au clavier, quelque part sur ce site :
+          Indice — au clavier, ou du doigt en glissant :
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Indice">
           {keys.map((k, i) => (

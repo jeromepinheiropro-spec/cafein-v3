@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LeafMark } from "../lib/ui.jsx";
-import { HuntBean } from "./EasterEggs.jsx";
+import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
 
 const LINKS = [
   { label: "Création", to: "/creation-site-web" },
@@ -15,6 +15,7 @@ const LINKS = [
 const WORD = ["C", "A", "F", "E", "I", "N"];
 
 export default function Footer() {
+  const eggSpeed = useEggSpeed();
   return (
     <footer className="relative bg-espresso border-t-4 border-mint overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-10 pt-16 pb-8">
@@ -66,7 +67,7 @@ export default function Footer() {
                     I
                     <motion.span
                       animate={{ rotate: [0, 15, -15, 0] }}
-                      transition={{ repeat: Infinity, duration: 4 }}
+                      transition={{ repeat: Infinity, duration: (4) / eggSpeed }}
                       className="absolute -top-[0.18em] left-1/2 -translate-x-1/2"
                     >
                       <LeafMark className="h-[0.24em] w-auto" />
