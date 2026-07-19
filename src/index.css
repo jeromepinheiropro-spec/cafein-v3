@@ -15,10 +15,16 @@
 
 html {
   scroll-behavior: auto;
+  /* bloque tout déplacement horizontal (mobile) : les éléments inclinés
+     (bandeau, blobs) débordent volontairement mais ne doivent pas créer de scroll */
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body {
-  @apply bg-cream text-ink font-body antialiased overflow-x-hidden;
+  @apply bg-cream text-ink font-body antialiased;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 /* Hide native cursor only on fine pointers (desktop) */
