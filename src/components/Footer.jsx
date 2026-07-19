@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { LeafMark } from "../lib/ui.jsx";
+import { HuntBean } from "./EasterEggs.jsx";
 
 const LINKS = ["Création", "SEO & GEO", "Communication", "Contact", "Blog", "Lexique"];
 const WORD = ["C", "A", "F", "E", "I", "N"];

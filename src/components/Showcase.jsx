@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
+import { HuntBean } from "./EasterEggs.jsx";
 
 /* ── Fausse fenêtre navigateur pour les aperçus projets ───────── */
 function BrowserMock({ variant = "a" }) {
@@ -237,6 +238,7 @@ export default function Showcase() {
           <div className="flex items-center gap-3">
             <Spark className="w-5 h-5 text-mint-dark" />
             <SectionLabel>( Des résultats concrets )</SectionLabel>
+            <HuntBean id="resultats" className="w-5 h-5" />
           </div>
           <div className="mt-8 grid md:grid-cols-3 gap-6">
             {RESULTS.map((r, i) => (

@@ -38,16 +38,11 @@ function RotatingBadge() {
 
 export default function Hero({ started }) {
   const ref = useRef(null);
-  const { rain } = useEgg();
-  const beanClicks = useRef(0);
+  const { collect } = useEgg();
 
   function onBeanClick(e) {
     e.stopPropagation();
-    beanClicks.current += 1;
-    if (beanClicks.current >= 3) {
-      beanClicks.current = 0;
-      rain();
-    }
+    collect("hero");
   }
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yTitle = useTransform(scrollYProgress, [0, 1], [0, 160]);
@@ -162,9 +157,10 @@ export default function Hero({ started }) {
                           animate={started ? { y: 0, opacity: 1 } : {}}
                           transition={{ delay: 0.85, type: "spring", stiffness: 320, damping: 11 }}
                           onClick={onBeanClick}
-                          data-cursor="?"
+                          data-cursor="Grain !"
                           whileTap={{ scale: 0.8 }}
-                          className="absolute left-1/2 top-[0.02em] -translate-x-1/2 w-[0.16em] h-[0.16em] cursor-pointer pointer-events-auto"
+                          className="absolute left-1/2 top-[0.02em] w-[0.16em] h-[0.16em] cursor-pointer pointer-events-auto"
+                          style={{ marginLeft: "-0.08em" }}
                           role="button"
                           aria-label="Un grain de café curieux"
                         >
