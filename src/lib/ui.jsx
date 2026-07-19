@@ -80,9 +80,9 @@ export function SectionLabel({ children, dark = false, className = "" }) {
 }
 
 /* ── Grain de café SVG ────────────────────────────────────────── */
-export function Bean({ className = "w-8 h-8", fill = "#1FCE8A" }) {
+export function Bean({ className = "w-8 h-8", fill = "#1FCE8A", style }) {
   return (
-    <svg viewBox="0 0 48 48" className={className} aria-hidden="true" fill="none">
+    <svg viewBox="0 0 48 48" className={className} style={style} aria-hidden="true" fill="none">
       <ellipse cx="24" cy="24" rx="15" ry="21" transform="rotate(28 24 24)" fill={fill} />
       <path
         d="M15 10 C 26 18, 22 30, 33 38"
