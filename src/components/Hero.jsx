@@ -7,6 +7,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { Magnetic, Bean, Spark, ArrowUpRight, Cup } from "../lib/ui.jsx";
+import { useEgg } from "./EasterEggs.jsx";
 
 const letters = ["C", "a", "f", "e", "i", "n"];
 
@@ -37,6 +38,17 @@ function RotatingBadge() {
 
 export default function Hero({ started }) {
   const ref = useRef(null);
+  const { rain } = useEgg();
+  const beanClicks = useRef(0);
+
+  function onBeanClick(e) {
+    e.stopPropagation();
+    beanClicks.current += 1;
+    if (beanClicks.current >= 3) {
+      beanClicks.current = 0;
+      rain();
+    }
+  }
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yTitle = useTransform(scrollYProgress, [0, 1], [0, 160]);
   const yBeans = useTransform(scrollYProgress, [0, 1], [0, -220]);
@@ -149,7 +161,12 @@ export default function Hero({ started }) {
                           initial={{ y: -120, opacity: 0 }}
                           animate={started ? { y: 0, opacity: 1 } : {}}
                           transition={{ delay: 0.85, type: "spring", stiffness: 320, damping: 11 }}
-                          className="absolute left-1/2 top-[0.02em] -translate-x-1/2 w-[0.16em] h-[0.16em]"
+                          onClick={onBeanClick}
+                          data-cursor="?"
+                          whileTap={{ scale: 0.8 }}
+                          className="absolute left-1/2 top-[0.02em] -translate-x-1/2 w-[0.16em] h-[0.16em] cursor-pointer pointer-events-auto"
+                          role="button"
+                          aria-label="Un grain de café curieux"
                         >
                           <motion.span
                             animate={{ rotate: [0, 360] }}

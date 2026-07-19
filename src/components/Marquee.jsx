@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Spark } from "../lib/ui.jsx";
+import { useEgg } from "./EasterEggs.jsx";
 
 const WORDS = ["Sites web", "SEO", "GEO", "Communication", "Luxembourg"];
 
@@ -9,6 +10,8 @@ const WORDS = ["Sites web", "SEO", "GEO", "Communication", "Luxembourg"];
   La vitesse augmente au survol ? Non — elle s'inverse ! (petit plaisir)
 */
 export default function Marquee({ tilt = -2, dark = false }) {
+  const { overdrive, decaf } = useEgg();
+  const duration = overdrive ? 4 : decaf ? 55 : 18;
   const row = (
     <div className="flex items-center shrink-0">
       {WORDS.map((w) => (
@@ -31,9 +34,10 @@ export default function Marquee({ tilt = -2, dark = false }) {
       aria-hidden="true"
     >
       <motion.div
+        key={duration}
         className="flex w-max"
         animate={{ x: ["0%", "-25%"] }}
-        transition={{ repeat: Infinity, duration: 18, ease: "linear" }}
+        transition={{ repeat: Infinity, duration, ease: "linear" }}
       >
         {row}
         {row}
