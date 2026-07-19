@@ -57,6 +57,7 @@ export function EggProvider({ children }) {
   const [toast, setToast] = useState(null);
   const [allFound, setAllFound] = useState(false);
   const [hint, setHint] = useState(false);
+  const [swipeProgress, setSwipeProgress] = useState(0);
   const curiousClicks = useRef(0);
 
   /* 3 clics sur le grain du i → indice vers le jeu caché */
@@ -160,64 +161,71 @@ export function EggProvider({ children }) {
   }, [launchKonami]);
 
   /* Konami au doigt : glissez ↑ ↑ ↓ ↓ ← → ← → sur l'écran.
-     On suit le doigt via touchmove et on valide aussi sur touchcancel :
-     sur Android, le navigateur « vole » le geste pour scroller et
-     n'envoie jamais touchend — c'est le cas le plus courant. */
+     Détection PENDANT le mouvement (touchmove) : aucune dépendance à
+     touchend/touchcancel, que Safari iOS et Chrome Android délivrent mal.
+     Le sens inversé (penser « flèche » = sens du défilement) est aussi accepté. */
   useEffect(() => {
     const SEQ = ["up", "up", "down", "down", "left", "right", "left", "right"];
-    let idx = 0;
-    let sx = 0, sy = 0, lx = 0, ly = 0, st = 0, lastEnd = 0, tracking = false;
+    const INV = ["down", "down", "up", "up", "right", "left", "right", "left"];
+    const STEP = 60; /* px de mouvement pour valider un geste */
+    let idxA = 0, idxB = 0, prevBest = 0;
+    let ox = 0, oy = 0, active = false, lastReg = 0;
+    let fadeTimer = null;
 
-    function onStart(e) {
-      const t = e.touches[0];
-      sx = lx = t.clientX;
-      sy = ly = t.clientY;
-      st = Date.now();
-      tracking = true;
-    }
-    function onMove(e) {
-      if (!tracking) return;
-      const t = e.touches[0];
-      lx = t.clientX;
-      ly = t.clientY;
-    }
-    function finish() {
-      if (!tracking) return;
-      tracking = false;
-      const dx = lx - sx;
-      const dy = ly - sy;
-      const ax = Math.abs(dx), ay = Math.abs(dy);
-      if (Math.max(ax, ay) < 30) return; /* simple tap : on ignore */
-      if (Date.now() - st > 2500) return; /* drag très lent : ignoré, la série continue */
-      /* série interrompue trop longtemps → on repart de zéro */
-      if (lastEnd && Date.now() - lastEnd > 6000) idx = 0;
-      lastEnd = Date.now();
-      const dir = ax > ay ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
-      idx = dir === SEQ[idx] ? idx + 1 : dir === SEQ[0] ? 1 : 0;
-      if (idx > 0) {
-        try { navigator.vibrate && navigator.vibrate(idx === SEQ.length ? [60, 40, 60] : 15); } catch { /* iOS */ }
+    function register(dir) {
+      const now = Date.now();
+      if (lastReg && now - lastReg > 6000) { idxA = 0; idxB = 0; prevBest = 0; }
+      lastReg = now;
+      idxA = dir === SEQ[idxA] ? idxA + 1 : dir === SEQ[0] ? 1 : 0;
+      idxB = dir === INV[idxB] ? idxB + 1 : dir === INV[0] ? 1 : 0;
+      const best = Math.max(idxA, idxB);
+      if (best > prevBest) {
+        try { navigator.vibrate && navigator.vibrate(best >= SEQ.length ? [60, 40, 60] : 15); } catch { /* iOS */ }
       }
-      if (idx === SEQ.length) {
-        idx = 0;
+      prevBest = best;
+      setSwipeProgress(best);
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => setSwipeProgress(0), 4000);
+      if (idxA === SEQ.length || idxB === SEQ.length) {
+        idxA = 0; idxB = 0; prevBest = 0;
+        setSwipeProgress(0);
         launchKonami();
       }
     }
-    function onEnd(e) {
-      if (e.changedTouches && e.changedTouches[0]) {
-        lx = e.changedTouches[0].clientX;
-        ly = e.changedTouches[0].clientY;
-      }
-      finish();
+    let sessionDir = null; /* une direction ne compte qu'une fois par contact */
+    function onStart(e) {
+      const t = e.touches[0];
+      ox = t.clientX;
+      oy = t.clientY;
+      active = true;
+      sessionDir = null;
     }
+    function onMove(e) {
+      if (!active) return;
+      const t = e.touches[0];
+      const dx = t.clientX - ox;
+      const dy = t.clientY - oy;
+      const ax = Math.abs(dx), ay = Math.abs(dy);
+      if (Math.max(ax, ay) < STEP) return;
+      const dir = ax > ay ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
+      /* nouvelle origine : permet d'enchaîner plusieurs directions dans un même drag */
+      ox = t.clientX;
+      oy = t.clientY;
+      if (dir === sessionDir) return; /* même direction qui continue : déjà comptée */
+      sessionDir = dir;
+      register(dir);
+    }
+    function onStop() { active = false; }
     window.addEventListener("touchstart", onStart, { passive: true });
     window.addEventListener("touchmove", onMove, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
-    window.addEventListener("touchcancel", finish, { passive: true });
+    window.addEventListener("touchend", onStop, { passive: true });
+    window.addEventListener("touchcancel", onStop, { passive: true });
     return () => {
+      clearTimeout(fadeTimer);
       window.removeEventListener("touchstart", onStart);
       window.removeEventListener("touchmove", onMove);
-      window.removeEventListener("touchend", onEnd);
-      window.removeEventListener("touchcancel", finish);
+      window.removeEventListener("touchend", onStop);
+      window.removeEventListener("touchcancel", onStop);
     };
   }, [launchKonami]);
 
@@ -251,7 +259,7 @@ export function EggProvider({ children }) {
         found={found}
         hint={hint}
         onCloseHint={() => setHint(false)}
-        onLaunchKonami={launchKonami}
+        swipeProgress={swipeProgress}
       />
     </EggContext.Provider>
   );
@@ -425,9 +433,8 @@ function KonamiArcade() {
 }
 
 /* ── Carte indice « Curieux mais malin ! » (3 clics sur le grain) ── */
-function CuriousHint({ onClose, onLaunch }) {
+function CuriousHint({ onClose }) {
   const keys = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
-  const isTouch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -479,34 +486,46 @@ function CuriousHint({ onClose, onLaunch }) {
         <p className="mt-3 font-medium text-sm text-ink/60 italic">
           La suite ? Les joueurs d'arcade des années 80 la connaissent par cœur…
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {isTouch && (
-            <button
-              onClick={() => { onClose(); onLaunch(); }}
-              className="rounded-full bg-mint text-ink font-semibold text-sm px-6 py-2.5 border-2 border-ink shadow-[3px_3px_0_#0A0F0D] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
-            >
-              🕹️ Insérer un jeton
-            </button>
-          )}
-          <button
-            onClick={onClose}
-            className="rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
-          >
-            Compris, motus ☕
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="mt-6 rounded-full bg-ink text-cream font-semibold text-sm px-6 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors"
+        >
+          Compris, motus ☕
+        </button>
       </motion.div>
     </motion.div>
   );
 }
 
 /* ── Calques + HUD ────────────────────────────────────────────── */
-function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hint, onCloseHint, onLaunchKonami }) {
+function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hint, onCloseHint, swipeProgress }) {
   return (
     <>
       <AnimatePresence>{blast && <OverdriveBlast key="blast" />}</AnimatePresence>
       <AnimatePresence>{konami && <KonamiArcade key="konami" />}</AnimatePresence>
-      <AnimatePresence>{hint && <CuriousHint key="hint" onClose={onCloseHint} onLaunch={onLaunchKonami} />}</AnimatePresence>
+      <AnimatePresence>{hint && <CuriousHint key="hint" onClose={onCloseHint} />}</AnimatePresence>
+
+      {/* Jauge discrète de la séquence secrète (à partir de la moitié) */}
+      <AnimatePresence>
+        {swipeProgress >= 4 && !konami && (
+          <motion.div
+            key="swipeprogress"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 30, opacity: 0 }}
+            className="fixed bottom-16 inset-x-0 z-[9550] flex justify-center pointer-events-none"
+          >
+            <div className="flex items-center gap-1.5 bg-espresso/85 backdrop-blur border border-mint/40 rounded-full px-3.5 py-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-2 h-2 rounded-full ${i < swipeProgress ? "bg-mint" : "bg-cream/20"}`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {allFound && (
           <BeanRain
