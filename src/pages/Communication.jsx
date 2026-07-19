@@ -2,13 +2,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* Mockup post social pour le hero */
 function PostDeco() {
+  const eggSpeed = useEggSpeed();
   return (
     <motion.div
       animate={{ y: [0, -8, 0] }}
-      transition={{ repeat: Infinity, duration: 4 }}
+      transition={{ repeat: Infinity, duration: (4) / eggSpeed }}
       className="rounded-2xl border-2 border-cream/20 bg-espresso-2 p-6 shadow-2xl max-w-sm ml-auto"
     >
       <div className="flex items-center gap-3">

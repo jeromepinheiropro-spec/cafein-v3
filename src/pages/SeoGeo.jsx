@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { CountUp } from "../components/Stats.jsx";
+import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* Mockup résultat Google pour le hero */
 function SerpDeco() {
+  const eggSpeed = useEggSpeed();
   return (
     <div className="space-y-4">
       <div className="rounded-2xl border-2 border-cream/20 bg-espresso-2 p-6 shadow-2xl">
@@ -17,7 +19,7 @@ function SerpDeco() {
       </div>
       <motion.div
         animate={{ y: [0, -6, 0] }}
-        transition={{ repeat: Infinity, duration: 3 }}
+        transition={{ repeat: Infinity, duration: (3) / eggSpeed }}
         className="rounded-2xl border-2 border-mint/50 bg-mint/10 p-6"
       >
         <p className="font-mono text-[10px] tracking-widest text-mint uppercase mb-2">Assistant IA</p>
