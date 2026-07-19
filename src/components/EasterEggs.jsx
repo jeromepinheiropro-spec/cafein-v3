@@ -176,10 +176,10 @@ export function EggProvider({ children }) {
       const dx = t.clientX - sx;
       const dy = t.clientY - sy;
       const ax = Math.abs(dx), ay = Math.abs(dy);
-      if (Date.now() - st > 900) { idx = 0; return; }
-      if (Math.max(ax, ay) < 40) return; /* simple tap : on ignore */
+      if (Math.max(ax, ay) < 30) return; /* simple tap : on ignore */
+      if (Date.now() - st > 2000) return; /* drag très lent : ignoré, la série continue */
       /* série interrompue trop longtemps → on repart de zéro */
-      if (lastEnd && Date.now() - lastEnd > 2500) idx = 0;
+      if (lastEnd && Date.now() - lastEnd > 5000) idx = 0;
       lastEnd = Date.now();
       const dir = ax > ay ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
       idx = dir === SEQ[idx] ? idx + 1 : dir === SEQ[0] ? 1 : 0;
