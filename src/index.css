@@ -19,12 +19,15 @@ html {
      (bandeau, blobs) débordent volontairement mais ne doivent pas créer de scroll */
   overflow-x: clip;
   max-width: 100%;
+  /* pas de pull-to-refresh ni de rebond : indispensable pour le Konami en glissements */
+  overscroll-behavior-y: none;
 }
 
 body {
   @apply bg-cream text-ink font-body antialiased;
   overflow-x: clip;
   max-width: 100%;
+  overscroll-behavior-y: none;
 }
 
 /* Hide native cursor only on fine pointers (desktop) */
