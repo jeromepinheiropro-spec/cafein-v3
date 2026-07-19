@@ -27,10 +27,10 @@ export default function Marquee({ tilt = -2, dark = false, words = DEFAULT_WORDS
 
   return (
     <div
-      className={`relative py-4 md:py-5 overflow-hidden border-y-4 ${
+      className={`relative z-20 py-4 md:py-5 overflow-hidden border-y-4 ${
         dark ? "bg-espresso border-mint" : "bg-mint border-espresso"
       }`}
-      style={{ transform: `rotate(${tilt}deg) scale(1.02)` }}
+      style={{ transform: `rotate(${tilt}deg) scale(1.02)`, marginTop: "-1.25rem", marginBottom: "-1.25rem" }}
       aria-hidden="true"
     >
       <motion.div

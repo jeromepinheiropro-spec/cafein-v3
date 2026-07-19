@@ -1,6 +1,9 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Link } from "react-router-dom";
 import { SectionLabel, ArrowUpRight } from "../lib/ui.jsx";
+
+const MotionLink = motion.create(Link);
 
 /* Icônes doodle par service */
 function IconSite({ className }) {
@@ -40,6 +43,7 @@ function IconCom({ className }) {
 const SERVICES = [
   {
     n: "01",
+    to: "/creation-site-web",
     title: "Création de site web",
     desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
     tags: ["Vitrine", "E-commerce", "Sur mesure"],
@@ -50,6 +54,7 @@ const SERVICES = [
   },
   {
     n: "02",
+    to: "/seo-geo",
     title: "SEO & GEO",
     desc: "Référencement naturel classique et optimisation pour être trouvé et cité par les intelligences artificielles (ChatGPT, Perplexity...), avec un focus local Luxembourg.",
     tags: ["Google", "ChatGPT", "Local"],
@@ -60,6 +65,7 @@ const SERVICES = [
   },
   {
     n: "03",
+    to: "/communication",
     title: "Communication digitale",
     desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
     tags: ["Réseaux sociaux", "Contenus", "Campagnes"],
@@ -76,11 +82,14 @@ function Card({ s, i, total, progress }) {
 
   return (
     <div className="sticky top-24 md:top-28 flex justify-center px-4" style={{ zIndex: i + 1 }}>
-      <motion.article
+      <MotionLink
+        to={s.to}
+        data-cursor="Découvrir"
+        aria-label={`${s.title} — en savoir plus`}
         style={{ scale, rotate: s.rotate }}
         whileHover={{ rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className={`${s.bg} ${s.text} w-full max-w-4xl rounded-[2rem] border-[3px] border-ink shadow-[8px_8px_0_#0A0F0D] p-8 md:p-12 mb-8`}
+        className={`block ${s.bg} ${s.text} w-full max-w-4xl rounded-[2rem] border-[3px] border-ink shadow-[8px_8px_0_#0A0F0D] p-8 md:p-12 mb-8 cursor-pointer`}
       >
         <div className="flex items-start justify-between gap-6">
           <span className="font-mono text-sm md:text-base font-bold tracking-widest border-2 border-ink rounded-full px-3 py-1">
@@ -105,18 +114,14 @@ function Card({ s, i, total, progress }) {
               {t}
             </span>
           ))}
-          <a
-            href="#contact"
-            data-cursor="On en parle ?"
-            className="ml-auto inline-flex items-center gap-2 font-display font-bold text-sm md:text-base group"
-          >
+          <span className="ml-auto inline-flex items-center gap-2 font-display font-bold text-sm md:text-base group">
             En savoir plus
             <span className="grid place-items-center w-9 h-9 rounded-full bg-ink text-cream group-hover:rotate-45 transition-transform duration-300">
               <ArrowUpRight className="w-4 h-4" />
             </span>
-          </a>
+          </span>
         </div>
-      </motion.article>
+      </MotionLink>
     </div>
   );
 }
