@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 
 import Cursor from "./components/Cursor.jsx";
+import { EggProvider } from "./components/EasterEggs.jsx";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
 import Hero from "./components/Hero.jsx";
@@ -55,7 +56,8 @@ export default function App() {
   }, [loading]);
 
   return (
-    <div className="grain">
+    <EggProvider>
+    <div className="grain egg-scope">
       <Cursor />
       <AnimatePresence>
         {loading && <Preloader onDone={() => setLoading(false)} />}
@@ -78,5 +80,6 @@ export default function App() {
       </main>
       <Footer />
     </div>
+    </EggProvider>
   );
 }
