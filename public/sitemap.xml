@@ -1,28 +1,404 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.cafein.lu/</loc><lastmod>2026-07-20</lastmod><priority>1.0</priority></url>
-  <url><loc>https://www.cafein.lu/creation-site-web</loc><lastmod>2026-07-20</lastmod><priority>0.9</priority></url>
-  <url><loc>https://www.cafein.lu/seo-geo</loc><lastmod>2026-07-20</lastmod><priority>0.9</priority></url>
-  <url><loc>https://www.cafein.lu/communication</loc><lastmod>2026-07-20</lastmod><priority>0.9</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise</loc><lastmod>2026-07-20</lastmod><priority>0.9</priority></url>
-  <url><loc>https://www.cafein.lu/equipe</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/sites-vitrine</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/e-commerce</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/developpement-sur-mesure</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/seo</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/geo-visibilite-ia</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/seo-local-luxembourg</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/reseaux-sociaux</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/contenus-copywriting</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/branding-identite</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/campagnes-publicitaires</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/emailing-newsletters</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/notre-expertise/data-reporting</loc><lastmod>2026-07-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/kinteraction</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/le-101</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/efluenz</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/xucom</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/7-plis</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/realisations/agria</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.cafein.lu/lexique</loc><lastmod>2026-07-20</lastmod><priority>0.7</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.cafein.lu/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/creation-site-web</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/creation-site-web"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/creation-site-web"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/creation-site-web"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/seo-geo</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/seo-geo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/seo-geo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/seo-geo"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/communication</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/communication"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/communication"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/communication"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/equipe</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/equipe"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/equipe"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/equipe"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/lexique</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/lexique"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/lexique"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/lexique"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/sites-vitrine</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/sites-vitrine"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/sites-vitrine"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/sites-vitrine"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/e-commerce</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/e-commerce"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/e-commerce"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/e-commerce"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/developpement-sur-mesure</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/developpement-sur-mesure"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/developpement-sur-mesure"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/developpement-sur-mesure"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/seo</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/seo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/seo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/seo"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/geo-visibilite-ia</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/geo-visibilite-ia"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/geo-visibilite-ia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/geo-visibilite-ia"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/seo-local-luxembourg</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/seo-local-luxembourg"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/seo-local-luxembourg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/seo-local-luxembourg"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/reseaux-sociaux</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/reseaux-sociaux"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/reseaux-sociaux"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/reseaux-sociaux"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/contenus-copywriting</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/contenus-copywriting"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/contenus-copywriting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/contenus-copywriting"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/branding-identite</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/branding-identite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/branding-identite"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/branding-identite"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/campagnes-publicitaires</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/campagnes-publicitaires"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/campagnes-publicitaires"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/campagnes-publicitaires"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/emailing-newsletters</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/emailing-newsletters"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/emailing-newsletters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/emailing-newsletters"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/notre-expertise/data-reporting</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/data-reporting"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/data-reporting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/data-reporting"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/kinteraction</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/kinteraction"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/kinteraction"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/kinteraction"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/le-101</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/le-101"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/le-101"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/le-101"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/efluenz</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/efluenz"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/efluenz"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/efluenz"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/xucom</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/xucom"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/xucom"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/xucom"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/7-plis</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/7-plis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/7-plis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/7-plis"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/agria</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/agria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/agria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/agria"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/creation-site-web</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/creation-site-web"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/creation-site-web"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/creation-site-web"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/seo-geo</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/seo-geo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/seo-geo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/seo-geo"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/communication</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/communication"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/communication"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/communication"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/equipe</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/equipe"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/equipe"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/equipe"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/lexique</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/lexique"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/lexique"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/lexique"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/sites-vitrine</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/sites-vitrine"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/sites-vitrine"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/sites-vitrine"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/e-commerce</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/e-commerce"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/e-commerce"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/e-commerce"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/developpement-sur-mesure</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/developpement-sur-mesure"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/developpement-sur-mesure"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/developpement-sur-mesure"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/seo</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/seo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/seo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/seo"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/geo-visibilite-ia</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/geo-visibilite-ia"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/geo-visibilite-ia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/geo-visibilite-ia"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/seo-local-luxembourg</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/seo-local-luxembourg"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/seo-local-luxembourg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/seo-local-luxembourg"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/reseaux-sociaux</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/reseaux-sociaux"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/reseaux-sociaux"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/reseaux-sociaux"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/contenus-copywriting</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/contenus-copywriting"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/contenus-copywriting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/contenus-copywriting"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/branding-identite</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/branding-identite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/branding-identite"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/branding-identite"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/campagnes-publicitaires</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/campagnes-publicitaires"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/campagnes-publicitaires"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/campagnes-publicitaires"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/emailing-newsletters</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/emailing-newsletters"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/emailing-newsletters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/emailing-newsletters"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/notre-expertise/data-reporting</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/notre-expertise/data-reporting"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/notre-expertise/data-reporting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/data-reporting"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/kinteraction</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/kinteraction"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/kinteraction"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/kinteraction"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/le-101</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/le-101"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/le-101"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/le-101"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/efluenz</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/efluenz"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/efluenz"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/efluenz"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/xucom</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/xucom"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/xucom"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/xucom"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/7-plis</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/7-plis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/7-plis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/7-plis"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/agria</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/agria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/agria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/agria"/>
+    <lastmod>2026-07-20</lastmod>
+    <priority>0.7</priority>
+  </url>
 </urlset>
