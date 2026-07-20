@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 
+import { LangProvider } from "./lib/lang.jsx";
 import Cursor from "./components/Cursor.jsx";
 import { RouteCurtain, ScrollBrew } from "./components/RouteFX.jsx";
 import { EggProvider } from "./components/EasterEggs.jsx";
@@ -74,6 +75,7 @@ export default function App() {
   }, [loading]);
 
   return (
+    <LangProvider>
     <EggProvider>
     <div className="grain egg-scope">
       <Cursor />
@@ -102,5 +104,6 @@ export default function App() {
       <Footer />
     </div>
     </EggProvider>
+    </LangProvider>
   );
 }
