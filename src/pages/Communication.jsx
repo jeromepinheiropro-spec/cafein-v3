@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
+import { LeafMark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* Commentaires réels sous la publication (API /api/comments) */
@@ -42,11 +43,33 @@ function PubComments() {
     }
   }
 
-  const shown = (items || []).slice(-30);
+  const [expanded, setExpanded] = useState(false);
+  const all = items || [];
+  const shown = expanded ? all : all.slice(-3);
   return (
     <div className="mt-4 border-t border-cream/10 pt-3">
+      {all.length > 3 && !expanded && (
+        <motion.button
+          type="button"
+          whileTap={{ scale: 0.96 }}
+          onClick={() => setExpanded(true)}
+          className="mb-2 font-mono text-[11px] tracking-wide text-cream/50 hover:text-mint transition-colors"
+        >
+          Voir les {all.length} commentaires
+        </motion.button>
+      )}
+      {expanded && (
+        <motion.button
+          type="button"
+          whileTap={{ scale: 0.96 }}
+          onClick={() => setExpanded(false)}
+          className="mb-2 font-mono text-[11px] tracking-wide text-cream/50 hover:text-mint transition-colors"
+        >
+          Réduire les commentaires
+        </motion.button>
+      )}
       {shown.length > 0 && (
-        <ul className="max-h-36 overflow-y-auto space-y-2 pr-1 mb-3">
+        <ul className={`${expanded ? "max-h-52" : ""} overflow-y-auto space-y-2 pr-1 mb-3`}>
           <AnimatePresence initial={false}>
             {shown.map((c) => (
               <motion.li
@@ -107,14 +130,16 @@ function PostDeco() {
       className="rounded-2xl border-2 border-cream/20 bg-espresso-2 p-6 shadow-2xl max-w-sm ml-auto"
     >
       <div className="flex items-center gap-3">
-        <span className="grid place-items-center w-11 h-11 rounded-full bg-mint font-display font-extrabold text-ink">C</span>
+        <span className="grid place-items-center w-11 h-11 rounded-full bg-mint border-2 border-mint/50">
+          <LeafMark className="h-6 w-auto" leaf1="#F5EFE2" leaf2="#0A0F0D" />
+        </span>
         <div>
           <p className="font-display font-bold text-cream text-sm">Cafein · Agence</p>
           <p className="font-mono text-[10px] tracking-widest text-cream/40 uppercase">À l'instant</p>
         </div>
       </div>
       <p className="mt-4 text-cream/80 font-medium text-sm leading-relaxed">
-        Nouveau site en ligne pour un client luxembourgeois, propre, rapide, efficace. ☕
+        Nouveau site en ligne : propre, rapide, efficace. ☕
       </p>
       {/* visuel de la publication */}
       <div className="mt-4 rounded-xl overflow-hidden border-2 border-cream/15 relative">
