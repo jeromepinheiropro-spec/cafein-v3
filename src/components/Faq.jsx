@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel } from "../lib/ui.jsx";
 
-const FAQS = [
+export const FAQS = [
   {
     q: "Vous travaillez avec quel type d'entreprises ?",
     a: "Principalement des PME, indépendants et commerces luxembourgeois qui veulent un site professionnel et une vraie visibilité locale. Vitrine, e-commerce ou plateforme spécifique : on s'adapte à votre secteur et à votre budget.",
