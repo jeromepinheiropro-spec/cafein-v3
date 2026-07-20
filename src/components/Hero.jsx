@@ -24,8 +24,10 @@ function RotatingBadge() {
         <defs>
           <path id="circlePath" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
         </defs>
-        <text className="font-mono uppercase" fontSize="9.5" fill="#0A0F0D">
-          <textPath href="#circlePath" textLength="238" lengthAdjust="spacingAndGlyphs">agence · web · luxembourg ·</textPath>
+        {/* pas de textLength : Safari le gère mal sur textPath — l'espacement
+            est calibré pour boucler exactement sur la circonférence (27 × 8.84px) */}
+        <text className="font-mono uppercase" fontSize="9.5" letterSpacing="3.1" fill="#0A0F0D">
+          <textPath href="#circlePath">agence · web · luxembourg ·</textPath>
         </text>
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">

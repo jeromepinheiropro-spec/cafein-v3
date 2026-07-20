@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -168,26 +169,54 @@ export function EggProvider({ children }) {
     const SEQ = ["up", "up", "down", "down", "left", "right", "left", "right"];
     const INV = ["down", "down", "up", "up", "right", "left", "right", "left"];
     const STEP = 60; /* px de mouvement pour valider un geste */
-    let idxA = 0, idxB = 0, prevBest = 0;
+    let prevBest = 0;
     let ox = 0, oy = 0, active = false, lastReg = 0;
     let fadeTimer = null;
+    const buf = []; /* fenêtre glissante des 8 dernières directions */
 
+    /* longueur du plus long suffixe de buf qui est un préfixe du motif :
+       insensible aux gestes parasites qui précèdent la séquence */
+    function suffixMatch(pattern) {
+      for (let k = Math.min(buf.length, pattern.length); k > 0; k--) {
+        let ok = true;
+        for (let i = 0; i < k; i++) {
+          if (buf[buf.length - k + i] !== pattern[i]) { ok = false; break; }
+        }
+        if (ok) return k;
+      }
+      return 0;
+    }
+
+    let gaugeShown = false;
     function register(dir) {
       const now = Date.now();
-      if (lastReg && now - lastReg > 6000) { idxA = 0; idxB = 0; prevBest = 0; }
+      if (lastReg && now - lastReg > 6000) { buf.length = 0; prevBest = 0; }
       lastReg = now;
-      idxA = dir === SEQ[idxA] ? idxA + 1 : dir === SEQ[0] ? 1 : 0;
-      idxB = dir === INV[idxB] ? idxB + 1 : dir === INV[0] ? 1 : 0;
+      buf.push(dir);
+      if (buf.length > 8) buf.shift();
+      const idxA = suffixMatch(SEQ);
+      const idxB = suffixMatch(INV);
       const best = Math.max(idxA, idxB);
       if (best > prevBest) {
         try { navigator.vibrate && navigator.vibrate(best >= SEQ.length ? [60, 40, 60] : 15); } catch { /* iOS */ }
       }
       prevBest = best;
-      setSwipeProgress(best);
-      clearTimeout(fadeTimer);
-      fadeTimer = setTimeout(() => setSwipeProgress(0), 4000);
+      /* IMPORTANT (perf Safari) : pas de setState pendant le scroll ordinaire.
+         On ne touche au rendu React que lorsque la jauge doit s'afficher (≥4)
+         ou s'effacer — sinon chaque défilement re-rendrait tout le site. */
+      if (best >= 4) {
+        gaugeShown = true;
+        setSwipeProgress(best);
+        clearTimeout(fadeTimer);
+        fadeTimer = setTimeout(() => { gaugeShown = false; setSwipeProgress(0); }, 4000);
+      } else if (gaugeShown) {
+        gaugeShown = false;
+        setSwipeProgress(0);
+      }
       if (idxA === SEQ.length || idxB === SEQ.length) {
-        idxA = 0; idxB = 0; prevBest = 0;
+        buf.length = 0;
+        prevBest = 0;
+        gaugeShown = false;
         setSwipeProgress(0);
         launchKonami();
       }
@@ -234,19 +263,24 @@ export function EggProvider({ children }) {
     document.documentElement.classList.toggle("egg-decaf", decaf);
   }, [overdrive, decaf]);
 
+  /* Valeur de contexte mémoïsée : les toasts, jauges et cartes n'entraînent
+     plus de re-rendu de tous les composants consommateurs (perf Safari). */
+  const ctxValue = useMemo(
+    () => ({
+      overdrive,
+      decaf,
+      speed: overdrive ? 5 : decaf ? 0.35 : 1,
+      found,
+      collect,
+      curious,
+      toggleOverdrive,
+      toggleDecaf,
+    }),
+    [overdrive, decaf, found, collect, curious, toggleOverdrive, toggleDecaf]
+  );
+
   return (
-    <EggContext.Provider
-      value={{
-        overdrive,
-        decaf,
-        speed: overdrive ? 5 : decaf ? 0.35 : 1,
-        found,
-        collect,
-        curious,
-        toggleOverdrive,
-        toggleDecaf,
-      }}
-    >
+    <EggContext.Provider value={ctxValue}>
       {/* key = vitesse : au changement de mode, toutes les boucles repartent à la nouvelle allure */}
       <React.Fragment key={overdrive ? "over" : decaf ? "decaf" : "normal"}>{children}</React.Fragment>
       <EggLayer
