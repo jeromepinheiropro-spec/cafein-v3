@@ -8,6 +8,7 @@ import { CountUp } from "../components/Stats.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import { EXPERTISES, getExpertise, Doodle } from "../lib/expertises.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 /* ── Déco du hero : icône géante + grains en orbite ───────────── */
 function OrbitDeco({ e }) {
@@ -92,24 +93,27 @@ function FeatureCard({ text, i }) {
 
 export default function ExpertiseDetail() {
   const { slug } = useParams();
-  const e = getExpertise(slug);
+  const { lang } = useLang();
+  const t = useT();
+  const eFr = getExpertise(slug);
+  const e = getExpertise(slug, lang);
   if (!e) return <Navigate to="/notre-expertise" replace />;
-  const idx = EXPERTISES.indexOf(e);
-  const related = (e.related || []).map(getExpertise).filter(Boolean);
+  const idx = EXPERTISES.indexOf(eFr);
+  const related = (e.related || []).map((s) => getExpertise(s, lang)).filter(Boolean);
 
   return (
     <>
       <Seo
-        title={`${e.title} au Luxembourg | Cafein`}
-        description={e.subtitle}
-        path={`/notre-expertise/${e.slug}`}
+        title={`${eFr.title} au Luxembourg | Cafein`}
+        description={eFr.subtitle}
+        path={`/notre-expertise/${eFr.slug}`}
         jsonLd={[
-          serviceLd(e.title, e.subtitle, `/notre-expertise/${e.slug}`),
-          faqLd(e.faq),
+          serviceLd(eFr.title, eFr.subtitle, `/notre-expertise/${eFr.slug}`),
+          faqLd(eFr.faq),
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "Notre expertise", path: "/notre-expertise" },
-            { name: e.title, path: `/notre-expertise/${e.slug}` },
+            { name: eFr.title, path: `/notre-expertise/${eFr.slug}` },
           ]),
         ]}
       />
@@ -133,7 +137,15 @@ export default function ExpertiseDetail() {
             viewport={{ once: true, margin: "-80px" }}
             className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight"
           >
-            Concrètement, <span className="squiggle">on s'occupe de tout</span>
+            {lang === "en" ? (
+              <>
+                In practice, <span className="squiggle">we handle everything</span>
+              </>
+            ) : (
+              <>
+                Concrètement, <span className="squiggle">on s'occupe de tout</span>
+              </>
+            )}
           </motion.h2>
           <ul className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5 list-none">
             {e.features.map((f, i) => (
@@ -167,7 +179,7 @@ export default function ExpertiseDetail() {
         </div>
       </section>
 
-      <Steps title="Comment on s'y prend" steps={e.steps} />
+      <Steps title={t("Comment on s'y prend", "How we do it")} steps={e.steps} />
 
       <MiniFaq items={e.faq} />
 
@@ -180,7 +192,7 @@ export default function ExpertiseDetail() {
             viewport={{ once: true }}
             className="font-mono text-xs md:text-sm tracking-[0.35em] uppercase text-mint-dark"
           >
-            ( Ça se marie bien avec )
+            {t("( Ça se marie bien avec )", "( Pairs well with )")}
           </motion.p>
           <div className="mt-8 grid sm:grid-cols-3 gap-5">
             {related.map((r, i) => (
@@ -194,7 +206,7 @@ export default function ExpertiseDetail() {
               >
                 <Link
                   to={`/notre-expertise/${r.slug}`}
-                  data-cursor="Découvrir"
+                  data-cursor={t("Découvrir", "Discover")}
                   className="group flex items-center gap-4 rounded-2xl bg-white border-[3px] border-ink p-5 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[8px_8px_0_#1FCE8A] transition-shadow"
                 >
                   <span className={`grid place-items-center w-14 h-14 rounded-xl border-2 border-ink text-ink shrink-0 ${r.bg || "bg-cream-2"}`}>
@@ -218,16 +230,19 @@ export default function ExpertiseDetail() {
               to="/notre-expertise"
               className="inline-flex items-center gap-2 font-display font-bold text-mint-dark hover:gap-3 transition-all"
             >
-              ← Toutes nos expertises
+              {t("← Toutes nos expertises", "← All our expertise")}
             </Link>
           </motion.div>
         </div>
       </section>
 
       <CtaBand
-        title="On en parle autour d'un café ?"
-        sub="Premier échange gratuit, conseils francs, devis sans engagement."
-        label={e.cta || "Parlons-en"}
+        title={t("On en parle autour d'un café ?", "Shall we chat over a coffee?")}
+        sub={t(
+          "Premier échange gratuit, conseils francs, devis sans engagement.",
+          "Free first chat, honest advice, no-strings quote.",
+        )}
+        label={e.cta || t("Parlons-en", "Let's talk")}
       />
     </>
   );

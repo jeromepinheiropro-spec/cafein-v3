@@ -5,10 +5,12 @@ import Marquee from "../components/Marquee.jsx";
 import { Spark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
+import { useT, useLang } from "../lib/lang.jsx";
 
 /* Mockup navigateur animé : le site se construit en boucle sous vos yeux */
 function BrowserDeco() {
   const eggSpeed = useEggSpeed();
+  const t = useT();
   const D = 8 / eggSpeed; // durée d'un cycle complet
 
   /* aide : élément qui "pop" à t0, reste, puis disparaît pour la boucle */
@@ -43,7 +45,7 @@ function BrowserDeco() {
               transition={{ duration: D, times: [0.02, 0.14, 0.95, 1], repeat: Infinity, ease: "linear" }}
               className="inline-block font-mono text-[10px] tracking-widest text-mint uppercase"
             >
-              https://votre-site.lu
+              {t("https://votre-site.lu", "https://your-site.lu")}
             </motion.span>
           </div>
         </div>
@@ -93,7 +95,7 @@ function BrowserDeco() {
         transition={{ duration: D, times: [0.7, 0.74, 0.92, 0.97], repeat: Infinity, ease: "easeOut" }}
         className="absolute -top-5 -right-3 rounded-full bg-sun border-[3px] border-ink px-4 py-2 font-display font-extrabold text-ink text-sm shadow-[4px_4px_0_#0A0F0D]"
       >
-        EN LIGNE !
+        {t("EN LIGNE !", "LIVE!")}
       </motion.div>
 
       {/* étincelles au moment du tampon */}
@@ -114,7 +116,7 @@ function BrowserDeco() {
       {/* chips flottantes autour de la fenêtre */}
       {[
         { label: "Responsive", cls: "-left-4 -bottom-5 bg-mint", delay: 0 },
-        { label: "Rapide", cls: "left-28 -bottom-8 bg-caramel", delay: 0.6 },
+        { label: t("Rapide", "Fast"), cls: "left-28 -bottom-8 bg-caramel", delay: 0.6 },
         { label: "SEO ready", cls: "-right-3 -bottom-6 bg-cream-2", delay: 1.2 },
       ].map((c) => (
         <motion.span
@@ -135,71 +137,144 @@ function BrowserDeco() {
   );
 }
 
-const TYPES = [
-  { n: "01", t: "Site vitrine", d: "Restaurants, cabinets, artisans : votre activité présentée avec soin." },
-  { n: "02", t: "E-commerce", d: "Vendez en ligne avec une boutique rapide et rassurante." },
-  { n: "03", t: "Plateforme", d: "SaaS, portails métier, outils internes : du sur mesure qui scale." },
-];
+const TYPES = {
+  fr: [
+    { n: "01", t: "Site vitrine", d: "Restaurants, cabinets, artisans : votre activité présentée avec soin." },
+    { n: "02", t: "E-commerce", d: "Vendez en ligne avec une boutique rapide et rassurante." },
+    { n: "03", t: "Plateforme", d: "SaaS, portails métier, outils internes : du sur mesure qui scale." },
+  ],
+  en: [
+    { n: "01", t: "Showcase website", d: "Restaurants, practices, artisans: your business presented with care." },
+    { n: "02", t: "E-commerce", d: "Sell online with a fast, reassuring store." },
+    { n: "03", t: "Platform", d: "SaaS, business portals, internal tools: custom builds that scale." },
+  ],
+};
 
 const WP = {
-  tag: "Rapide à lancer",
-  title: "WordPress",
-  desc: "Un site professionnel, simple à mettre à jour vous-même, sur la plateforme la plus utilisée au monde.",
-  points: [
-    "Design sur mesure, pas de template générique",
-    "Interface d'édition simple pour votre contenu",
-    "Hébergement et maintenance possibles",
-    "Idéal pour sites vitrine et blogs",
-  ],
-  bg: "bg-mint",
+  fr: {
+    tag: "Rapide à lancer",
+    title: "WordPress",
+    desc: "Un site professionnel, simple à mettre à jour vous-même, sur la plateforme la plus utilisée au monde.",
+    points: [
+      "Design sur mesure, pas de template générique",
+      "Interface d'édition simple pour votre contenu",
+      "Hébergement et maintenance possibles",
+      "Idéal pour sites vitrine et blogs",
+    ],
+    bg: "bg-mint",
+  },
+  en: {
+    tag: "Quick to launch",
+    title: "WordPress",
+    desc: "A professional website, easy to update yourself, on the world's most widely used platform.",
+    points: [
+      "Custom design, no generic template",
+      "Simple editing interface for your content",
+      "Hosting and maintenance available",
+      "Ideal for showcase sites and blogs",
+    ],
+    bg: "bg-mint",
+  },
 };
 const SM = {
-  tag: "100% personnalisé",
-  title: "Sur mesure",
-  desc: "Un développement entièrement sur mesure pour les projets qui ont besoin de performance, de fonctionnalités spécifiques ou d'une scalabilité particulière.",
-  points: [
-    "Performance et vitesse de chargement optimales",
-    "Fonctionnalités et intégrations spécifiques à votre métier",
-    "Architecture pensée pour grandir avec votre activité",
-    "Idéal pour SaaS, plateformes et projets complexes",
-  ],
-  bg: "bg-caramel",
+  fr: {
+    tag: "100% personnalisé",
+    title: "Sur mesure",
+    desc: "Un développement entièrement sur mesure pour les projets qui ont besoin de performance, de fonctionnalités spécifiques ou d'une scalabilité particulière.",
+    points: [
+      "Performance et vitesse de chargement optimales",
+      "Fonctionnalités et intégrations spécifiques à votre métier",
+      "Architecture pensée pour grandir avec votre activité",
+      "Idéal pour SaaS, plateformes et projets complexes",
+    ],
+    bg: "bg-caramel",
+  },
+  en: {
+    tag: "100% custom",
+    title: "Custom build",
+    desc: "Fully custom development for projects that call for performance, specific features or a particular kind of scalability.",
+    points: [
+      "Optimal performance and loading speed",
+      "Features and integrations specific to your business",
+      "An architecture built to grow with your activity",
+      "Ideal for SaaS, platforms and complex projects",
+    ],
+    bg: "bg-caramel",
+  },
 };
 
-const INCLUS = [
-  "Design responsive (mobile, tablette, desktop)",
-  "Structure SEO optimisée dès le départ",
-  "Conformité RGPD de base",
-  "Vitesse de chargement optimisée",
-  "Formation à la prise en main",
-  "Un mois de support après lancement",
-];
+const INCLUS = {
+  fr: [
+    "Design responsive (mobile, tablette, desktop)",
+    "Structure SEO optimisée dès le départ",
+    "Conformité RGPD de base",
+    "Vitesse de chargement optimisée",
+    "Formation à la prise en main",
+    "Un mois de support après lancement",
+  ],
+  en: [
+    "Responsive design (mobile, tablet, desktop)",
+    "SEO-optimised structure from day one",
+    "Basic GDPR compliance",
+    "Optimised loading speed",
+    "Hands-on training",
+    "One month of support after launch",
+  ],
+};
 
-const COMPARE = [
-  ["Budget", "Plus accessible", "Plus élevé"],
-  ["Délai de livraison", "2 à 4 semaines", "4 à 10 semaines"],
-  ["Autonomie d'édition", "Très simple", "Selon intégration CMS"],
-  ["Performance", "Bonne", "Excellente"],
-  ["Flexibilité", "Standard", "Illimitée"],
-  ["Idéal pour", "Vitrines, blogs", "SaaS, plateformes"],
-];
+const COMPARE = {
+  fr: [
+    ["Budget", "Plus accessible", "Plus élevé"],
+    ["Délai de livraison", "2 à 4 semaines", "4 à 10 semaines"],
+    ["Autonomie d'édition", "Très simple", "Selon intégration CMS"],
+    ["Performance", "Bonne", "Excellente"],
+    ["Flexibilité", "Standard", "Illimitée"],
+    ["Idéal pour", "Vitrines, blogs", "SaaS, plateformes"],
+  ],
+  en: [
+    ["Budget", "More affordable", "Higher"],
+    ["Delivery time", "2 to 4 weeks", "4 to 10 weeks"],
+    ["Editing autonomy", "Very simple", "Depends on CMS integration"],
+    ["Performance", "Good", "Excellent"],
+    ["Flexibility", "Standard", "Unlimited"],
+    ["Ideal for", "Showcase sites, blogs", "SaaS, platforms"],
+  ],
+};
 
-const FAQ = [
-  {
-    q: "Puis-je modifier le contenu moi-même après livraison ?",
-    a: "Oui. Sur WordPress, vous disposez d'une interface d'édition simple et d'une formation à la prise en main. Sur un développement sur mesure, un CMS peut être intégré selon vos besoins d'autonomie.",
-  },
-  {
-    q: "La maintenance est-elle incluse ?",
-    a: "Un mois de support est inclus après chaque lancement. Ensuite, on propose des formules de maintenance (mises à jour, sauvegardes, sécurité, petites évolutions) adaptées à votre budget, sans engagement forcé.",
-  },
-  {
-    q: "Vous intervenez aussi sur des sites existants ?",
-    a: "Oui : refonte complète, optimisation des performances, corrections SEO ou simple coup de frais. On commence par un audit rapide de l'existant pour vous dire honnêtement ce qui mérite d'être gardé.",
-  },
-];
+const FAQ = {
+  fr: [
+    {
+      q: "Puis-je modifier le contenu moi-même après livraison ?",
+      a: "Oui. Sur WordPress, vous disposez d'une interface d'édition simple et d'une formation à la prise en main. Sur un développement sur mesure, un CMS peut être intégré selon vos besoins d'autonomie.",
+    },
+    {
+      q: "La maintenance est-elle incluse ?",
+      a: "Un mois de support est inclus après chaque lancement. Ensuite, on propose des formules de maintenance (mises à jour, sauvegardes, sécurité, petites évolutions) adaptées à votre budget, sans engagement forcé.",
+    },
+    {
+      q: "Vous intervenez aussi sur des sites existants ?",
+      a: "Oui : refonte complète, optimisation des performances, corrections SEO ou simple coup de frais. On commence par un audit rapide de l'existant pour vous dire honnêtement ce qui mérite d'être gardé.",
+    },
+  ],
+  en: [
+    {
+      q: "Can I edit the content myself after delivery?",
+      a: "Yes. On WordPress, you get a simple editing interface and hands-on training. On a custom build, a CMS can be integrated depending on how much autonomy you need.",
+    },
+    {
+      q: "Is maintenance included?",
+      a: "One month of support is included after every launch. After that, we offer maintenance plans (updates, backups, security, small improvements) tailored to your budget, with no forced commitment.",
+    },
+    {
+      q: "Do you also work on existing websites?",
+      a: "Yes: full redesign, performance optimisation, SEO fixes or a simple refresh. We start with a quick audit of what's already there to tell you honestly what's worth keeping.",
+    },
+  ],
+};
 
 export default function CreationSite() {
+  const { lang } = useLang();
+  const t = useT();
   return (
     <>
       <Seo
@@ -208,7 +283,7 @@ export default function CreationSite() {
         path="/creation-site-web"
         jsonLd={[
           serviceLd("Création de site internet", "Sites vitrine, e-commerce et plateformes sur mesure au Luxembourg.", "/creation-site-web"),
-          faqLd(FAQ),
+          faqLd(FAQ.fr),
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "Création de site web", path: "/creation-site-web" },
@@ -218,13 +293,22 @@ export default function CreationSite() {
       <PageHero
         n="01"
         tag="Sites"
-        title={<>Un site qui vous ressemble, <span className="text-mint-dark">pensé pour convertir</span></>}
-        subtitle="Que vous ayez besoin d'un site vitrine, d'une boutique en ligne ou d'une plateforme sur mesure, Cafein conçoit des sites rapides, propres et pensés pour transformer vos visiteurs en clients, pour les entreprises basées au Luxembourg comme à l'international."
+        title={
+          lang === "en" ? (
+            <>A website that looks like you, <span className="text-mint-dark">built to convert</span></>
+          ) : (
+            <>Un site qui vous ressemble, <span className="text-mint-dark">pensé pour convertir</span></>
+          )
+        }
+        subtitle={t(
+          "Que vous ayez besoin d'un site vitrine, d'une boutique en ligne ou d'une plateforme sur mesure, Cafein conçoit des sites rapides, propres et pensés pour transformer vos visiteurs en clients, pour les entreprises basées au Luxembourg comme à l'international.",
+          "Whether you need a showcase site, an online store or a custom platform, Cafein designs fast, clean websites built to turn your visitors into clients, for businesses based in Luxembourg and abroad."
+        )}
       >
         <BrowserDeco />
       </PageHero>
 
-      <Marquee words={["Vitrine", "E-commerce", "Plateforme", "WordPress", "Sur mesure"]} />
+      <Marquee words={lang === "en" ? ["Showcase", "E-commerce", "Platform", "WordPress", "Custom"] : ["Vitrine", "E-commerce", "Plateforme", "WordPress", "Sur mesure"]} />
 
       {/* Types de projets */}
       <section className="bg-cream py-20 md:py-28">
@@ -235,10 +319,10 @@ export default function CreationSite() {
             viewport={{ once: true, margin: "-80px" }}
             className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight mb-12"
           >
-            Pour chaque type de projet
+            {t("Pour chaque type de projet", "For every type of project")}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {TYPES.map((c, i) => (
+            {TYPES[lang].map((c, i) => (
               <motion.div
                 key={c.n}
                 initial={{ opacity: 0, y: 40, rotate: i % 2 ? 1.5 : -1.5 }}
@@ -260,7 +344,7 @@ export default function CreationSite() {
             viewport={{ once: true }}
             className="mt-8 font-mono text-xs tracking-[0.3em] uppercase text-mint-dark flex items-center gap-2"
           >
-            <Spark className="w-4 h-4" /> Et le vôtre ?
+            <Spark className="w-4 h-4" /> {t("Et le vôtre ?", "And yours?")}
           </motion.p>
         </div>
       </section>
@@ -268,7 +352,7 @@ export default function CreationSite() {
       {/* WordPress vs Sur mesure */}
       <section className="bg-espresso py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-8">
-          {[WP, SM].map((c, i) => (
+          {[WP[lang], SM[lang]].map((c, i) => (
             <motion.div
               key={c.title}
               initial={{ opacity: 0, y: 50 }}
@@ -309,11 +393,11 @@ export default function CreationSite() {
                 <tr className="border-b-2 border-cream/15 font-mono text-[11px] tracking-[0.25em] uppercase text-cream/50">
                   <th className="px-6 py-4"> </th>
                   <th className="px-6 py-4 text-mint">WordPress</th>
-                  <th className="px-6 py-4 text-caramel">Sur mesure</th>
+                  <th className="px-6 py-4 text-caramel">{t("Sur mesure", "Custom")}</th>
                 </tr>
               </thead>
               <tbody>
-                {COMPARE.map((row) => (
+                {COMPARE[lang].map((row) => (
                   <tr key={row[0]} className="border-b border-cream/10 last:border-0">
                     <td className="px-6 py-4 font-display font-bold text-cream">{row[0]}</td>
                     <td className="px-6 py-4 text-cream/70 font-medium">{row[1]}</td>
@@ -335,10 +419,14 @@ export default function CreationSite() {
             viewport={{ once: true, margin: "-80px" }}
             className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight mb-12"
           >
-            Inclus dans <span className="squiggle">chaque projet</span>
+            {lang === "en" ? (
+              <>Included in <span className="squiggle">every project</span></>
+            ) : (
+              <>Inclus dans <span className="squiggle">chaque projet</span></>
+            )}
           </motion.h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {INCLUS.map((p, i) => (
+            {INCLUS[lang].map((p, i) => (
               <motion.div
                 key={p}
                 initial={{ opacity: 0, x: -20 }}
@@ -361,32 +449,58 @@ export default function CreationSite() {
 
       <Steps
         dark
-        title="Comment on travaille"
-        steps={[
-          { n: "01", title: "Découverte", desc: "On échange sur vos objectifs, votre cible et vos contraintes pour cadrer le projet." },
-          { n: "02", title: "Design", desc: "Maquettes et parcours utilisateur, alignés avec votre identité de marque." },
-          { n: "03", title: "Développement", desc: "Intégration et développement, avec des points d'étape réguliers." },
-          { n: "04", title: "Lancement", desc: "Mise en ligne, puis accompagnement pour le référencement et la suite." },
-        ]}
+        title={t("Comment on travaille", "How we work")}
+        steps={
+          lang === "en"
+            ? [
+                { n: "01", title: "Discovery", desc: "We discuss your goals, your audience and your constraints to frame the project." },
+                { n: "02", title: "Design", desc: "Mockups and user journeys, aligned with your brand identity." },
+                { n: "03", title: "Development", desc: "Integration and development, with regular check-ins along the way." },
+                { n: "04", title: "Launch", desc: "Go-live, then ongoing support for search visibility and what comes next." },
+              ]
+            : [
+                { n: "01", title: "Découverte", desc: "On échange sur vos objectifs, votre cible et vos contraintes pour cadrer le projet." },
+                { n: "02", title: "Design", desc: "Maquettes et parcours utilisateur, alignés avec votre identité de marque." },
+                { n: "03", title: "Développement", desc: "Intégration et développement, avec des points d'étape réguliers." },
+                { n: "04", title: "Lancement", desc: "Mise en ligne, puis accompagnement pour le référencement et la suite." },
+              ]
+        }
       />
 
-      <MiniFaq items={FAQ} />
+      <MiniFaq items={FAQ[lang]} />
 
       <Edito
-        kicker="Créer un site au Luxembourg"
-        title={<>Un bon site, c'est un commercial <span className="squiggle">qui ne dort jamais</span></>}
-        paragraphs={[
-          <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact, que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,
-          <>Chez Cafein, chaque projet démarre avec les fondations qui comptent pour Google : structure claire, vitesse de chargement, version mobile impeccable et référencement naturel intégré dès la conception. Résultat : un site beau à visiter, simple à mettre à jour, et surtout facile à trouver. Le café est offert, le devis aussi.</>,
-        ]}
+        kicker={t("Créer un site au Luxembourg", "Building a website in Luxembourg")}
+        title={
+          lang === "en" ? (
+            <>A good website is a salesperson <span className="squiggle">that never sleeps</span></>
+          ) : (
+            <>Un bon site, c'est un commercial <span className="squiggle">qui ne dort jamais</span></>
+          )
+        }
+        paragraphs={
+          lang === "en"
+            ? [
+                <>Building a website in Luxembourg isn't just about "being online": it's about giving your clients a reason to choose you. A well-designed showcase site presents your business, inspires trust and turns visits into enquiries, whether you're an artisan, a freelancer, a firm or an SME in the Greater Region.</>,
+                <>At Cafein, every project starts with the foundations Google cares about: clear structure, fast loading, a flawless mobile version and organic search optimisation baked in from the design stage. The result: a site that's a pleasure to visit, simple to update, and above all easy to find. The coffee is on us — so is the quote.</>,
+              ]
+            : [
+                <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact, que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,
+                <>Chez Cafein, chaque projet démarre avec les fondations qui comptent pour Google : structure claire, vitesse de chargement, version mobile impeccable et référencement naturel intégré dès la conception. Résultat : un site beau à visiter, simple à mettre à jour, et surtout facile à trouver. Le café est offert, le devis aussi.</>,
+              ]
+        }
         links={[
-          { to: "/notre-expertise/sites-vitrine", label: "Sites vitrine" },
+          { to: "/notre-expertise/sites-vitrine", label: t("Sites vitrine", "Showcase websites") },
           { to: "/notre-expertise/e-commerce", label: "E-commerce" },
-          { to: "/seo-geo", label: "Référencement SEO & GEO" },
+          { to: "/seo-geo", label: t("Référencement SEO & GEO", "SEO & GEO") },
         ]}
       />
 
-      <CtaBand title="Un projet de site web en tête ?" sub="Discutons-en, sans engagement." label="Demander un devis" />
+      <CtaBand
+        title={t("Un projet de site web en tête ?", "Got a website project in mind?")}
+        sub={t("Discutons-en, sans engagement.", "Let's talk it over, no strings attached.")}
+        label={t("Demander un devis", "Request a quote")}
+      />
     </>
   );
 }

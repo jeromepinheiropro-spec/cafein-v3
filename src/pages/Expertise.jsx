@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
-import { EXPERTISES, Doodle } from "../lib/expertises.jsx";
+import { EXPERTISES, getExpertises, Doodle } from "../lib/expertises.jsx";
 import Seo, { SITE, breadcrumbLd } from "../lib/seo.jsx";
+import { useT, useLang } from "../lib/lang.jsx";
 
 /* La liste des 12 expertises en données structurées */
 const LIST_LD = {
@@ -25,6 +26,7 @@ const LIST_LD = {
   chaque carte mène à sa page dédiée.
 */
 function ExpertiseCard({ e, i }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: i % 2 ? 1.5 : -1.5 }}
@@ -36,7 +38,7 @@ function ExpertiseCard({ e, i }) {
     >
       <Link
         to={`/notre-expertise/${e.slug}`}
-        data-cursor="Découvrir"
+        data-cursor={t("Découvrir", "Discover")}
         className="group flex flex-col rounded-3xl bg-white border-[3px] border-ink p-7 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[9px_9px_0_#1FCE8A] transition-shadow text-left h-full"
       >
         <div className="flex items-start justify-between gap-4">
@@ -56,7 +58,7 @@ function ExpertiseCard({ e, i }) {
           {e.desc}
         </p>
         <span className="mt-4 inline-flex items-center gap-1.5 font-display font-bold text-sm text-mint-dark group-hover:gap-2.5 transition-all">
-          En savoir plus <ArrowUpRight className="w-4 h-4" />
+          {t("En savoir plus", "Learn more")} <ArrowUpRight className="w-4 h-4" />
         </span>
       </Link>
     </motion.div>
@@ -64,6 +66,9 @@ function ExpertiseCard({ e, i }) {
 }
 
 export default function Expertise() {
+  const t = useT();
+  const { lang } = useLang();
+  const expertises = getExpertises(lang);
   return (
     <>
       <Seo
@@ -80,13 +85,22 @@ export default function Expertise() {
       />
       <PageHero
         n="✦"
-        tag="Savoir-faire"
+        tag={t("Savoir-faire", "Know-how")}
         title={
-          <>
-            Une expertise complète, <span className="text-mint-dark">servie bien serrée</span>
-          </>
+          lang === "en" ? (
+            <>
+              Complete expertise, <span className="text-mint-dark">served nice and strong</span>
+            </>
+          ) : (
+            <>
+              Une expertise complète, <span className="text-mint-dark">servie bien serrée</span>
+            </>
+          )
         }
-        subtitle="Des années d'expérience réunies autour d'une même tasse : sites web, visibilité, communication et data. Douze savoir-faire complémentaires, un seul interlocuteur, au Luxembourg et dans la Grande Région."
+        subtitle={t(
+          "Des années d'expérience réunies autour d'une même tasse : sites web, visibilité, communication et data. Douze savoir-faire complémentaires, un seul interlocuteur, au Luxembourg et dans la Grande Région.",
+          "Years of experience gathered around a single cup: websites, visibility, communication and data. Twelve complementary skills, one single contact, in Luxembourg and the Greater Region.",
+        )}
       >
         <div className="relative select-none" aria-hidden>
           {/* pile de tasses façon autocollants */}
@@ -99,7 +113,7 @@ export default function Expertise() {
               ))}
             </div>
             <p className="mt-6 font-mono text-[10px] tracking-[0.3em] uppercase text-cream/50 text-center">
-              12 expertises · 1 interlocuteur
+              {t("12 expertises · 1 interlocuteur", "12 areas of expertise · 1 contact")}
             </p>
           </div>
           <motion.div
@@ -112,7 +126,13 @@ export default function Expertise() {
         </div>
       </PageHero>
 
-      <Marquee words={["Sites web", "SEO", "GEO", "Social media", "Contenus", "Data"]} />
+      <Marquee
+        words={
+          lang === "en"
+            ? ["Websites", "SEO", "GEO", "Social media", "Content", "Data"]
+            : ["Sites web", "SEO", "GEO", "Social media", "Contenus", "Data"]
+        }
+      />
 
       {/* Grille des 12 expertises */}
       <section className="bg-cream py-20 md:py-28">
@@ -123,7 +143,15 @@ export default function Expertise() {
             viewport={{ once: true, margin: "-80px" }}
             className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight"
           >
-            Tout ce qu'on sait <span className="squiggle">faire</span>
+            {lang === "en" ? (
+              <>
+                Everything we <span className="squiggle">do</span>
+              </>
+            ) : (
+              <>
+                Tout ce qu'on sait <span className="squiggle">faire</span>
+              </>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -132,11 +160,14 @@ export default function Expertise() {
             transition={{ delay: 0.15 }}
             className="mt-4 text-lg text-ink/70 font-medium max-w-2xl"
           >
-            Chaque expertise a sa page dédiée, cliquez, explorez, c'est ensemble qu'elles donnent le meilleur mélange.
+            {t(
+              "Chaque expertise a sa page dédiée, cliquez, explorez, c'est ensemble qu'elles donnent le meilleur mélange.",
+              "Each area of expertise has its own dedicated page, click, explore, together they make the best blend.",
+            )}
           </motion.p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EXPERTISES.map((e, i) => (
+            {expertises.map((e, i) => (
               <ExpertiseCard key={e.slug} e={e} i={i} />
             ))}
           </div>
@@ -147,7 +178,7 @@ export default function Expertise() {
             viewport={{ once: true }}
             className="mt-10 font-mono text-xs tracking-[0.3em] uppercase text-mint-dark flex items-center gap-2"
           >
-            <Spark className="w-4 h-4" /> Il manque la vôtre ? Parlons-en.
+            <Spark className="w-4 h-4" /> {t("Il manque la vôtre ? Parlons-en.", "Missing yours? Let's talk.")}
           </motion.p>
         </div>
       </section>
@@ -156,9 +187,27 @@ export default function Expertise() {
       <section className="bg-espresso py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6 md:px-10 grid sm:grid-cols-3 gap-8 text-center">
           {[
-            { big: "1", label: "interlocuteur unique, du premier appel au suivi" },
-            { big: "3", label: "métiers complémentaires : site, visibilité, communication" },
-            { big: "0", label: "jargon, on vous explique tout, simplement" },
+            {
+              big: "1",
+              label: t(
+                "interlocuteur unique, du premier appel au suivi",
+                "single contact, from the first call to follow-up",
+              ),
+            },
+            {
+              big: "3",
+              label: t(
+                "métiers complémentaires : site, visibilité, communication",
+                "complementary crafts: website, visibility, communication",
+              ),
+            },
+            {
+              big: "0",
+              label: t(
+                "jargon, on vous explique tout, simplement",
+                "jargon, we explain everything, simply",
+              ),
+            },
           ].map((s, i) => (
             <motion.div
               key={s.label}
@@ -175,22 +224,35 @@ export default function Expertise() {
       </section>
 
       <Edito
-        kicker="Une agence, tout le digital"
-        title={<>Douze expertises, <span className="squiggle">un seul café à payer</span></>}
+        kicker={t("Une agence, tout le digital", "One agency, all things digital")}
+        title={
+          lang === "en" ? (
+            <>Twelve areas of expertise, <span className="squiggle">just one coffee to pay for</span></>
+          ) : (
+            <>Douze expertises, <span className="squiggle">un seul café à payer</span></>
+          )
+        }
         paragraphs={[
-          <>Faire appel à une agence digitale au Luxembourg qui réunit création de sites, référencement et communication, c'est éviter le grand écart entre trois prestataires qui ne se parlent pas. Votre site nourrit votre SEO, vos contenus alimentent vos réseaux, vos données guident les décisions : tout se tient, et tout est sous le même toit.</>,
+          lang === "en" ? (
+            <>Choosing a digital agency in Luxembourg that brings together website creation, SEO and communication means avoiding the split between three providers who never talk to each other. Your website feeds your SEO, your content fuels your social media, your data guides your decisions: it all holds together, and it's all under the same roof.</>
+          ) : (
+            <>Faire appel à une agence digitale au Luxembourg qui réunit création de sites, référencement et communication, c'est éviter le grand écart entre trois prestataires qui ne se parlent pas. Votre site nourrit votre SEO, vos contenus alimentent vos réseaux, vos données guident les décisions : tout se tient, et tout est sous le même toit.</>
+          ),
         ]}
         links={[
-          { to: "/creation-site-web", label: "Création de site" },
+          { to: "/creation-site-web", label: t("Création de site", "Website creation") },
           { to: "/seo-geo", label: "SEO & GEO" },
-          { to: "/communication", label: "Communication" },
+          { to: "/communication", label: t("Communication", "Communication") },
         ]}
       />
 
       <CtaBand
-        title="Une idée ? On a l'expertise qui va avec."
-        sub="Racontez-nous votre projet autour d'un café, devis gratuit, sans engagement."
-        label="Parlons-en"
+        title={t("Une idée ? On a l'expertise qui va avec.", "Got an idea? We've got the expertise to match.")}
+        sub={t(
+          "Racontez-nous votre projet autour d'un café, devis gratuit, sans engagement.",
+          "Tell us about your project over a coffee, free quote, no strings attached.",
+        )}
+        label={t("Parlons-en", "Let's talk")}
       />
     </>
   );

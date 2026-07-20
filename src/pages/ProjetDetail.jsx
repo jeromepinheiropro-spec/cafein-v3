@@ -9,6 +9,7 @@ import { useEggSpeed } from "../components/EasterEggs.jsx";
 import { PROJETS, getProjet } from "../lib/projets.jsx";
 import { getExpertise, Doodle } from "../lib/expertises.jsx";
 import Seo, { SITE, breadcrumbLd } from "../lib/seo.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 /* ── Visuel du hero : capture dans une fenêtre cartoon ────────── */
 function ProjetVisual({ p }) {
@@ -88,34 +89,37 @@ function DoneCard({ text, i }) {
 
 export default function ProjetDetail() {
   const { slug } = useParams();
-  const p = getProjet(slug);
+  const { lang } = useLang();
+  const t = useT();
+  const p = getProjet(slug, lang);
+  const pFr = getProjet(slug);
   if (!p) return <Navigate to="/" replace />;
-  const related = (p.related || []).map(getExpertise).filter(Boolean);
+  const related = (p.related || []).map((s) => getExpertise(s, lang)).filter(Boolean);
 
   return (
     <>
       <Seo
-        title={`${p.title} : réalisation ${p.tags.toLowerCase()} | Cafein`}
-        description={`${p.client} Découvrez ce que notre groupe a réalisé : ${p.tags.toLowerCase()}.`}
-        path={`/realisations/${p.slug}`}
+        title={`${pFr.title} : réalisation ${pFr.tags.toLowerCase()} | Cafein`}
+        description={`${pFr.client} Découvrez ce que notre groupe a réalisé : ${pFr.tags.toLowerCase()}.`}
+        path={`/realisations/${pFr.slug}`}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "CreativeWork",
-            name: `Projet ${p.title}`,
-            about: p.tags,
-            url: `${SITE}/realisations/${p.slug}`,
-            dateCreated: p.year,
+            name: `Projet ${pFr.title}`,
+            about: pFr.tags,
+            url: `${SITE}/realisations/${pFr.slug}`,
+            dateCreated: pFr.year,
             author: { "@id": SITE + "/#cafein" },
           },
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "Réalisations", path: "/#realisations" },
-            { name: p.title, path: `/realisations/${p.slug}` },
+            { name: pFr.title, path: `/realisations/${pFr.slug}` },
           ]),
         ]}
       />
-      <PageHero n={p.n} tag={`Projet · ${p.year}`} title={p.tagline} subtitle={p.client}>
+      <PageHero n={p.n} tag={`${t("Projet", "Project")} · ${p.year}`} title={p.tagline} subtitle={p.client}>
         <ProjetVisual p={p} />
       </PageHero>
 
@@ -132,7 +136,7 @@ export default function ProjetDetail() {
                 viewport={{ once: true }}
                 className="font-mono text-xs md:text-sm tracking-[0.35em] uppercase text-mint-dark flex items-center gap-2"
               >
-                <Spark className="w-4 h-4" /> La mission
+                <Spark className="w-4 h-4" /> {t("La mission", "The mission")}
               </motion.p>
               <motion.h2
                 initial={{ opacity: 0, y: 30 }}
@@ -140,7 +144,11 @@ export default function ProjetDetail() {
                 viewport={{ once: true, margin: "-80px" }}
                 className="mt-4 font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight"
               >
-                Ce qu'on a <span className="squiggle">fait</span>
+                {lang === "en" ? (
+                  <>What we <span className="squiggle">did</span></>
+                ) : (
+                  <>Ce qu'on a <span className="squiggle">fait</span></>
+                )}
               </motion.h2>
               <div className="mt-6 space-y-5">
                 {p.mission.map((m, i) => (
@@ -177,7 +185,7 @@ export default function ProjetDetail() {
               viewport={{ once: true }}
               className="font-mono text-xs md:text-sm tracking-[0.35em] uppercase text-mint"
             >
-              ( Les résultats )
+              {t("( Les résultats )", "( The results )")}
             </motion.p>
             <div className="mt-10 grid sm:grid-cols-3 gap-10 text-center">
               {p.stats.map((s, i) => (
@@ -208,7 +216,7 @@ export default function ProjetDetail() {
             viewport={{ once: true }}
             className="font-mono text-xs md:text-sm tracking-[0.35em] uppercase text-mint-dark"
           >
-            ( Les expertises mobilisées )
+            {t("( Les expertises mobilisées )", "( Expertise involved )")}
           </motion.p>
           <div className="mt-8 grid sm:grid-cols-3 gap-5">
             {related.map((r, i) => (
@@ -222,7 +230,7 @@ export default function ProjetDetail() {
               >
                 <Link
                   to={`/notre-expertise/${r.slug}`}
-                  data-cursor="Découvrir"
+                  data-cursor={t("Découvrir", "Discover")}
                   className="group flex items-center gap-4 rounded-2xl bg-white border-[3px] border-ink p-5 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[8px_8px_0_#1FCE8A] transition-shadow"
                 >
                   <span className={`grid place-items-center w-14 h-14 rounded-xl border-2 border-ink text-ink shrink-0 ${r.bg || "bg-cream-2"}`}>
@@ -246,7 +254,7 @@ export default function ProjetDetail() {
               to="/#realisations"
               className="inline-flex items-center gap-2 font-display font-bold text-mint-dark hover:gap-3 transition-all"
             >
-              ← Toutes nos réalisations
+              {t("← Toutes nos réalisations", "← All our work")}
             </Link>
             <div className="flex flex-wrap gap-2">
               {PROJETS.filter((x) => x.slug !== p.slug)
@@ -255,7 +263,7 @@ export default function ProjetDetail() {
                   <Link
                     key={x.slug}
                     to={`/realisations/${x.slug}`}
-                    data-cursor="Voir"
+                    data-cursor={t("Voir", "View")}
                     className="rounded-full bg-white border-2 border-ink px-4 py-2 font-display font-bold text-sm text-ink shadow-[3px_3px_0_#0A0F0D] hover:shadow-[5px_5px_0_#1FCE8A] transition-shadow"
                   >
                     {x.title}
@@ -267,9 +275,12 @@ export default function ProjetDetail() {
       </section>
 
       <CtaBand
-        title="Envie d'un projet comme celui-ci ?"
-        sub="Racontez-nous le vôtre autour d'un café, devis gratuit, sans engagement."
-        label="Parlons-en"
+        title={t("Envie d'un projet comme celui-ci ?", "Want a project like this one?")}
+        sub={t(
+          "Racontez-nous le vôtre autour d'un café, devis gratuit, sans engagement.",
+          "Tell us about yours over a coffee — free quote, no strings attached.",
+        )}
+        label={t("Parlons-en", "Let's talk")}
       />
     </>
   );
