@@ -17,6 +17,14 @@ export function LangProvider({ children }) {
     } catch {
       /* privé / SSR */
     }
+    /* Aucun choix mémorisé : on détecte la langue du navigateur.
+       Anglophone → EN, tout le reste → FR (marché principal). */
+    try {
+      const nav = (navigator.language || navigator.userLanguage || "fr").toLowerCase();
+      if (nav.startsWith("en")) return "en";
+    } catch {
+      /* ignore */
+    }
     return "fr";
   });
 
