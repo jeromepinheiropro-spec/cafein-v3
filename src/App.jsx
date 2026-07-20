@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 
 import Cursor from "./components/Cursor.jsx";
+import { RouteCurtain, ScrollBrew } from "./components/RouteFX.jsx";
 import { EggProvider } from "./components/EasterEggs.jsx";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
@@ -78,6 +79,8 @@ export default function App() {
       </AnimatePresence>
 
       <Nav />
+      <ScrollBrew />
+      <RouteCurtain />
       <main>
         <Routes>
           <Route path="/" element={<Home started={!loading} />} />
