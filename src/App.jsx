@@ -88,15 +88,27 @@ export default function App() {
       <RouteCurtain />
       <main>
         <Routes>
-          <Route path="/" element={<Home started={!loading} />} />
-          <Route path="/creation-site-web" element={<CreationSite />} />
-          <Route path="/seo-geo" element={<SeoGeo />} />
-          <Route path="/communication" element={<Communication />} />
-          <Route path="/lexique" element={<Lexique />} />
-          <Route path="/notre-expertise" element={<Expertise />} />
-          <Route path="/notre-expertise/:slug" element={<ExpertiseDetail />} />
-          <Route path="/realisations/:slug" element={<ProjetDetail />} />
-          <Route path="/equipe" element={<Equipe />} />
+          {/* Routes publiques : rendues à la racine (FR) ET sous /en (EN).
+              La langue est déduite de l'URL par LangProvider. */}
+          {[
+            { path: "/", element: <Home started={!loading} /> },
+            { path: "/creation-site-web", element: <CreationSite /> },
+            { path: "/seo-geo", element: <SeoGeo /> },
+            { path: "/communication", element: <Communication /> },
+            { path: "/lexique", element: <Lexique /> },
+            { path: "/notre-expertise", element: <Expertise /> },
+            { path: "/notre-expertise/:slug", element: <ExpertiseDetail /> },
+            { path: "/realisations/:slug", element: <ProjetDetail /> },
+            { path: "/equipe", element: <Equipe /> },
+          ].flatMap((r) => [
+            <Route key={r.path} path={r.path} element={r.element} />,
+            <Route
+              key={"/en" + r.path}
+              path={r.path === "/" ? "/en" : "/en" + r.path}
+              element={r.element}
+            />,
+          ])}
+          {/* Modération : espace équipe, non traduit, noindex */}
           <Route path="/moderation" element={<Moderation />} />
           <Route path="*" element={<Home started={!loading} />} />
         </Routes>
