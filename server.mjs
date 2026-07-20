@@ -20,8 +20,9 @@ const ADMIN_KEY = process.env.ADMIN_KEY || "";
 const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
 const CONTACT_TO = process.env.CONTACT_TO || "hello@cafein.lu";
 /* Expéditeur technique des notifications : doit être un sender vérifié dans
-   Brevo. contact@cerberion.lu l'est déjà ; le replyTo pointe vers le visiteur. */
-const CONTACT_FROM = process.env.CONTACT_FROM || "contact@cerberion.lu";
+   le compte Brevo « Cafein ». pinoo54440@gmail.com y est vérifié ; le replyTo
+   pointe vers le visiteur pour répondre en un clic. */
+const CONTACT_FROM = process.env.CONTACT_FROM || "pinoo54440@gmail.com";
 const PORT = process.env.PORT || 3000;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
