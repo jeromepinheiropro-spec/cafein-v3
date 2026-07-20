@@ -77,7 +77,7 @@ export default function Process() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionLabel>( Délai de livraison )</SectionLabel>
             <p className="font-display font-extrabold text-3xl md:text-5xl text-ink">
-              3–4 semaines <span className="font-mono text-sm md:text-base text-ink/50 tracking-widest uppercase align-middle">— site vitrine</span>{" "}
+              3–4 semaines <span className="font-mono text-sm md:text-base text-ink/50 tracking-widest uppercase align-middle">· site vitrine</span>{" "}
               <HuntBean id="methode" className="w-5 h-5" />
             </p>
           </div>

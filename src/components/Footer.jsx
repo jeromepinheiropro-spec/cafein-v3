@@ -84,7 +84,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-cream/10 flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-cream/40">
-            © 2026 — Luxembourg
+            © 2026 · Luxembourg
           </p>
           <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-cream/40 flex items-center gap-2">
             Fait avec <span className="text-mint">beaucoup</span> de café

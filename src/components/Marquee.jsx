@@ -7,7 +7,7 @@ const DEFAULT_WORDS = ["Sites web", "SEO", "GEO", "Communication", "Luxembourg"]
 
 /*
   Bande défilante infinie, légèrement inclinée.
-  La vitesse augmente au survol ? Non — elle s'inverse ! (petit plaisir)
+  La vitesse augmente au survol ? Non, elle s'inverse ! (petit plaisir)
 */
 export default function Marquee({ tilt = -2, dark = false, words = DEFAULT_WORDS }) {
   const { overdrive, decaf } = useEgg();

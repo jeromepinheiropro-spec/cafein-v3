@@ -107,7 +107,7 @@ export default function Contact() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="mt-6 text-lg md:text-xl text-cream/70 font-medium max-w-md leading-relaxed"
           >
-            Une question, un projet ? Écrivez-nous, on vous répond rapidement — le temps de faire
+            Une question, un projet ? Écrivez-nous, on vous répond rapidement, le temps de faire
             couler un café.
           </motion.p>
 
@@ -149,7 +149,7 @@ export default function Contact() {
                   C'est envoyé !
                 </h3>
                 <p className="mt-3 text-ink/80 font-medium text-lg">
-                  Merci {form.nom.split(" ")[0] || ""} — on revient vers vous très vite.
+                  Merci {form.nom.split(" ")[0] || ""}, on revient vers vous très vite.
                   <br />
                   (Le temps d'un espresso, promis.)
                 </p>

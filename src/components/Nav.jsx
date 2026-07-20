@@ -62,7 +62,7 @@ export default function Nav() {
             className="flex items-center gap-2 select-none"
             style={{ WebkitTouchCallout: "none" }}
             data-cursor="Hello"
-            aria-label="Cafein — accueil"
+            aria-label="Cafein, accueil"
             onClick={onLogoClick}
             onTouchStart={onLogoPressStart}
             onTouchEnd={onLogoPressEnd}
@@ -152,7 +152,7 @@ export default function Nav() {
               exit={{ opacity: 0 }}
               className="absolute bottom-10 left-8 font-mono text-xs tracking-[0.3em] text-cream/40 uppercase"
             >
-              Luxembourg — FR / EN
+              Luxembourg · FR / EN
             </motion.p>
           </motion.div>
         )}

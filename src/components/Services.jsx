@@ -85,7 +85,7 @@ function Card({ s, i, total, progress }) {
       <MotionLink
         to={s.to}
         data-cursor="Découvrir"
-        aria-label={`${s.title} — en savoir plus`}
+        aria-label={`${s.title}, en savoir plus`}
         style={{ scale, rotate: s.rotate }}
         whileHover={{ rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}

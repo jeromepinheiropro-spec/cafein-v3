@@ -9,7 +9,7 @@ export const FAQS = [
   },
   {
     q: "Combien coûte un site web ?",
-    a: "Ça dépend du projet : un site vitrine n'a pas le même budget qu'un e-commerce ou une plateforme sur mesure. On établit un devis clair et sans surprise après un premier échange — gratuit, évidemment. Vous savez exactement ce que vous payez, et pourquoi.",
+    a: "Ça dépend du projet : un site vitrine n'a pas le même budget qu'un e-commerce ou une plateforme sur mesure. On établit un devis clair et sans surprise après un premier échange, gratuit, évidemment. Vous savez exactement ce que vous payez, et pourquoi.",
   },
   {
     q: "En combien de temps peut-on être visible sur Google ?",

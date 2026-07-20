@@ -106,7 +106,7 @@ function BeforeAfter() {
         onPointerMove={(e) => e.buttons === 1 && updateFromClientX(e.clientX)}
         onPointerDown={(e) => updateFromClientX(e.clientX)}
       >
-        {/* APRÈS (fond) — contenu aligné à droite pour rester visible */}
+        {/* APRÈS (fond), contenu aligné à droite pour rester visible */}
         <div className="absolute inset-0 bg-espresso p-6 md:p-10 flex flex-col justify-between items-end text-right">
           <div className="flex flex-col items-end">
             <span className="inline-block rounded-full bg-mint text-ink font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
@@ -120,7 +120,7 @@ function BeforeAfter() {
             </div>
           </div>
           <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-mint">
-            Refonte optimisée — UX mobile + structure SEO
+            Refonte optimisée : UX mobile + structure SEO
           </p>
         </div>
 

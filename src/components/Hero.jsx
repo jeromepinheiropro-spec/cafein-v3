@@ -24,7 +24,7 @@ function RotatingBadge() {
         <defs>
           <path id="circlePath" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
         </defs>
-        {/* pas de textLength : Safari le gère mal sur textPath — l'espacement
+        {/* pas de textLength : Safari le gère mal sur textPath, l'espacement
             est calibré pour boucler exactement sur la circonférence (27 × 8.84px) */}
         <text className="font-mono uppercase" fontSize="9.5" letterSpacing="3.1" fill="#0A0F0D">
           <textPath href="#circlePath">agence · web · luxembourg ·</textPath>
@@ -135,7 +135,7 @@ export default function Hero({ started }) {
           <div>
             {/* Titre géant lettre par lettre */}
             <h1 className="font-display font-extrabold leading-[0.85] tracking-tight text-ink text-[clamp(4.5rem,17vw,15rem)] select-none">
-              <span className="sr-only">Cafein — agence de communication digitale au Luxembourg</span>
+              <span className="sr-only">Cafein, agence de communication digitale au Luxembourg</span>
               <span aria-hidden className="inline-flex">
                 {letters.map((l, i) => (
                   <motion.span
@@ -192,7 +192,7 @@ export default function Hero({ started }) {
               className="mt-6 max-w-xl text-lg md:text-2xl text-ink/80 font-medium leading-relaxed"
             >
               Votre agence de <span className="squiggle font-bold text-ink">marketing web</span> au
-              Luxembourg. Sites sur mesure, communication digitale et visibilité —{" "}
+              Luxembourg. Sites sur mesure, communication digitale et visibilité :{" "}
               <span className="font-bold text-mint-dark">SEO&nbsp;&amp;&nbsp;GEO</span>. Le tout, servi
               bien serré.
             </motion.p>
@@ -245,7 +245,7 @@ export default function Hero({ started }) {
         transition={{ delay: 1.4 }}
         className="absolute bottom-6 inset-x-0 flex items-center justify-between px-6 md:px-10 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-ink/50"
       >
-        <span className="hidden sm:block">Sites web — SEO/GEO — Communication</span>
+        <span className="hidden sm:block">Sites web · SEO/GEO · Communication</span>
         <motion.span
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: (1.6) / eggSpeed }}

@@ -203,7 +203,7 @@ export function EggProvider({ children }) {
       prevBest = best;
       /* IMPORTANT (perf Safari) : pas de setState pendant le scroll ordinaire.
          On ne touche au rendu React que lorsque la jauge doit s'afficher (≥4)
-         ou s'effacer — sinon chaque défilement re-rendrait tout le site. */
+         ou s'effacer, sinon chaque défilement re-rendrait tout le site. */
       if (best >= 4) {
         gaugeShown = true;
         setSwipeProgress(best);
@@ -497,10 +497,10 @@ function CuriousHint({ onClose }) {
         </p>
         <p className="mt-3 font-medium text-ink/75 leading-relaxed">
           Trois clics sur le même grain, on aime ça. Il existe un <b>jeu caché</b> quelque part :
-          remportez-le et c'est <b className="text-mint-dark">10% sur votre offre de prix</b> — ou un café offert.
+          remportez-le et c'est <b className="text-mint-dark">10% sur votre offre de prix</b>, ou un café offert.
         </p>
         <p className="mt-5 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50">
-          Indice — au clavier, ou du doigt en glissant :
+          Indice, au clavier ou du doigt en glissant :
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Indice">
           {keys.map((k, i) => (
@@ -587,7 +587,7 @@ function EggLayer({ overdrive, decaf, blast, konami, toast, allFound, found, hin
               <div>
                 <p className="font-display font-bold text-sm">Grain trouvé ! {toast.n}/4</p>
                 <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/60">
-                  {4 - toast.n} restant{4 - toast.n > 1 ? "s" : ""} — ouvrez l'œil
+                  {4 - toast.n} restant{4 - toast.n > 1 ? "s" : ""}, ouvrez l'œil
                 </p>
               </div>
             </motion.div>
