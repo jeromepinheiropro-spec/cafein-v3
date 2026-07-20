@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Magnetic, ArrowUpRight, Spark, Bean, SectionLabel } from "./ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -309,6 +310,78 @@ export function Steps({ title, steps, dark = false }) {
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Édito SEO : un bloc de texte riche mais chaleureux ────────
+   Paragraphes qui se révèlent, mots-clés soulignés, et des
+   « chips » de maillage interne vers les pages liées. */
+export function Edito({ kicker = "Pour aller plus loin", title, paragraphs = [], links = [] }) {
+  return (
+    <section className="relative bg-cream-2/60 border-y-2 border-ink/10 py-16 md:py-24 overflow-hidden">
+      <motion.div
+        aria-hidden
+        animate={{ rotate: [0, 12, -12, 0] }}
+        transition={{ repeat: Infinity, duration: 7 }}
+        className="absolute top-10 right-8 md:right-24 opacity-70 pointer-events-none"
+      >
+        <Bean className="w-10 h-10 md:w-14 md:h-14" fill="#F4A259" />
+      </motion.div>
+      <div className="mx-auto max-w-4xl px-6 md:px-10">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="font-mono text-xs md:text-sm tracking-[0.35em] uppercase text-mint-dark flex items-center gap-2"
+        >
+          <Spark className="w-4 h-4" /> {kicker}
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 26 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ type: "spring", stiffness: 120, damping: 18 }}
+          className="mt-4 font-display font-extrabold text-2xl md:text-4xl text-ink tracking-tight"
+        >
+          {title}
+        </motion.h2>
+        <div className="mt-6 space-y-5">
+          {paragraphs.map((p, i) => (
+            <motion.p
+              key={i}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: i * 0.08 }}
+              className="text-ink/75 font-medium leading-relaxed text-base md:text-lg"
+            >
+              {p}
+            </motion.p>
+          ))}
+        </div>
+        {links.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15 }}
+            className="mt-8 flex flex-wrap gap-3"
+          >
+            {links.map((l) => (
+              <motion.span key={l.to} whileHover={{ y: -3, rotate: -1 }} className="inline-block">
+                <RouterLink
+                  to={l.to}
+                  data-cursor="Découvrir"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white border-2 border-ink px-4 py-2 font-display font-bold text-sm text-ink shadow-[3px_3px_0_#0A0F0D] hover:shadow-[5px_5px_0_#1FCE8A] transition-shadow"
+                >
+                  {l.label} <ArrowUpRight className="w-4 h-4 text-mint-dark" />
+                </RouterLink>
+              </motion.span>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );
