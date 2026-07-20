@@ -14,6 +14,7 @@ import CreationSite from "./pages/CreationSite.jsx";
 import SeoGeo from "./pages/SeoGeo.jsx";
 import Communication from "./pages/Communication.jsx";
 import Lexique from "./pages/Lexique.jsx";
+import Expertise from "./pages/Expertise.jsx";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -83,6 +84,7 @@ export default function App() {
           <Route path="/seo-geo" element={<SeoGeo />} />
           <Route path="/communication" element={<Communication />} />
           <Route path="/lexique" element={<Lexique />} />
+          <Route path="/notre-expertise" element={<Expertise />} />
           <Route path="*" element={<Home started={!loading} />} />
         </Routes>
       </main>
