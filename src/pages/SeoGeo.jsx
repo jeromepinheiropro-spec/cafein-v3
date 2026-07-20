@@ -158,11 +158,13 @@ export default function SeoGeo() {
     <>
       <Seo
         title="Agence SEO & GEO au Luxembourg : référencement Google et IA | Cafein"
+        titleEn="SEO & GEO Agency in Luxembourg: Google and AI Ranking | Cafein"
         description="Référencement naturel (SEO) et visibilité dans les IA (GEO) au Luxembourg : audit, optimisation technique, contenus et suivi des positions. Être trouvé sur Google comme dans ChatGPT."
+        descriptionEn="Search engine optimization (SEO) and visibility in AI engines (GEO) in Luxembourg: audit, technical optimization, content and rank tracking. Get found on Google and in ChatGPT."
         path="/seo-geo"
         jsonLd={[
           serviceLd("SEO & GEO", "Référencement naturel Google et optimisation pour les moteurs IA (GEO) au Luxembourg.", "/seo-geo"),
-          faqLd(FAQ.fr),
+          faqLd(lang === "en" ? FAQ.en : FAQ.fr),
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "SEO & GEO", path: "/seo-geo" },

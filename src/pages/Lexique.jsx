@@ -133,7 +133,9 @@ export default function Lexique() {
     <>
       <Seo
         title="Lexique du web : SEO, GEO, sites & social media expliqués simplement | Cafein"
+        titleEn="Web Glossary: SEO, GEO, Websites & Social Media Made Simple | Cafein"
         description="69 termes du web enfin clairs : SEO, GEO, backlink, CMS, Core Web Vitals, taux de conversion… Le jargon du digital traduit en français simple par Cafein, agence web au Luxembourg."
+        descriptionEn="69 web terms finally made clear: SEO, GEO, backlink, CMS, Core Web Vitals, conversion rate… Digital jargon translated into plain English by Cafein, a web agency in Luxembourg."
         path="/lexique"
         jsonLd={[
           LEXIQUE_LD,

@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { PageHero, CtaBand, MiniFaq, Steps } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
@@ -104,16 +105,16 @@ export default function ExpertiseDetail() {
   return (
     <>
       <Seo
-        title={`${eFr.title} au Luxembourg | Cafein`}
-        description={eFr.subtitle}
+        title={`${e.title} ${t("au Luxembourg", "in Luxembourg")} | Cafein`}
+        description={e.subtitle}
         path={`/notre-expertise/${eFr.slug}`}
         jsonLd={[
-          serviceLd(eFr.title, eFr.subtitle, `/notre-expertise/${eFr.slug}`),
-          faqLd(eFr.faq),
+          serviceLd(e.title, e.subtitle, `/notre-expertise/${eFr.slug}`),
+          faqLd(e.faq),
           breadcrumbLd([
-            { name: "Accueil", path: "/" },
-            { name: "Notre expertise", path: "/notre-expertise" },
-            { name: eFr.title, path: `/notre-expertise/${eFr.slug}` },
+            { name: t("Accueil", "Home"), path: "/" },
+            { name: t("Notre expertise", "Our expertise"), path: "/notre-expertise" },
+            { name: e.title, path: `/notre-expertise/${eFr.slug}` },
           ]),
         ]}
       />

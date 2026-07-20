@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark, Bean, ArrowUpRight } from "../lib/ui.jsx";
@@ -238,7 +238,9 @@ export default function Equipe() {
     <>
       <Seo
         title="L'équipe Cafein : trois cofondateurs, un percolateur | Agence web Luxembourg"
+        titleEn="The Cafein Team: Three Cofounders, One Coffee Machine | Web Agency Luxembourg"
         description="Stan, Pinoo et Flo : les trois cofondateurs de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO et communication, une équipe resserrée qui s'occupe de tout."
+        descriptionEn="Stan, Pinoo and Flo: the three cofounders of Cafein, a web agency in Luxembourg. Strategy, website design, SEO and communication, a tight-knit team that handles everything."
         path="/equipe"
         jsonLd={[
           {

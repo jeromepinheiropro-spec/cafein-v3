@@ -279,11 +279,13 @@ export default function CreationSite() {
     <>
       <Seo
         title="Création de site internet au Luxembourg : vitrine, e-commerce, sur mesure | Cafein"
+        titleEn="Website Design in Luxembourg: Showcase, E-commerce, Custom | Cafein"
         description="Cafein crée votre site internet au Luxembourg : site vitrine, boutique e-commerce ou plateforme sur mesure. Design soigné, SEO intégré dès le départ, RGPD, un mois de support inclus."
+        descriptionEn="Cafein builds your website in Luxembourg: showcase sites, e-commerce stores or custom platforms. Polished design, SEO built in from day one, GDPR-ready, one month of support included."
         path="/creation-site-web"
         jsonLd={[
           serviceLd("Création de site internet", "Sites vitrine, e-commerce et plateformes sur mesure au Luxembourg.", "/creation-site-web"),
-          faqLd(FAQ.fr),
+          faqLd(lang === "en" ? FAQ.en : FAQ.fr),
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "Création de site web", path: "/creation-site-web" },

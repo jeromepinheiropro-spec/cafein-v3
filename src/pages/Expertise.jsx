@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
@@ -73,7 +73,9 @@ export default function Expertise() {
     <>
       <Seo
         title="Nos 12 expertises web & digital au Luxembourg | Cafein"
+        titleEn="Our 12 Web & Digital Areas of Expertise in Luxembourg | Cafein"
         description="Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg, un seul interlocuteur du premier appel au suivi."
+        descriptionEn="Showcase sites, e-commerce, SEO, GEO, social media, branding, data… The 12 areas of expertise of Cafein, a digital agency in Luxembourg, one contact from first call to follow-up."
         path="/notre-expertise"
         jsonLd={[
           LIST_LD,

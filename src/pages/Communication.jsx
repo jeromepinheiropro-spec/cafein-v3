@@ -244,11 +244,13 @@ export default function Communication() {
     <>
       <Seo
         title="Communication digitale & réseaux sociaux au Luxembourg | Cafein"
+        titleEn="Digital Communication & Social Media in Luxembourg | Cafein"
         description="Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook, sans jargon."
+        descriptionEn="Strategy, social media, content and ad campaigns in Luxembourg: Cafein handles your digital communication from A to Z. LinkedIn, Instagram, Facebook, no jargon."
         path="/communication"
         jsonLd={[
           serviceLd("Communication digitale", "Stratégie, réseaux sociaux, contenus et campagnes au Luxembourg et dans la Grande Région.", "/communication"),
-          faqLd(FAQ.fr),
+          faqLd(lang === "en" ? FAQ.en : FAQ.fr),
           breadcrumbLd([
             { name: "Accueil", path: "/" },
             { name: "Communication", path: "/communication" },

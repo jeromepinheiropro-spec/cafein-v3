@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { PageHero, CtaBand } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { ArrowUpRight, Bean, Spark } from "../lib/ui.jsx";
@@ -99,23 +100,31 @@ export default function ProjetDetail() {
   return (
     <>
       <Seo
-        title={`${pFr.title} : réalisation ${pFr.tags.toLowerCase()} | Cafein`}
-        description={`${pFr.client} Découvrez ce que notre groupe a réalisé : ${pFr.tags.toLowerCase()}.`}
+        title={
+          lang === "en"
+            ? `${p.title}: ${p.tags.toLowerCase()} project | Cafein`
+            : `${pFr.title} : réalisation ${pFr.tags.toLowerCase()} | Cafein`
+        }
+        description={
+          lang === "en"
+            ? `${p.client} See what our group delivered: ${p.tags.toLowerCase()}.`
+            : `${pFr.client} Découvrez ce que notre groupe a réalisé : ${pFr.tags.toLowerCase()}.`
+        }
         path={`/realisations/${pFr.slug}`}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "CreativeWork",
-            name: `Projet ${pFr.title}`,
-            about: pFr.tags,
+            name: `${t("Projet", "Project")} ${p.title}`,
+            about: p.tags,
             url: `${SITE}/realisations/${pFr.slug}`,
             dateCreated: pFr.year,
             author: { "@id": SITE + "/#cafein" },
           },
           breadcrumbLd([
-            { name: "Accueil", path: "/" },
-            { name: "Réalisations", path: "/#realisations" },
-            { name: pFr.title, path: `/realisations/${pFr.slug}` },
+            { name: t("Accueil", "Home"), path: "/" },
+            { name: t("Réalisations", "Work"), path: "/#realisations" },
+            { name: p.title, path: `/realisations/${pFr.slug}` },
           ]),
         ]}
       />
