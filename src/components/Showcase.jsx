@@ -4,52 +4,60 @@ import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
 import { HuntBean } from "./EasterEggs.jsx";
 
-/* ── Fausse fenêtre navigateur pour les aperçus projets ───────── */
-function BrowserMock({ variant = "a" }) {
-  const isA = variant === "a";
-  return (
-    <div className="rounded-2xl overflow-hidden border-[3px] border-ink bg-white">
-      <div className="flex items-center gap-1.5 px-4 py-2.5 bg-cream-2 border-b-[3px] border-ink">
-        <span className="w-2.5 h-2.5 rounded-full bg-caramel" />
-        <span className="w-2.5 h-2.5 rounded-full bg-sun" />
-        <span className="w-2.5 h-2.5 rounded-full bg-mint" />
-        <span className="ml-3 flex-1 h-4 rounded-full bg-ink/10" />
-      </div>
-      {isA ? (
-        <div className="p-5 space-y-3 bg-white">
-          <div className="h-7 w-2/3 rounded-lg bg-espresso" />
-          <div className="h-3 w-full rounded bg-ink/15" />
-          <div className="h-3 w-5/6 rounded bg-ink/15" />
-          <div className="flex gap-2 pt-1">
-            <div className="h-8 w-24 rounded-full bg-mint border-2 border-ink" />
-            <div className="h-8 w-24 rounded-full border-2 border-ink" />
-          </div>
-          <div className="grid grid-cols-3 gap-2 pt-2">
-            <div className="h-14 rounded-lg bg-mint/30" />
-            <div className="h-14 rounded-lg bg-caramel/30" />
-            <div className="h-14 rounded-lg bg-sun/40" />
-          </div>
-        </div>
-      ) : (
-        <div className="p-5 bg-espresso space-y-3">
-          <div className="flex gap-2">
-            <div className="h-16 w-16 rounded-full bg-mint shrink-0" />
-            <div className="flex-1 space-y-2 pt-2">
-              <div className="h-4 w-3/4 rounded bg-cream/80" />
-              <div className="h-3 w-1/2 rounded bg-cream/30" />
-            </div>
-          </div>
-          <div className="h-3 w-full rounded bg-cream/20" />
-          <div className="h-3 w-4/5 rounded bg-cream/20" />
-          <div className="h-9 w-32 rounded-full bg-caramel border-2 border-cream/20" />
-        </div>
-      )}
-    </div>
-  );
-}
+/* ── Projets du groupe (réalisés avec Nooki, même maison) ─────── */
+const PROJECTS = [
+  {
+    n: "01",
+    title: "Kinteraction",
+    tags: "Site web · Graphisme",
+    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-kinteraction.webp",
+    alt: "Projet Kinteraction — création de site web et identité visuelle",
+    shadow: "#1FCE8A",
+  },
+  {
+    n: "02",
+    title: "Le 101",
+    tags: "Référencement SEO",
+    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-le-101.webp",
+    alt: "Projet Le 101 — stratégie de référencement naturel SEO",
+    shadow: "#F4A259",
+  },
+  {
+    n: "03",
+    title: "Efluenz",
+    tags: "Site web · Graphisme",
+    img: "https://nooki.fr/wp-content/uploads/2026/06/efluenz-projet.webp",
+    alt: "Projet Efluenz — site web et direction artistique",
+    shadow: "#FFD166",
+  },
+  {
+    n: "04",
+    title: "Xucom",
+    tags: "Graphisme · Web design · SEO",
+    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-xucom.webp",
+    alt: "Projet Xucom — identité de marque, web design et SEO",
+    shadow: "#FFD166",
+  },
+  {
+    n: "05",
+    title: "7 Plis",
+    tags: "Campagnes SEA",
+    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-7-plis.webp",
+    alt: "Projet 7 Plis — campagnes publicitaires Google Ads",
+    shadow: "#1FCE8A",
+  },
+  {
+    n: "06",
+    title: "Agria",
+    tags: "Site web · Graphisme",
+    img: "https://nooki.fr/wp-content/uploads/2026/01/header-agria.webp",
+    alt: "Projet Agria Grand Est — création de site web",
+    shadow: "#F4A259",
+  },
+];
 
 /* ── Carte projet avec tilt 3D ────────────────────────────────── */
-function ProjectCard({ letter, title, sub, variant, rot }) {
+function ProjectCard({ p, rot }) {
   const ref = useRef(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -77,19 +85,33 @@ function ProjectCard({ letter, title, sub, variant, rot }) {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 100, damping: 18 }}
       style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      data-cursor="Bientôt"
-      className="group relative rounded-3xl bg-white border-[3px] border-ink p-6 shadow-[8px_8px_0_#0A0F0D] hover:shadow-[12px_12px_0_#1FCE8A] transition-shadow duration-300"
+      data-cursor="☕"
+      className="group relative rounded-3xl bg-white border-[3px] border-ink p-4 pb-5 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
+      whileHover={{ boxShadow: `12px 12px 0 ${p.shadow}` }}
     >
-      <div className="flex items-center justify-between mb-5">
-        <span className="grid place-items-center w-11 h-11 rounded-full bg-espresso text-mint font-display font-bold text-lg">
-          {letter}
+      <div className="relative rounded-2xl overflow-hidden border-[3px] border-ink">
+        {/* barre navigateur cartoon */}
+        <div className="flex items-center gap-1.5 px-4 py-2.5 bg-cream-2 border-b-[3px] border-ink">
+          <span className="w-2.5 h-2.5 rounded-full bg-caramel" />
+          <span className="w-2.5 h-2.5 rounded-full bg-sun" />
+          <span className="w-2.5 h-2.5 rounded-full bg-mint" />
+          <span className="ml-3 font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40">{p.tags}</span>
+        </div>
+        <div className="overflow-hidden">
+          <img
+            src={p.img}
+            alt={p.alt}
+            loading="lazy"
+            className="w-full h-44 md:h-52 object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          />
+        </div>
+        <span className="absolute top-11 right-3 grid place-items-center w-9 h-9 rounded-full bg-espresso text-mint font-mono text-xs font-bold border-2 border-mint/50">
+          {p.n}
         </span>
-        <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-ink/50">{sub}</span>
       </div>
-      <BrowserMock variant={variant} />
-      <div className="mt-5 flex items-center justify-between">
-        <h3 className="font-display font-extrabold text-xl md:text-2xl text-ink">{title}</h3>
-        <span className="grid place-items-center w-10 h-10 rounded-full border-2 border-ink group-hover:bg-mint group-hover:rotate-45 transition-all duration-300">
+      <div className="mt-4 px-1 flex items-center justify-between">
+        <h3 className="font-display font-extrabold text-lg md:text-xl text-ink">{p.title}</h3>
+        <span className="grid place-items-center w-9 h-9 rounded-full border-2 border-ink group-hover:bg-mint group-hover:rotate-45 transition-all duration-300">
           <ArrowUpRight className="w-4 h-4" />
         </span>
       </div>
@@ -212,7 +234,7 @@ export default function Showcase() {
             transition={{ duration: 0.6 }}
             className="font-display font-extrabold text-4xl md:text-6xl text-ink leading-[0.95] max-w-2xl"
           >
-            Un aperçu de ce qu'on <span className="squiggle">prépare</span>
+            Des projets qui ont <span className="squiggle">du corps</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -221,14 +243,15 @@ export default function Showcase() {
             transition={{ delay: 0.2 }}
             className="max-w-sm text-ink/70 font-medium"
           >
-            Nos premiers projets arrivent bientôt. En attendant, voici le type de rendu qu'on vise :
-            propre, rapide et pensé pour convertir.
+            Une sélection de réalisations signées par notre groupe : sites web, identités,
+            SEO et campagnes. Propre, rapide et pensé pour convertir.
           </motion.p>
         </div>
 
-        <div className="mt-12 grid md:grid-cols-2 gap-8 md:gap-10">
-          <ProjectCard letter="A" title="Projet 1" sub="Aperçu du site, à venir" variant="a" rot={-1} />
-          <ProjectCard letter="B" title="Projet 2" sub="Aperçu du site, à venir" variant="b" rot={1} />
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {PROJECTS.map((p, i) => (
+            <ProjectCard key={p.n} p={p} rot={i % 2 ? 1 : -1} />
+          ))}
         </div>
 
         <BeforeAfter />
