@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLang } from "../lib/lang.jsx";
 
 /* Compteur animé */
 export function CountUp({ to, duration = 1.6, suffix = "", prefix = "" }) {
@@ -30,19 +31,29 @@ export function CountUp({ to, duration = 1.6, suffix = "", prefix = "" }) {
   );
 }
 
-const STATS = [
-  { big: <CountUp to={100} suffix="%" />, label: "Sur-mesure, jamais de template revendu" },
-  { big: <CountUp to={3} />, label: "Services complémentaires : site, visibilité et communication" },
-  { big: "3–4 sem.", label: "Délai moyen pour un site vitrine" },
-  { big: "FR + EN", label: "Bilingue, pour le marché grand-ducal" },
-];
+const STATS = {
+  fr: [
+    { big: <CountUp to={100} suffix="%" />, label: "Sur-mesure, jamais de template revendu" },
+    { big: <CountUp to={3} />, label: "Services complémentaires : site, visibilité et communication" },
+    { big: "3–4 sem.", label: "Délai moyen pour un site vitrine" },
+    { big: "FR + EN", label: "Bilingue, pour le marché grand-ducal" },
+  ],
+  en: [
+    { big: <CountUp to={100} suffix="%" />, label: "Bespoke work, never a resold template" },
+    { big: <CountUp to={3} />, label: "Complementary services: website, visibility and communication" },
+    { big: "3–4 wks", label: "Average lead time for a showcase site" },
+    { big: "FR + EN", label: "Bilingual, for the Luxembourg market" },
+  ],
+};
 
 export default function Stats() {
+  const { lang } = useLang();
+  const stats = STATS[lang];
   return (
     <section className="relative bg-espresso py-20 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-cream/15 rounded-3xl overflow-hidden border border-cream/15">
-          {STATS.map((s, i) => (
+          {stats.map((s, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 40 }}

@@ -2,35 +2,68 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionLabel, Cup } from "../lib/ui.jsx";
 import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
-const STEPS = [
-  {
-    n: "01",
-    title: "On échange",
-    desc: "Un premier appel pour cadrer votre projet, vos objectifs et votre budget.",
-    emojiAlt: "tasse",
-  },
-  {
-    n: "02",
-    title: "On construit",
-    desc: "Design, développement, contenu : on avance vite sans sacrifier la qualité.",
-  },
-  {
-    n: "03",
-    title: "On lance",
-    desc: "Mise en ligne et suivi des premiers résultats, ensemble.",
-  },
-];
+const STEPS = {
+  fr: [
+    {
+      n: "01",
+      title: "On échange",
+      desc: "Un premier appel pour cadrer votre projet, vos objectifs et votre budget.",
+      emojiAlt: "tasse",
+    },
+    {
+      n: "02",
+      title: "On construit",
+      desc: "Design, développement, contenu : on avance vite sans sacrifier la qualité.",
+    },
+    {
+      n: "03",
+      title: "On lance",
+      desc: "Mise en ligne et suivi des premiers résultats, ensemble.",
+    },
+  ],
+  en: [
+    {
+      n: "01",
+      title: "We talk",
+      desc: "A first call to scope your project, your goals and your budget.",
+      emojiAlt: "cup",
+    },
+    {
+      n: "02",
+      title: "We build",
+      desc: "Design, development, content: we move fast without sacrificing quality.",
+    },
+    {
+      n: "03",
+      title: "We launch",
+      desc: "Go-live and tracking of the first results, together.",
+    },
+  ],
+};
 
-const WEEKS = [
-  { w: "Sem. 1", label: "Découverte" },
-  { w: "Sem. 2", label: "Design" },
-  { w: "Sem. 3", label: "Développement" },
-  { w: "Sem. 4", label: "Lancement" },
-];
+const WEEKS = {
+  fr: [
+    { w: "Sem. 1", label: "Découverte" },
+    { w: "Sem. 2", label: "Design" },
+    { w: "Sem. 3", label: "Développement" },
+    { w: "Sem. 4", label: "Lancement" },
+  ],
+  en: [
+    { w: "Wk 1", label: "Discovery" },
+    { w: "Wk 2", label: "Design" },
+    { w: "Wk 3", label: "Development" },
+    { w: "Wk 4", label: "Launch" },
+  ],
+};
 
 export default function Process() {
   const eggSpeed = useEggSpeed();
+  const { lang } = useLang();
+  const t = useT();
+  const steps = STEPS[lang];
+  const weeks = WEEKS[lang];
   const barRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: barRef, offset: ["start 0.85", "end 0.5"] });
   const width = useTransform(scrollYProgress, [0, 1], ["4%", "100%"]);
@@ -39,7 +72,7 @@ export default function Process() {
   return (
     <section className="relative bg-cream py-24 md:py-36 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionLabel>( Comment ça marche )</SectionLabel>
+        <SectionLabel>{t("( Comment ça marche )", "( How it works )")}</SectionLabel>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -47,13 +80,22 @@ export default function Process() {
           transition={{ duration: 0.6 }}
           className="font-display font-extrabold text-4xl md:text-6xl text-ink mt-4 leading-[0.95] max-w-3xl"
         >
-          Simple comme un café
-          <span className="text-mint-dark"> allongé.</span>
+          {lang === "en" ? (
+            <>
+              As simple as your morning
+              <span className="text-mint-dark"> brew.</span>
+            </>
+          ) : (
+            <>
+              Simple comme un café
+              <span className="text-mint-dark"> allongé.</span>
+            </>
+          )}
         </motion.h2>
 
         {/* Étapes */}
         <div className="mt-14 grid md:grid-cols-3 gap-6">
-          {STEPS.map((s, i) => (
+          {steps.map((s, i) => (
             <motion.div
               key={s.n}
               initial={{ opacity: 0, y: 50, rotate: i % 2 ? 2 : -2 }}
@@ -75,9 +117,9 @@ export default function Process() {
         {/* Timeline 3-4 semaines */}
         <div className="mt-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <SectionLabel>( Délai de livraison )</SectionLabel>
+            <SectionLabel>{t("( Délai de livraison )", "( Delivery time )")}</SectionLabel>
             <p className="font-display font-extrabold text-3xl md:text-5xl text-ink">
-              3–4 semaines <span className="font-mono text-sm md:text-base text-ink/50 tracking-widest uppercase align-middle">· site vitrine</span>{" "}
+              {t("3–4 semaines", "3–4 weeks")} <span className="font-mono text-sm md:text-base text-ink/50 tracking-widest uppercase align-middle">{t("· site vitrine", "· brochure site")}</span>{" "}
               <HuntBean id="methode" className="w-5 h-5" />
             </p>
           </div>
@@ -102,7 +144,7 @@ export default function Process() {
             </div>
 
             <div className="mt-4 grid grid-cols-4 text-center">
-              {WEEKS.map((k, i) => (
+              {weeks.map((k, i) => (
                 <motion.div
                   key={k.w}
                   initial={{ opacity: 0, y: 14 }}

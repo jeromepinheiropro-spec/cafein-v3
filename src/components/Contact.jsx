@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel, Magnetic, LeafMark, ArrowUpRight } from "../lib/ui.jsx";
 import { useEggSpeed } from "./EasterEggs.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 /* Confettis maison : petites particules qui explosent au succès */
 function Confetti() {
@@ -37,6 +38,7 @@ function Confetti() {
 
 function Field({ label, id, type = "text", as = "input", value, onChange, required }) {
   const Comp = as;
+  const t = useT();
   return (
     <div className="relative group">
       <label
@@ -54,7 +56,7 @@ function Field({ label, id, type = "text", as = "input", value, onChange, requir
         required={required}
         rows={as === "textarea" ? 4 : undefined}
         className="w-full bg-transparent border-b-[3px] border-cream/25 focus:border-mint outline-none py-3 text-lg md:text-xl font-medium text-cream placeholder-cream/25 transition-colors resize-none"
-        placeholder={as === "textarea" ? "Racontez-nous tout…" : ""}
+        placeholder={as === "textarea" ? t("Racontez-nous tout…", "Tell us everything…") : ""}
       />
     </div>
   );
@@ -62,6 +64,8 @@ function Field({ label, id, type = "text", as = "input", value, onChange, requir
 
 export default function Contact() {
   const eggSpeed = useEggSpeed();
+  const { lang } = useLang();
+  const t = useT();
   const [form, setForm] = useState({ nom: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | done
 
@@ -89,7 +93,7 @@ export default function Contact() {
 
       <div className="relative mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-16">
         <div>
-          <SectionLabel dark>( Contact )</SectionLabel>
+          <SectionLabel dark>{t("( Contact )", "( Get in touch )")}</SectionLabel>
           <motion.h2
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -97,8 +101,17 @@ export default function Contact() {
             transition={{ duration: 0.7 }}
             className="font-display font-extrabold text-[clamp(3.5rem,9vw,7.5rem)] leading-[0.9] text-cream mt-4"
           >
-            Un<br />
-            <span className="text-mint">projet&nbsp;?</span>
+            {lang === "en" ? (
+              <>
+                Got a<br />
+                <span className="text-mint">project?</span>
+              </>
+            ) : (
+              <>
+                Un<br />
+                <span className="text-mint">projet&nbsp;?</span>
+              </>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -107,8 +120,10 @@ export default function Contact() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="mt-6 text-lg md:text-xl text-cream/70 font-medium max-w-md leading-relaxed"
           >
-            Une question, un projet ? Écrivez-nous, on vous répond rapidement, le temps de faire
-            couler un café.
+            {t(
+              "Une question, un projet ? Écrivez-nous, on vous répond rapidement, le temps de faire couler un café.",
+              "A question, a project? Drop us a line — we'll get back to you fast, in the time it takes to brew a coffee."
+            )}
           </motion.p>
 
           <motion.div
@@ -120,7 +135,7 @@ export default function Contact() {
           >
             <span className="rounded-full border border-cream/20 px-4 py-2">Luxembourg</span>
             <span className="rounded-full border border-cream/20 px-4 py-2">FR / EN</span>
-            <span className="rounded-full border border-cream/20 px-4 py-2">Réponse rapide</span>
+            <span className="rounded-full border border-cream/20 px-4 py-2">{t("Réponse rapide", "Quick reply")}</span>
           </motion.div>
         </div>
 
@@ -146,12 +161,13 @@ export default function Contact() {
                   </svg>
                 </motion.div>
                 <h3 className="font-display font-extrabold text-3xl md:text-4xl text-ink">
-                  C'est envoyé !
+                  {t("C'est envoyé !", "Message sent!")}
                 </h3>
                 <p className="mt-3 text-ink/80 font-medium text-lg">
-                  Merci {form.nom.split(" ")[0] || ""}, on revient vers vous très vite.
+                  {t("Merci", "Thanks")} {form.nom.split(" ")[0] || ""}
+                  {t(", on revient vers vous très vite.", ", we'll get back to you very soon.")}
                   <br />
-                  (Le temps d'un espresso, promis.)
+                  {t("(Le temps d'un espresso, promis.)", "(Just the time for an espresso, promise.)")}
                 </p>
               </motion.div>
             ) : (
@@ -161,13 +177,13 @@ export default function Contact() {
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8 rounded-[2rem] border-2 border-cream/15 p-8 md:p-12 bg-espresso-2/60 backdrop-blur"
               >
-                <Field label="Nom" id="nom" value={form.nom} onChange={set("nom")} required />
+                <Field label={t("Nom", "Name")} id="nom" value={form.nom} onChange={set("nom")} required />
                 <Field label="Email" id="email" type="email" value={form.email} onChange={set("email")} required />
                 <Field label="Message" id="message" as="textarea" value={form.message} onChange={set("message")} required />
                 <Magnetic strength={0.2}>
                   <button
                     type="submit"
-                    data-cursor="Envoyer !"
+                    data-cursor={t("Envoyer !", "Send it!")}
                     disabled={status === "sending"}
                     className="group inline-flex items-center gap-3 rounded-full bg-mint text-ink font-display font-bold text-lg px-8 py-4 border-[3px] border-ink shadow-[5px_5px_0_#F5EFE2] hover:shadow-[0_0_0_#F5EFE2] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200 disabled:opacity-70"
                   >
@@ -178,11 +194,11 @@ export default function Contact() {
                           transition={{ repeat: Infinity, duration: (0.8) / eggSpeed, ease: "linear" }}
                           className="w-5 h-5 rounded-full border-[3px] border-ink border-t-transparent"
                         />
-                        Envoi…
+                        {t("Envoi…", "Sending…")}
                       </>
                     ) : (
                       <>
-                        Envoyer
+                        {t("Envoyer", "Send")}
                         <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                       </>
                     )}

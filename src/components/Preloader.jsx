@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { LeafMark } from "../lib/ui.jsx";
+import { useT } from "../lib/lang.jsx";
 
 /*
   Préloader : une tasse qui se remplit de café pendant que le compteur monte.
   Sortie : rideau qui se lève en deux temps.
 */
 export default function Preloader({ onDone }) {
+  const t = useT();
   const [count, setCount] = useState(0);
   const reduce = useReducedMotion();
 
@@ -36,7 +38,7 @@ export default function Preloader({ onDone }) {
     <motion.div
       className="fixed inset-0 z-[9000] bg-espresso flex flex-col items-center justify-center overflow-hidden"
       exit={{ y: "-100%", transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] } }}
-      aria-label="Chargement"
+      aria-label={t("Chargement", "Loading")}
     >
       {/* deuxième rideau pour l'effet de profondeur à la sortie */}
       <motion.div
@@ -119,7 +121,7 @@ export default function Preloader({ onDone }) {
         </div>
 
         <p className="font-mono text-[11px] md:text-xs tracking-[0.4em] text-cream/50 uppercase">
-          Le café passe… le site arrive
+          {t("Le café passe… le site arrive", "Brewing… your site is on its way")}
         </p>
       </div>
     </motion.div>

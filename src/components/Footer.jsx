@@ -3,27 +3,42 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LeafMark } from "../lib/ui.jsx";
 import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
-const LINKS = [
-  { label: "Expertise", to: "/notre-expertise" },
-  { label: "Création", to: "/creation-site-web" },
-  { label: "SEO & GEO", to: "/seo-geo" },
-  { label: "Communication", to: "/communication" },
-  { label: "L'équipe", to: "/equipe" },
-  { label: "Lexique", to: "/lexique" },
-  { label: "Blog", to: "/#blog" },
-  { label: "Contact", to: "/#contact" },
-];
+const LINKS = {
+  fr: [
+    { label: "Expertise", to: "/notre-expertise" },
+    { label: "Création", to: "/creation-site-web" },
+    { label: "SEO & GEO", to: "/seo-geo" },
+    { label: "Communication", to: "/communication" },
+    { label: "L'équipe", to: "/equipe" },
+    { label: "Lexique", to: "/lexique" },
+    { label: "Blog", to: "/#blog" },
+    { label: "Contact", to: "/#contact" },
+  ],
+  en: [
+    { label: "Expertise", to: "/notre-expertise" },
+    { label: "Web design", to: "/creation-site-web" },
+    { label: "SEO & GEO", to: "/seo-geo" },
+    { label: "Communication", to: "/communication" },
+    { label: "The team", to: "/equipe" },
+    { label: "Glossary", to: "/lexique" },
+    { label: "Blog", to: "/#blog" },
+    { label: "Contact", to: "/#contact" },
+  ],
+};
 const WORD = ["C", "A", "F", "E", "I", "N"];
 
 export default function Footer() {
   const eggSpeed = useEggSpeed();
+  const { lang } = useLang();
+  const t = useT();
   return (
     <footer className="relative bg-espresso border-t-4 border-mint overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-10 pt-16 pb-8">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap gap-x-6 gap-y-2">
-            {LINKS.map((l) => (
+            {LINKS[lang].map((l) => (
               <Link
                 key={l.label}
                 to={l.to}
@@ -39,10 +54,10 @@ export default function Footer() {
             </span>
             <motion.a
               href="#top"
-              data-cursor="Hop !"
+              data-cursor={t("Hop !", "Up we go!")}
               whileHover={{ y: -4 }}
               className="grid place-items-center w-11 h-11 rounded-full border-2 border-mint text-mint hover:bg-mint hover:text-ink transition-colors"
-              aria-label="Retour en haut"
+              aria-label={t("Retour en haut", "Back to top")}
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 20V4m0 0l-6 6m6-6l6 6" />
@@ -88,7 +103,11 @@ export default function Footer() {
             © 2026 · Luxembourg
           </p>
           <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-cream/40 flex items-center gap-2">
-            Fait avec <span className="text-mint">beaucoup</span> de café
+            {lang === "en" ? (
+              <>Made with <span className="text-mint">lots</span> of coffee</>
+            ) : (
+              <>Fait avec <span className="text-mint">beaucoup</span> de café</>
+            )}
             <HuntBean id="footer" className="w-4 h-4" />
           </p>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel } from "../lib/ui.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 export const FAQS = [
   {
@@ -14,6 +15,21 @@ export const FAQS = [
   {
     q: "En combien de temps peut-on être visible sur Google ?",
     a: "Le SEO est un travail de fond : comptez généralement 3 à 6 mois pour des résultats significatifs sur des mots-clés locaux. Certaines optimisations techniques donnent des effets plus rapides, et on suit les positions ensemble, mois après mois.",
+  },
+];
+
+const FAQS_EN = [
+  {
+    q: "What kind of businesses do you work with?",
+    a: "Mostly Luxembourg-based SMEs, freelancers and local shops that want a professional website and real local visibility. Showcase site, e-commerce or a custom platform: we adapt to your industry and your budget.",
+  },
+  {
+    q: "How much does a website cost?",
+    a: "It depends on the project: a showcase site doesn't cost the same as an e-commerce store or a bespoke platform. We put together a clear, no-surprise quote after a first chat — free of charge, of course. You know exactly what you're paying for, and why.",
+  },
+  {
+    q: "How long before we show up on Google?",
+    a: "SEO is a long game: expect 3 to 6 months for meaningful results on local keywords. Some technical optimisations pay off faster, and we track your rankings together, month after month.",
   },
 ];
 
@@ -67,10 +83,13 @@ function Item({ faq, i, open, toggle }) {
 
 export default function Faq() {
   const [open, setOpen] = useState(0);
+  const { lang } = useLang();
+  const t = useT();
+  const faqs = lang === "en" ? FAQS_EN : FAQS;
   return (
     <section className="relative bg-cream py-24 md:py-32">
       <div className="mx-auto max-w-5xl px-6 md:px-10">
-        <SectionLabel>( Questions fréquentes )</SectionLabel>
+        <SectionLabel>{t("( Questions fréquentes )", "( Frequently asked questions )")}</SectionLabel>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -78,10 +97,14 @@ export default function Faq() {
           transition={{ duration: 0.6 }}
           className="font-display font-extrabold text-4xl md:text-6xl text-ink mt-4 mb-12 leading-[0.95]"
         >
-          Tout ce qui vous <span className="squiggle">turlupine</span>
+          {lang === "en" ? (
+            <>Everything that keeps you <span className="squiggle">wondering</span></>
+          ) : (
+            <>Tout ce qui vous <span className="squiggle">turlupine</span></>
+          )}
         </motion.h2>
         <div className="space-y-4">
-          {FAQS.map((f, i) => (
+          {faqs.map((f, i) => (
             <Item key={i} faq={f} i={i} open={open} toggle={(n) => setOpen(open === n ? -1 : n)} />
           ))}
         </div>

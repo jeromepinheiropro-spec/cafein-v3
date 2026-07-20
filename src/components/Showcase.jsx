@@ -4,12 +4,14 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
 import { HuntBean } from "./EasterEggs.jsx";
-import { PROJETS } from "../lib/projets.jsx";
+import { getProjets } from "../lib/projets.jsx";
+import { useT, useLang } from "../lib/lang.jsx";
 
 const MotionLink = motion.create(Link);
 
 /* ── Carte projet avec tilt 3D ────────────────────────────────── */
 function ProjectCard({ p, rot }) {
+  const t = useT();
   const ref = useRef(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -38,7 +40,7 @@ function ProjectCard({ p, rot }) {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 100, damping: 18 }}
       style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      data-cursor="Découvrir"
+      data-cursor={t("Découvrir", "Discover")}
       className="group relative block rounded-3xl bg-white border-[3px] border-ink p-4 pb-5 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
       whileHover={{ boxShadow: `12px 12px 0 ${p.shadow}` }}
     >
@@ -76,6 +78,7 @@ function ProjectCard({ p, rot }) {
 function BeforeAfter() {
   const containerRef = useRef(null);
   const [pct, setPct] = useState(50);
+  const t = useT();
 
   function updateFromClientX(clientX) {
     const r = containerRef.current.getBoundingClientRect();
@@ -93,10 +96,10 @@ function BeforeAfter() {
     >
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <h3 className="font-display font-extrabold text-2xl md:text-4xl text-ink">
-          Un site repensé de A à Z
+          {t("Un site repensé de A à Z", "A site rebuilt from A to Z")}
         </h3>
         <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-ink/50">
-          ← Glissez le curseur →
+          {t("← Glissez le curseur →", "← Drag the slider →")}
         </p>
       </div>
 
@@ -110,7 +113,7 @@ function BeforeAfter() {
         <div className="absolute inset-0 bg-espresso p-6 md:p-10 flex flex-col justify-between items-end text-right">
           <div className="flex flex-col items-end">
             <span className="inline-block rounded-full bg-mint text-ink font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
-              Après Cafein
+              {t("Après Cafein", "After Cafein")}
             </span>
             <div className="mt-6 space-y-3 w-56 md:w-80 flex flex-col items-end">
               <div className="h-8 md:h-10 w-4/5 rounded-lg bg-cream" />
@@ -120,7 +123,7 @@ function BeforeAfter() {
             </div>
           </div>
           <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-mint">
-            Refonte optimisée : UX mobile + structure SEO
+            {t("Refonte optimisée : UX mobile + structure SEO", "Optimised rebuild: mobile UX + SEO structure")}
           </p>
         </div>
 
@@ -130,7 +133,7 @@ function BeforeAfter() {
           style={{ clipPath: `inset(0 ${100 - pct}% 0 0)` }}
         >
           <span className="inline-block rounded-full bg-ink/80 text-cream font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
-            Avant : site existant
+            {t("Avant : site existant", "Before: existing site")}
           </span>
           <div className="mt-6 space-y-3 max-w-md opacity-60">
             <div className="h-6 w-1/2 rounded bg-ink/40" />
@@ -139,7 +142,7 @@ function BeforeAfter() {
             <div className="h-2.5 w-5/6 rounded bg-ink/20" />
             <div className="h-8 w-28 rounded bg-ink/30 mt-4" />
             <p className="font-mono text-[10px] uppercase tracking-widest text-ink/40 pt-3">
-              lent · daté · invisible sur Google
+              {t("lent · daté · invisible sur Google", "slow · dated · invisible on Google")}
             </p>
           </div>
         </div>
@@ -167,18 +170,22 @@ function BeforeAfter() {
   );
 }
 
-/* ── Résultats concrets ───────────────────────────────────────── */
-const RESULTS = [
-  { big: <CountUp to={240} prefix="+" suffix="%" />, title: "Trafic organique", sub: "En 6 mois sur un projet SEO local Luxembourg" },
-  { big: "< 1.5s", title: "Temps de chargement", sub: "Score PageSpeed > 90 sur mobile après optimisation" },
-  { big: "Top 3", title: "Sur Google", sub: "Mots-clés locaux ciblés, résultats stables" },
-];
-
 export default function Showcase() {
+  const { lang } = useLang();
+  const t = useT();
+  const projets = getProjets(lang);
+
+  /* ── Résultats concrets ─────────────────────────────────────── */
+  const RESULTS = [
+    { big: <CountUp to={240} prefix="+" suffix="%" />, title: t("Trafic organique", "Organic traffic"), sub: t("En 6 mois sur un projet SEO local Luxembourg", "In 6 months on a local SEO project in Luxembourg") },
+    { big: "< 1.5s", title: t("Temps de chargement", "Load time"), sub: t("Score PageSpeed > 90 sur mobile après optimisation", "PageSpeed score > 90 on mobile after optimisation") },
+    { big: "Top 3", title: t("Sur Google", "On Google"), sub: t("Mots-clés locaux ciblés, résultats stables", "Targeted local keywords, stable results") },
+  ];
+
   return (
     <section id="realisations" className="relative bg-cream py-24 md:py-32 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionLabel>( Réalisations )</SectionLabel>
+        <SectionLabel>{t("( Réalisations )", "( Our work )")}</SectionLabel>
         <div className="flex flex-wrap items-end justify-between gap-6 mt-4">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -187,7 +194,11 @@ export default function Showcase() {
             transition={{ duration: 0.6 }}
             className="font-display font-extrabold text-4xl md:text-6xl text-ink leading-[0.95] max-w-2xl"
           >
-            Des projets qui ont <span className="squiggle">du corps</span>
+            {lang === "en" ? (
+              <>Projects with real <span className="squiggle">substance</span></>
+            ) : (
+              <>Des projets qui ont <span className="squiggle">du corps</span></>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -196,13 +207,15 @@ export default function Showcase() {
             transition={{ delay: 0.2 }}
             className="max-w-sm text-ink/70 font-medium"
           >
-            Une sélection de réalisations signées par notre groupe : sites web, identités,
-            SEO et campagnes. Propre, rapide et pensé pour convertir.
+            {t(
+              "Une sélection de réalisations signées par notre groupe : sites web, identités, SEO et campagnes. Propre, rapide et pensé pour convertir.",
+              "A selection of work signed by our group: websites, identities, SEO and campaigns. Clean, fast and built to convert.",
+            )}
           </motion.p>
         </div>
 
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {PROJETS.map((p, i) => (
+          {projets.map((p, i) => (
             <ProjectCard key={p.slug} p={p} rot={i % 2 ? 1 : -1} />
           ))}
         </div>
@@ -213,7 +226,7 @@ export default function Showcase() {
         <div className="mt-24">
           <div className="flex items-center gap-3">
             <Spark className="w-5 h-5 text-mint-dark" />
-            <SectionLabel>( Des résultats concrets )</SectionLabel>
+            <SectionLabel>{t("( Des résultats concrets )", "( Real results )")}</SectionLabel>
             <HuntBean id="resultats" className="w-5 h-5" />
           </div>
           <div className="mt-8 grid md:grid-cols-3 gap-6">

@@ -8,20 +8,53 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { LeafMark, Wordmark, Magnetic } from "../lib/ui.jsx";
 import { useEgg } from "./EasterEggs.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 const LINKS = [
-  { label: "Notre expertise", to: "/notre-expertise" },
-  { label: "Création de site", to: "/creation-site-web" },
-  { label: "SEO & GEO", to: "/seo-geo" },
-  { label: "Communication", to: "/communication" },
-  { label: "L'équipe", to: "/equipe" },
+  { label: "Notre expertise", en: "Our expertise", to: "/notre-expertise" },
+  { label: "Création de site", en: "Web design", to: "/creation-site-web" },
+  { label: "SEO & GEO", en: "SEO & GEO", to: "/seo-geo" },
+  { label: "Communication", en: "Communication", to: "/communication" },
+  { label: "L'équipe", en: "The team", to: "/equipe" },
 ];
+
+/* Petit interrupteur FR | EN */
+function LangToggle({ dark = false }) {
+  const { lang, setLang } = useLang();
+  return (
+    <div
+      className={`flex items-center rounded-full border-2 p-0.5 ${
+        dark ? "border-cream/25" : "border-ink/15"
+      }`}
+      role="group"
+      aria-label="Langue / Language"
+    >
+      {["fr", "en"].map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          className={`px-2.5 py-1 rounded-full font-mono text-[11px] font-bold uppercase tracking-wider transition-colors ${
+            lang === l
+              ? "bg-mint text-ink"
+              : dark
+                ? "text-cream/50 hover:text-cream"
+                : "text-ink/50 hover:text-ink"
+          }`}
+        >
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function Nav() {
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
   const { toggleOverdrive, toggleDecaf } = useEgg();
+  const t = useT();
 
   /* Eggs mobiles : 5 taps rapides sur le logo → surcaféiné ; appui long → décaféiné */
   const taps = useRef({ n: 0, t: 0 });
@@ -88,20 +121,23 @@ export default function Nav() {
                   }`
                 }
               >
-                {l.label}
+                {t(l.label, l.en)}
                 <span className="absolute left-4 right-4 -bottom-0.5 h-[2.5px] rounded-full bg-mint origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
               </NavLink>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <LangToggle />
+            </div>
             <Magnetic>
               <a
                 href="/#contact"
                 data-cursor="Go !"
                 className="hidden sm:inline-flex items-center gap-2 rounded-full bg-ink text-cream font-semibold text-sm px-5 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors duration-300"
               >
-                Un café ?
+                {t("Un café ?", "Coffee?")}
                 <span className="inline-block w-2 h-2 rounded-full bg-mint group-hover:bg-ink" />
               </a>
             </Magnetic>
@@ -130,7 +166,7 @@ export default function Nav() {
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-0 z-[400] bg-espresso flex flex-col justify-center px-8"
           >
-            {[...LINKS, { label: "Contact", to: "/#contact" }].map((l, i) => (
+            {[...LINKS, { label: "Contact", en: "Contact", to: "/#contact" }].map((l, i) => (
               <motion.div
                 key={l.label}
                 initial={{ opacity: 0, y: 40 }}
@@ -143,18 +179,19 @@ export default function Nav() {
                   className="font-display font-extrabold text-4xl text-cream py-3 flex items-center gap-4 group"
                 >
                   <span className="font-mono text-sm text-mint">0{i + 1}</span>
-                  {l.label}
+                  {t(l.label, l.en)}
                 </Link>
               </motion.div>
             ))}
-            <motion.p
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { delay: 0.6 } }}
               exit={{ opacity: 0 }}
-              className="absolute bottom-10 left-8 font-mono text-xs tracking-[0.3em] text-cream/40 uppercase"
+              className="absolute bottom-10 left-8 flex items-center gap-4"
             >
-              Luxembourg · FR / EN
-            </motion.p>
+              <span className="font-mono text-xs tracking-[0.3em] text-cream/40 uppercase">Luxembourg</span>
+              <LangToggle dark />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

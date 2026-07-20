@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { SectionLabel, ArrowUpRight } from "../lib/ui.jsx";
+import { useT, useLang } from "../lib/lang.jsx";
 
 const MotionLink = motion.create(Link);
 
@@ -40,43 +41,81 @@ function IconCom({ className }) {
   );
 }
 
-const SERVICES = [
-  {
-    n: "01",
-    to: "/creation-site-web",
-    title: "Création de site web",
-    desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
-    tags: ["Vitrine", "E-commerce", "Sur mesure"],
-    Icon: IconSite,
-    bg: "bg-mint",
-    text: "text-ink",
-    rotate: -1.5,
-  },
-  {
-    n: "02",
-    to: "/seo-geo",
-    title: "SEO & GEO",
-    desc: "Référencement naturel classique et optimisation pour être trouvé et cité par les intelligences artificielles (ChatGPT, Perplexity...), avec un focus local Luxembourg.",
-    tags: ["Google", "ChatGPT", "Local"],
-    Icon: IconSeo,
-    bg: "bg-caramel",
-    text: "text-ink",
-    rotate: 1.5,
-  },
-  {
-    n: "03",
-    to: "/communication",
-    title: "Communication digitale",
-    desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
-    tags: ["Réseaux sociaux", "Contenus", "Campagnes"],
-    Icon: IconCom,
-    bg: "bg-sun",
-    text: "text-ink",
-    rotate: -1,
-  },
-];
+const SERVICES = {
+  fr: [
+    {
+      n: "01",
+      to: "/creation-site-web",
+      title: "Création de site web",
+      desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
+      tags: ["Vitrine", "E-commerce", "Sur mesure"],
+      Icon: IconSite,
+      bg: "bg-mint",
+      text: "text-ink",
+      rotate: -1.5,
+    },
+    {
+      n: "02",
+      to: "/seo-geo",
+      title: "SEO & GEO",
+      desc: "Référencement naturel classique et optimisation pour être trouvé et cité par les intelligences artificielles (ChatGPT, Perplexity...), avec un focus local Luxembourg.",
+      tags: ["Google", "ChatGPT", "Local"],
+      Icon: IconSeo,
+      bg: "bg-caramel",
+      text: "text-ink",
+      rotate: 1.5,
+    },
+    {
+      n: "03",
+      to: "/communication",
+      title: "Communication digitale",
+      desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
+      tags: ["Réseaux sociaux", "Contenus", "Campagnes"],
+      Icon: IconCom,
+      bg: "bg-sun",
+      text: "text-ink",
+      rotate: -1,
+    },
+  ],
+  en: [
+    {
+      n: "01",
+      to: "/creation-site-web",
+      title: "Website design",
+      desc: "WordPress or fully custom development, tailored to your needs and budget: showcase sites, e-commerce or bespoke platforms, built for the Luxembourg market.",
+      tags: ["Showcase", "E-commerce", "Custom-built"],
+      Icon: IconSite,
+      bg: "bg-mint",
+      text: "text-ink",
+      rotate: -1.5,
+    },
+    {
+      n: "02",
+      to: "/seo-geo",
+      title: "SEO & GEO",
+      desc: "Classic search engine optimisation plus tuning to get found and cited by AI assistants (ChatGPT, Perplexity...), with a local focus on Luxembourg.",
+      tags: ["Google", "ChatGPT", "Local"],
+      Icon: IconSeo,
+      bg: "bg-caramel",
+      text: "text-ink",
+      rotate: 1.5,
+    },
+    {
+      n: "03",
+      to: "/communication",
+      title: "Digital communication",
+      desc: "Strategy, social media, content and campaigns: we handle your digital communication from A to Z to make your brand shine across Luxembourg.",
+      tags: ["Social media", "Content", "Campaigns"],
+      Icon: IconCom,
+      bg: "bg-sun",
+      text: "text-ink",
+      rotate: -1,
+    },
+  ],
+};
 
 function Card({ s, i, total, progress }) {
+  const t = useT();
   const targetScale = 1 - (total - 1 - i) * 0.045;
   const scale = useTransform(progress, [i / total, 1], [1, targetScale]);
 
@@ -84,8 +123,8 @@ function Card({ s, i, total, progress }) {
     <div className="sticky top-24 md:top-28 flex justify-center px-4" style={{ zIndex: i + 1 }}>
       <MotionLink
         to={s.to}
-        data-cursor="Découvrir"
-        aria-label={`${s.title}, en savoir plus`}
+        data-cursor={t("Découvrir", "Discover")}
+        aria-label={`${s.title}, ${t("en savoir plus", "learn more")}`}
         style={{ scale, rotate: s.rotate }}
         whileHover={{ rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -115,7 +154,7 @@ function Card({ s, i, total, progress }) {
             </span>
           ))}
           <span className="ml-auto inline-flex items-center gap-2 font-display font-bold text-sm md:text-base group">
-            En savoir plus
+            {t("En savoir plus", "Learn more")}
             <span className="grid place-items-center w-9 h-9 rounded-full bg-ink text-cream group-hover:rotate-45 transition-transform duration-300">
               <ArrowUpRight className="w-4 h-4" />
             </span>
@@ -127,8 +166,10 @@ function Card({ s, i, total, progress }) {
 }
 
 export default function Services() {
+  const { lang } = useLang();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const services = SERVICES[lang];
 
   return (
     <section id="services" className="relative bg-cream py-24 md:py-32">
@@ -141,15 +182,25 @@ export default function Services() {
           transition={{ duration: 0.6 }}
           className="font-display font-extrabold text-4xl md:text-6xl lg:text-7xl text-ink mt-4 leading-[0.95]"
         >
-          Trois expressos,
-          <br />
-          <span className="text-stroke-espresso">zéro déca.</span>
+          {lang === "en" ? (
+            <>
+              Three espressos,
+              <br />
+              <span className="text-stroke-espresso">zero decaf.</span>
+            </>
+          ) : (
+            <>
+              Trois expressos,
+              <br />
+              <span className="text-stroke-espresso">zéro déca.</span>
+            </>
+          )}
         </motion.h2>
       </div>
 
       <div ref={ref} className="relative">
-        {SERVICES.map((s, i) => (
-          <Card key={s.n} s={s} i={i} total={SERVICES.length} progress={scrollYProgress} />
+        {services.map((s, i) => (
+          <Card key={s.n} s={s} i={i} total={services.length} progress={scrollYProgress} />
         ))}
       </div>
     </section>

@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { Magnetic, Bean, Spark, ArrowUpRight, Cup } from "../lib/ui.jsx";
 import { useEgg, useEggSpeed } from "./EasterEggs.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 const letters = ["C", "a", "f", "e", "i", "n"];
 
@@ -41,6 +42,8 @@ export default function Hero({ started }) {
   const eggSpeed = useEggSpeed();
   const ref = useRef(null);
   const { collect, curious } = useEgg();
+  const { lang } = useLang();
+  const t = useT();
 
   function onBeanClick(e) {
     e.stopPropagation();
@@ -127,7 +130,7 @@ export default function Hero({ started }) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-mint" />
             </span>
-            Agence basée au Luxembourg
+            {t("Agence basée au Luxembourg", "Agency based in Luxembourg")}
           </span>
         </motion.div>
 
@@ -135,7 +138,7 @@ export default function Hero({ started }) {
           <div>
             {/* Titre géant lettre par lettre */}
             <h1 className="font-display font-extrabold leading-[0.85] tracking-tight text-ink text-[clamp(4.5rem,17vw,15rem)] select-none">
-              <span className="sr-only">Cafein, agence de communication digitale au Luxembourg</span>
+              <span className="sr-only">{t("Cafein, agence de communication digitale au Luxembourg", "Cafein, digital communication agency in Luxembourg")}</span>
               <span aria-hidden className="inline-flex">
                 {letters.map((l, i) => (
                   <motion.span
@@ -191,10 +194,21 @@ export default function Hero({ started }) {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="mt-6 max-w-xl text-lg md:text-2xl text-ink/80 font-medium leading-relaxed"
             >
-              Votre agence de <span className="squiggle font-bold text-ink">marketing web</span> au
-              Luxembourg. Sites sur mesure, communication digitale et visibilité :{" "}
-              <span className="font-bold text-mint-dark">SEO&nbsp;&amp;&nbsp;GEO</span>. Le tout, servi
-              bien serré.
+              {lang === "en" ? (
+                <>
+                  Your <span className="squiggle font-bold text-ink">web marketing</span> agency in
+                  Luxembourg. Tailor-made websites, digital communication and visibility:{" "}
+                  <span className="font-bold text-mint-dark">SEO&nbsp;&amp;&nbsp;GEO</span>. All of it,
+                  served extra strong.
+                </>
+              ) : (
+                <>
+                  Votre agence de <span className="squiggle font-bold text-ink">marketing web</span> au
+                  Luxembourg. Sites sur mesure, communication digitale et visibilité :{" "}
+                  <span className="font-bold text-mint-dark">SEO&nbsp;&amp;&nbsp;GEO</span>. Le tout, servi
+                  bien serré.
+                </>
+              )}
             </motion.p>
 
             {/* CTA */}
@@ -207,20 +221,20 @@ export default function Hero({ started }) {
               <Magnetic strength={0.25}>
                 <a
                   href="#contact"
-                  data-cursor="C'est parti"
+                  data-cursor={t("C'est parti", "Let's go")}
                   className="group inline-flex items-center gap-3 rounded-full bg-mint text-ink font-display font-bold text-base md:text-lg px-7 py-4 border-2 border-ink shadow-[5px_5px_0_#0A0F0D] hover:shadow-[0px_0px_0_#0A0F0D] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
                 >
-                  Parlons de votre projet
+                  {t("Parlons de votre projet", "Let's talk about your project")}
                   <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                 </a>
               </Magnetic>
               <Magnetic strength={0.25}>
                 <a
                   href="#realisations"
-                  data-cursor="Mater"
+                  data-cursor={t("Mater", "Take a peek")}
                   className="inline-flex items-center gap-3 rounded-full bg-transparent text-ink font-display font-bold text-base md:text-lg px-7 py-4 border-2 border-ink hover:bg-ink hover:text-cream transition-colors duration-300"
                 >
-                  Voir nos réalisations
+                  {t("Voir nos réalisations", "See our work")}
                 </a>
               </Magnetic>
             </motion.div>
@@ -245,7 +259,7 @@ export default function Hero({ started }) {
         transition={{ delay: 1.4 }}
         className="absolute bottom-6 inset-x-0 flex items-center justify-between px-6 md:px-10 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-ink/50"
       >
-        <span className="hidden sm:block">Sites web · SEO/GEO · Communication</span>
+        <span className="hidden sm:block">{t("Sites web · SEO/GEO · Communication", "Websites · SEO/GEO · Communication")}</span>
         <motion.span
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: (1.6) / eggSpeed }}

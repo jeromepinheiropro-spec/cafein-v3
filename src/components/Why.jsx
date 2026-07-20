@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "../lib/ui.jsx";
+import { useLang, useT } from "../lib/lang.jsx";
 
 function IconPin({ className }) {
   return (
@@ -39,34 +40,65 @@ function IconBolt({ className }) {
   );
 }
 
-const REASONS = [
-  {
-    Icon: IconPin,
-    title: "Ancrés au Luxembourg",
-    desc: "Une agence locale qui comprend votre marché, pas un prestataire lointain.",
-    color: "bg-mint",
-  },
-  {
-    Icon: IconBot,
-    title: "Prêts pour l'ère de l'IA",
-    desc: "En plus du SEO classique, on optimise votre présence pour les moteurs IA (GEO), un angle que peu d'agences travaillent aujourd'hui.",
-    color: "bg-caramel",
-  },
-  {
-    Icon: IconChat,
-    title: "Un interlocuteur direct",
-    desc: "Pas d'intermédiaire ni de compte manager : vous échangez directement avec la personne qui construit votre projet.",
-    color: "bg-sun",
-  },
-  {
-    Icon: IconBolt,
-    title: "Rapide et sans fioritures",
-    desc: "Des sites propres et performants, livrés efficacement, sans jargon inutile.",
-    color: "bg-cream-2",
-  },
-];
+const REASONS = {
+  fr: [
+    {
+      Icon: IconPin,
+      title: "Ancrés au Luxembourg",
+      desc: "Une agence locale qui comprend votre marché, pas un prestataire lointain.",
+      color: "bg-mint",
+    },
+    {
+      Icon: IconBot,
+      title: "Prêts pour l'ère de l'IA",
+      desc: "En plus du SEO classique, on optimise votre présence pour les moteurs IA (GEO), un angle que peu d'agences travaillent aujourd'hui.",
+      color: "bg-caramel",
+    },
+    {
+      Icon: IconChat,
+      title: "Un interlocuteur direct",
+      desc: "Pas d'intermédiaire ni de compte manager : vous échangez directement avec la personne qui construit votre projet.",
+      color: "bg-sun",
+    },
+    {
+      Icon: IconBolt,
+      title: "Rapide et sans fioritures",
+      desc: "Des sites propres et performants, livrés efficacement, sans jargon inutile.",
+      color: "bg-cream-2",
+    },
+  ],
+  en: [
+    {
+      Icon: IconPin,
+      title: "Rooted in Luxembourg",
+      desc: "A local agency that understands your market, not some distant provider.",
+      color: "bg-mint",
+    },
+    {
+      Icon: IconBot,
+      title: "Ready for the AI era",
+      desc: "Beyond classic SEO, we optimize your presence for AI engines (GEO), an angle few agencies work on today.",
+      color: "bg-caramel",
+    },
+    {
+      Icon: IconChat,
+      title: "One direct contact",
+      desc: "No middlemen, no account managers: you talk directly with the person building your project.",
+      color: "bg-sun",
+    },
+    {
+      Icon: IconBolt,
+      title: "Fast and no-frills",
+      desc: "Clean, high-performing websites, delivered efficiently, without pointless jargon.",
+      color: "bg-cream-2",
+    },
+  ],
+};
 
 export default function Why() {
+  const { lang } = useLang();
+  const t = useT();
+  const reasons = REASONS[lang];
   return (
     <section className="relative bg-espresso py-24 md:py-36 overflow-hidden">
       {/* déco : grandes formes */}
@@ -74,7 +106,7 @@ export default function Why() {
       <div className="absolute -bottom-24 -right-16 w-80 h-80 rounded-blob bg-caramel/10 pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-6 md:px-10">
-        <SectionLabel dark>( Pourquoi Cafein ? )</SectionLabel>
+        <SectionLabel dark>{t("( Pourquoi Cafein ? )", "( Why Cafein? )")}</SectionLabel>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -82,13 +114,23 @@ export default function Why() {
           transition={{ duration: 0.6 }}
           className="font-display font-extrabold text-4xl md:text-6xl text-cream mt-4 leading-[0.95]"
         >
-          Le petit grain
-          <br />
-          <span className="text-stroke-cream">qui change tout.</span>
+          {lang === "en" ? (
+            <>
+              The little bean
+              <br />
+              <span className="text-stroke-cream">that changes everything.</span>
+            </>
+          ) : (
+            <>
+              Le petit grain
+              <br />
+              <span className="text-stroke-cream">qui change tout.</span>
+            </>
+          )}
         </motion.h2>
 
         <div className="mt-14 grid sm:grid-cols-2 gap-6">
-          {REASONS.map((r, i) => (
+          {reasons.map((r, i) => (
             <motion.div
               key={r.title}
               initial={{ opacity: 0, y: 50, rotate: i % 2 ? 1.5 : -1.5 }}
