@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { SectionLabel, ArrowUpRight } from "../lib/ui.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 

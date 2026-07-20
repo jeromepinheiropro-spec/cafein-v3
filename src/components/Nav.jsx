@@ -5,10 +5,10 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "../lib/link.jsx";
 import { LeafMark, Wordmark, Magnetic } from "../lib/ui.jsx";
 import { useEgg } from "./EasterEggs.jsx";
-import { useLang, useT } from "../lib/lang.jsx";
+import { useLang, useT, useLocalize } from "../lib/lang.jsx";
 
 const LINKS = [
   { label: "Notre expertise", en: "Our expertise", to: "/notre-expertise" },
@@ -55,6 +55,7 @@ export default function Nav() {
   const { scrollY } = useScroll();
   const { toggleOverdrive, toggleDecaf } = useEgg();
   const t = useT();
+  const localize = useLocalize();
 
   /* Eggs mobiles : 5 taps rapides sur le logo → surcaféiné ; appui long → décaféiné */
   const taps = useRef({ n: 0, t: 0 });
@@ -133,7 +134,7 @@ export default function Nav() {
             </div>
             <Magnetic>
               <a
-                href="/#contact"
+                href={localize("/#contact")}
                 data-cursor="Go !"
                 className="hidden sm:inline-flex items-center gap-2 rounded-full bg-ink text-cream font-semibold text-sm px-5 py-2.5 border-2 border-ink hover:bg-mint hover:text-ink hover:border-mint transition-colors duration-300"
               >

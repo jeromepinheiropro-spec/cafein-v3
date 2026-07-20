@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";

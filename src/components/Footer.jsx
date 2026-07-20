@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/link.jsx";
 import { LeafMark } from "../lib/ui.jsx";
 import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
 import { useLang, useT } from "../lib/lang.jsx";
