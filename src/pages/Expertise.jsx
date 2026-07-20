@@ -3,222 +3,14 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PageHero, CtaBand } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
-import { Spark, ArrowUpRight, Cup, Bean } from "../lib/ui.jsx";
-
-/* Icônes doodle minimalistes, cohérentes avec le reste du site */
-function Doodle({ kind, className = "w-9 h-9" }) {
-  const common = {
-    viewBox: "0 0 64 64",
-    className,
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 3.5,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  };
-  switch (kind) {
-    case "site":
-      return (
-        <svg {...common}>
-          <rect x="8" y="14" width="48" height="36" rx="4" />
-          <path d="M8 24h48M16 34h16M16 41h22" />
-        </svg>
-      );
-    case "ecom":
-      return (
-        <svg {...common}>
-          <path d="M12 18h8l6 26h22l6-20H24" />
-          <circle cx="30" cy="52" r="3" fill="currentColor" stroke="none" />
-          <circle cx="48" cy="52" r="3" fill="currentColor" stroke="none" />
-        </svg>
-      );
-    case "code":
-      return (
-        <svg {...common}>
-          <path d="M22 20 10 32l12 12M42 20l12 12-12 12M36 14l-8 36" />
-        </svg>
-      );
-    case "seo":
-      return (
-        <svg {...common}>
-          <circle cx="27" cy="27" r="15" />
-          <path d="M38 38 52 52M20 30l5-6 5 4 5-8" />
-        </svg>
-      );
-    case "geo":
-      return (
-        <svg {...common}>
-          <rect x="12" y="14" width="40" height="28" rx="6" />
-          <circle cx="26" cy="28" r="2.5" fill="currentColor" stroke="none" />
-          <circle cx="38" cy="28" r="2.5" fill="currentColor" stroke="none" />
-          <path d="M26 50h12M32 42v8" />
-        </svg>
-      );
-    case "local":
-      return (
-        <svg {...common}>
-          <path d="M32 54c10-11 16-18 16-26a16 16 0 1 0-32 0c0 8 6 15 16 26z" />
-          <circle cx="32" cy="27" r="6" />
-        </svg>
-      );
-    case "social":
-      return (
-        <svg {...common}>
-          <circle cx="20" cy="22" r="7" />
-          <circle cx="46" cy="16" r="5" />
-          <circle cx="44" cy="46" r="8" />
-          <path d="M26 26l11 15M26 20l14-3" />
-        </svg>
-      );
-    case "contenu":
-      return (
-        <svg {...common}>
-          <path d="M16 50 44 22l-6-6L10 44l-2 10 8-4zM38 16l10 10" />
-        </svg>
-      );
-    case "brand":
-      return (
-        <svg {...common}>
-          <circle cx="32" cy="32" r="18" />
-          <path d="M32 14v-6M32 56v-6M14 32H8M56 32h-6" />
-          <circle cx="32" cy="32" r="6" fill="currentColor" stroke="none" />
-        </svg>
-      );
-    case "ads":
-      return (
-        <svg {...common}>
-          <path d="M10 28v8l24 10V18L10 28zM34 24l18-8M34 40l18 8M52 26v12" />
-        </svg>
-      );
-    case "mail":
-      return (
-        <svg {...common}>
-          <rect x="10" y="18" width="44" height="30" rx="4" />
-          <path d="M10 22l22 16 22-16" />
-        </svg>
-      );
-    case "data":
-      return (
-        <svg {...common}>
-          <path d="M12 52V32M26 52V20M40 52V38M54 52V26" />
-          <path d="M8 56h48" />
-        </svg>
-      );
-    default:
-      return <Cup className={className} />;
-  }
-}
+import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
+import { EXPERTISES, Doodle } from "../lib/expertises.jsx";
 
 /*
-  Les 12 expertises Cafein, façon nooki.fr/notre-expertise
-  mais servies bien serrées. `to` = carte cliquable vers la page dédiée.
+  La grille des 12 expertises Cafein, façon nooki.fr/notre-expertise —
+  chaque carte mène à sa page dédiée.
 */
-const EXPERTISES = [
-  {
-    icon: "site",
-    title: "Sites vitrine",
-    desc: "Votre activité présentée avec soin, pensée pour transformer les visiteurs en contacts.",
-    to: "/creation-site-web",
-    bg: "bg-mint",
-  },
-  {
-    icon: "ecom",
-    title: "E-commerce",
-    desc: "Des boutiques en ligne rapides et rassurantes, du catalogue au paiement.",
-    to: "/creation-site-web",
-  },
-  {
-    icon: "code",
-    title: "Développement sur mesure",
-    desc: "SaaS, plateformes, outils métier : du code taillé pour vos besoins, qui grandit avec vous.",
-    to: "/creation-site-web",
-  },
-  {
-    icon: "seo",
-    title: "SEO",
-    desc: "Placez votre site en haut des résultats Google avec une stratégie durable, sans payer de publicité.",
-    to: "/seo-geo",
-    bg: "bg-caramel",
-  },
-  {
-    icon: "geo",
-    title: "GEO — visibilité IA",
-    desc: "Être trouvé et cité par ChatGPT, Perplexity et Gemini : le référencement nouvelle génération.",
-    to: "/seo-geo",
-    bg: "bg-sun",
-  },
-  {
-    icon: "local",
-    title: "SEO local Luxembourg",
-    desc: "Être visible auprès des clients de votre zone : Google Maps, fiches locales, Grande Région.",
-    to: "/seo-geo",
-  },
-  {
-    icon: "social",
-    title: "Réseaux sociaux",
-    desc: "Nous animons vos comptes pour fédérer une communauté et faire rayonner votre marque.",
-    to: "/communication",
-    bg: "bg-mint",
-  },
-  {
-    icon: "contenu",
-    title: "Contenus & copywriting",
-    desc: "Articles, pages, posts : des mots qui travaillent pour votre image et votre SEO.",
-    to: "/communication",
-  },
-  {
-    icon: "brand",
-    title: "Branding & identité",
-    desc: "Logo, couleurs, ton : une identité cohérente qui reste en tête, du site aux réseaux.",
-  },
-  {
-    icon: "ads",
-    title: "Campagnes publicitaires",
-    desc: "Google Ads et social ads ciblés, pour un retour sur investissement mesurable et rapide.",
-    bg: "bg-caramel",
-  },
-  {
-    icon: "mail",
-    title: "Emailing & newsletters",
-    desc: "Des e-mails bien tournés et esthétiques, le seul canal dont vous êtes vraiment propriétaire.",
-  },
-  {
-    icon: "data",
-    title: "Data & reporting",
-    desc: "Positions SEO, performances des campagnes : des rapports clairs pour décider vite.",
-    bg: "bg-sun",
-  },
-];
-
 function ExpertiseCard({ e, i }) {
-  const inner = (
-    <>
-      <div className="flex items-start justify-between gap-4">
-        <span
-          className={`grid place-items-center w-16 h-16 rounded-2xl border-[3px] border-ink text-ink ${e.bg || "bg-cream-2"}`}
-        >
-          <Doodle kind={e.icon} />
-        </span>
-        <span className="font-mono text-xs font-bold text-mint-dark tracking-widest">
-          {String(i + 1).padStart(2, "0")}
-        </span>
-      </div>
-      <h3 className="mt-5 font-display font-extrabold text-xl md:text-2xl text-ink leading-tight">
-        {e.title}
-      </h3>
-      <p className="mt-2.5 text-ink/70 font-medium leading-relaxed text-sm md:text-base">
-        {e.desc}
-      </p>
-      {e.to && (
-        <span className="mt-4 inline-flex items-center gap-1.5 font-display font-bold text-sm text-mint-dark group-hover:gap-2.5 transition-all">
-          En savoir plus <ArrowUpRight className="w-4 h-4" />
-        </span>
-      )}
-    </>
-  );
-
-  const className = `group flex flex-col rounded-3xl bg-white border-[3px] border-ink p-7 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[9px_9px_0_#1FCE8A] transition-shadow text-left h-full`;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: i % 2 ? 1.5 : -1.5 }}
@@ -228,13 +20,31 @@ function ExpertiseCard({ e, i }) {
       whileHover={{ y: -8, rotate: i % 2 ? -1 : 1 }}
       className="h-full"
     >
-      {e.to ? (
-        <Link to={e.to} data-cursor="Découvrir" className={className}>
-          {inner}
-        </Link>
-      ) : (
-        <div className={className}>{inner}</div>
-      )}
+      <Link
+        to={`/notre-expertise/${e.slug}`}
+        data-cursor="Découvrir"
+        className="group flex flex-col rounded-3xl bg-white border-[3px] border-ink p-7 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[9px_9px_0_#1FCE8A] transition-shadow text-left h-full"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <span
+            className={`grid place-items-center w-16 h-16 rounded-2xl border-[3px] border-ink text-ink ${e.bg || "bg-cream-2"}`}
+          >
+            <Doodle kind={e.icon} />
+          </span>
+          <span className="font-mono text-xs font-bold text-mint-dark tracking-widest">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+        </div>
+        <h3 className="mt-5 font-display font-extrabold text-xl md:text-2xl text-ink leading-tight">
+          {e.title}
+        </h3>
+        <p className="mt-2.5 text-ink/70 font-medium leading-relaxed text-sm md:text-base">
+          {e.desc}
+        </p>
+        <span className="mt-4 inline-flex items-center gap-1.5 font-display font-bold text-sm text-mint-dark group-hover:gap-2.5 transition-all">
+          En savoir plus <ArrowUpRight className="w-4 h-4" />
+        </span>
+      </Link>
     </motion.div>
   );
 }
@@ -296,12 +106,12 @@ export default function Expertise() {
             transition={{ delay: 0.15 }}
             className="mt-4 text-lg text-ink/70 font-medium max-w-2xl"
           >
-            Chaque expertise se déguste seule — mais c'est ensemble qu'elles donnent le meilleur mélange.
+            Chaque expertise a sa page dédiée — cliquez, explorez, c'est ensemble qu'elles donnent le meilleur mélange.
           </motion.p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {EXPERTISES.map((e, i) => (
-              <ExpertiseCard key={e.title} e={e} i={i} />
+              <ExpertiseCard key={e.slug} e={e} i={i} />
             ))}
           </div>
 
