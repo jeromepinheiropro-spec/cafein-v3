@@ -47,6 +47,27 @@ body {
   }
 }
 
+/* Safari desktop et mobile (classe posée par main.jsx) */
+.is-safari .grain::before {
+  animation: none;
+  inset: 0; /* couche 1×, pas 3× l'écran */
+}
+.is-safari .blur-3xl {
+  filter: blur(28px) !important;
+}
+.is-safari .blur-2xl {
+  filter: blur(20px) !important;
+}
+.is-safari .backdrop-blur-xl,
+.is-safari .backdrop-blur,
+.is-safari .backdrop-blur-sm {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.is-safari .mix-blend-difference {
+  mix-blend-mode: normal !important;
+}
+
 /* Hide native cursor only on fine pointers (desktop) */
 @media (pointer: fine) {
   body.custom-cursor,
