@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { PageHero, CtaBand, MiniFaq, Steps } from "../lib/page.jsx";
+import { PageHero, CtaBand, MiniFaq, Steps, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark } from "../lib/ui.jsx";
+import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 
 /* Mockup navigateur pour le hero */
 function BrowserDeco() {
@@ -99,6 +100,19 @@ const FAQ = [
 export default function CreationSite() {
   return (
     <>
+      <Seo
+        title="Création de site internet au Luxembourg — vitrine, e-commerce, sur mesure | Cafein"
+        description="Cafein crée votre site internet au Luxembourg : site vitrine, boutique e-commerce ou plateforme sur mesure. Design soigné, SEO intégré dès le départ, RGPD, un mois de support inclus."
+        path="/creation-site-web"
+        jsonLd={[
+          serviceLd("Création de site internet", "Sites vitrine, e-commerce et plateformes sur mesure au Luxembourg.", "/creation-site-web"),
+          faqLd(FAQ),
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "Création de site web", path: "/creation-site-web" },
+          ]),
+        ]}
+      />
       <PageHero
         n="01"
         tag="Sites"
@@ -255,6 +269,21 @@ export default function CreationSite() {
       />
 
       <MiniFaq items={FAQ} />
+
+      <Edito
+        kicker="Créer un site au Luxembourg"
+        title={<>Un bon site, c'est un commercial <span className="squiggle">qui ne dort jamais</span></>}
+        paragraphs={[
+          <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact — que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,
+          <>Chez Cafein, chaque projet démarre avec les fondations qui comptent pour Google : structure claire, vitesse de chargement, version mobile impeccable et référencement naturel intégré dès la conception. Résultat : un site beau à visiter, simple à mettre à jour, et surtout facile à trouver. Le café est offert, le devis aussi.</>,
+        ]}
+        links={[
+          { to: "/notre-expertise/sites-vitrine", label: "Sites vitrine" },
+          { to: "/notre-expertise/e-commerce", label: "E-commerce" },
+          { to: "/seo-geo", label: "Référencement SEO & GEO" },
+        ]}
+      />
+
       <CtaBand title="Un projet de site web en tête ?" sub="Discutons-en, sans engagement." label="Demander un devis" />
     </>
   );

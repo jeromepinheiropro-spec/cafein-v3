@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { PageHero, CtaBand, MiniFaq } from "../lib/page.jsx";
+import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { CountUp } from "../components/Stats.jsx";
+import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* Mockup résultat Google pour le hero */
@@ -90,6 +91,19 @@ const FAQ = [
 export default function SeoGeo() {
   return (
     <>
+      <Seo
+        title="Agence SEO & GEO au Luxembourg — référencement Google et IA | Cafein"
+        description="Référencement naturel (SEO) et visibilité dans les IA (GEO) au Luxembourg : audit, optimisation technique, contenus et suivi des positions. Être trouvé sur Google comme dans ChatGPT."
+        path="/seo-geo"
+        jsonLd={[
+          serviceLd("SEO & GEO", "Référencement naturel Google et optimisation pour les moteurs IA (GEO) au Luxembourg.", "/seo-geo"),
+          faqLd(FAQ),
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "SEO & GEO", path: "/seo-geo" },
+          ]),
+        ]}
+      />
       <PageHero
         n="02"
         tag="Rank #1"
@@ -200,6 +214,22 @@ export default function SeoGeo() {
       </section>
 
       <MiniFaq items={FAQ} />
+
+      <Edito
+        kicker="Le référencement, expliqué simplement"
+        title={<>Être premier sur Google, <span className="squiggle">et cité par les IA</span></>}
+        paragraphs={[
+          <>Le référencement naturel au Luxembourg est une course de fond, pas un sprint : Google récompense les sites techniquement propres, rapides et riches d'un contenu qui répond vraiment aux questions de vos clients. C'est exactement ce qu'on construit, mot-clé par mot-clé, page par page — avec un suivi transparent de vos positions chaque mois.</>,
+          <>Et pendant que tout le monde regarde Google, une nouvelle porte d'entrée s'est ouverte : ChatGPT, Perplexity et Gemini recommandent désormais des entreprises. Le GEO — l'art d'être cité comme source par les IA — est encore rare au Luxembourg, et c'est précisément notre spécialité. Deux moteurs, une seule stratégie de visibilité.</>,
+        ]}
+        links={[
+          { to: "/notre-expertise/seo", label: "SEO" },
+          { to: "/notre-expertise/geo-visibilite-ia", label: "GEO & IA" },
+          { to: "/notre-expertise/seo-local-luxembourg", label: "SEO local Luxembourg" },
+          { to: "/lexique", label: "Lexique du web" },
+        ]}
+      />
+
       <CtaBand title="Envie d'améliorer votre visibilité ?" sub="Parlons de votre situation actuelle et de vos objectifs." label="Demander un audit" />
     </>
   );

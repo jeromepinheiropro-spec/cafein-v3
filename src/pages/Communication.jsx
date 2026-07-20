@@ -1,7 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { PageHero, CtaBand, MiniFaq } from "../lib/page.jsx";
+import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 
 /* Mockup post social pour le hero */
@@ -73,6 +74,19 @@ const FAQ = [
 export default function Communication() {
   return (
     <>
+      <Seo
+        title="Communication digitale & réseaux sociaux au Luxembourg | Cafein"
+        description="Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook — sans jargon."
+        path="/communication"
+        jsonLd={[
+          serviceLd("Communication digitale", "Stratégie, réseaux sociaux, contenus et campagnes au Luxembourg et dans la Grande Région.", "/communication"),
+          faqLd(FAQ),
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "Communication", path: "/communication" },
+          ]),
+        ]}
+      />
       <PageHero
         n="03"
         tag="Social"
@@ -150,6 +164,21 @@ export default function Communication() {
       </section>
 
       <MiniFaq items={FAQ} />
+
+      <Edito
+        kicker="Communiquer au Luxembourg"
+        title={<>Une marque qu'on remarque, <span className="squiggle">et qu'on retient</span></>}
+        paragraphs={[
+          <>La communication digitale au Luxembourg a une particularité : un marché multilingue, local et où le bouche-à-oreille compte double. Une présence bien pensée sur LinkedIn, Instagram ou Facebook fait plus que « poster » — elle installe votre marque dans le paysage, rassure vos prospects et fait revenir vos clients.</>,
+          <>Notre approche : une stratégie claire avant le premier post, des contenus qui portent votre voix, et des campagnes pilotées aux résultats plutôt qu'aux likes. On commence petit si besoin, on mesure tout, et on amplifie ce qui fonctionne. Votre communication devient un investissement, pas une corvée.</>,
+        ]}
+        links={[
+          { to: "/notre-expertise/reseaux-sociaux", label: "Réseaux sociaux" },
+          { to: "/notre-expertise/contenus-copywriting", label: "Contenus & copywriting" },
+          { to: "/notre-expertise/campagnes-publicitaires", label: "Campagnes publicitaires" },
+        ]}
+      />
+
       <CtaBand title="Votre marque mérite d'être vue" sub="Parlons de votre communication, sans engagement." label="Parlons-en" />
     </>
   );

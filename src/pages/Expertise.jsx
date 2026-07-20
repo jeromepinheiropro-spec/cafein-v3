@@ -1,10 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { PageHero, CtaBand } from "../lib/page.jsx";
+import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
 import { EXPERTISES, Doodle } from "../lib/expertises.jsx";
+import Seo, { SITE, breadcrumbLd } from "../lib/seo.jsx";
+
+/* La liste des 12 expertises en données structurées */
+const LIST_LD = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Les expertises de Cafein",
+  itemListElement: EXPERTISES.map((e, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: e.title,
+    url: `${SITE}/notre-expertise/${e.slug}`,
+  })),
+};
 
 /*
   La grille des 12 expertises Cafein, façon nooki.fr/notre-expertise —
@@ -52,6 +66,18 @@ function ExpertiseCard({ e, i }) {
 export default function Expertise() {
   return (
     <>
+      <Seo
+        title="Nos 12 expertises web & digital au Luxembourg | Cafein"
+        description="Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg — un seul interlocuteur du premier appel au suivi."
+        path="/notre-expertise"
+        jsonLd={[
+          LIST_LD,
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "Notre expertise", path: "/notre-expertise" },
+          ]),
+        ]}
+      />
       <PageHero
         n="✦"
         tag="Savoir-faire"
@@ -147,6 +173,19 @@ export default function Expertise() {
           ))}
         </div>
       </section>
+
+      <Edito
+        kicker="Une agence, tout le digital"
+        title={<>Douze expertises, <span className="squiggle">un seul café à payer</span></>}
+        paragraphs={[
+          <>Faire appel à une agence digitale au Luxembourg qui réunit création de sites, référencement et communication, c'est éviter le grand écart entre trois prestataires qui ne se parlent pas. Votre site nourrit votre SEO, vos contenus alimentent vos réseaux, vos données guident les décisions : tout se tient — et tout est sous le même toit.</>,
+        ]}
+        links={[
+          { to: "/creation-site-web", label: "Création de site" },
+          { to: "/seo-geo", label: "SEO & GEO" },
+          { to: "/communication", label: "Communication" },
+        ]}
+      />
 
       <CtaBand
         title="Une idée ? On a l'expertise qui va avec."

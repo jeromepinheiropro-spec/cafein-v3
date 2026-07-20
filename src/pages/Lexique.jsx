@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PageHero, CtaBand } from "../lib/page.jsx";
+import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import Seo, { SITE, breadcrumbLd } from "../lib/seo.jsx";
 
 /* Les 69 termes du lexique V1, adaptés au design V4 */
 const TERMS = [
@@ -78,6 +79,20 @@ const TERMS = [
 
 const CATS = ["Tout", "SEO", "GEO & IA", "Site web", "Social media", "Publicité", "Data & mesure"];
 
+/* Le lexique complet en données structurées (schema.org DefinedTermSet) */
+const LEXIQUE_LD = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  name: "Lexique du web par Cafein",
+  url: SITE + "/lexique",
+  inLanguage: "fr",
+  hasDefinedTerm: TERMS.map((t) => ({
+    "@type": "DefinedTerm",
+    name: t.t,
+    description: t.d,
+  })),
+};
+
 const CAT_COLORS = {
   SEO: "bg-mint",
   "GEO & IA": "bg-caramel",
@@ -101,6 +116,18 @@ export default function Lexique() {
 
   return (
     <>
+      <Seo
+        title="Lexique du web : SEO, GEO, sites & social media expliqués simplement | Cafein"
+        description="69 termes du web enfin clairs : SEO, GEO, backlink, CMS, Core Web Vitals, taux de conversion… Le jargon du digital traduit en français simple par Cafein, agence web au Luxembourg."
+        path="/lexique"
+        jsonLd={[
+          LEXIQUE_LD,
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "Lexique", path: "/lexique" },
+          ]),
+        ]}
+      />
       <PageHero
         n="04"
         tag="A → Z"
@@ -191,6 +218,18 @@ export default function Lexique() {
           )}
         </div>
       </section>
+
+      <Edito
+        kicker="Pourquoi ce lexique ?"
+        title={<>Le digital sans jargon, <span className="squiggle">promis</span></>}
+        paragraphs={[
+          <>SEO, GEO, backlinks, Core Web Vitals… le web adore les acronymes, et c'est souvent là que la confiance se perd. Ce lexique est notre façon de travailler : chez Cafein, on vous explique chaque recommandation en français simple, pour que vous compreniez toujours ce que vous payez — et pourquoi.</>,
+        ]}
+        links={[
+          { to: "/seo-geo", label: "Notre approche SEO & GEO" },
+          { to: "/notre-expertise", label: "Toutes nos expertises" },
+        ]}
+      />
 
       <CtaBand
         title="Un terme vous échappe encore ?"

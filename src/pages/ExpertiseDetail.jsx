@@ -7,6 +7,7 @@ import { Spark, ArrowUpRight, Bean } from "../lib/ui.jsx";
 import { CountUp } from "../components/Stats.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import { EXPERTISES, getExpertise, Doodle } from "../lib/expertises.jsx";
+import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 
 /* ── Déco du hero : icône géante + grains en orbite ───────────── */
 function OrbitDeco({ e }) {
@@ -98,6 +99,20 @@ export default function ExpertiseDetail() {
 
   return (
     <>
+      <Seo
+        title={`${e.title} au Luxembourg | Cafein`}
+        description={e.subtitle}
+        path={`/notre-expertise/${e.slug}`}
+        jsonLd={[
+          serviceLd(e.title, e.subtitle, `/notre-expertise/${e.slug}`),
+          faqLd(e.faq),
+          breadcrumbLd([
+            { name: "Accueil", path: "/" },
+            { name: "Notre expertise", path: "/notre-expertise" },
+            { name: e.title, path: `/notre-expertise/${e.slug}` },
+          ]),
+        ]}
+      />
       <PageHero
         n={String(idx + 1).padStart(2, "0")}
         tag={e.title}
