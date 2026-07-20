@@ -1,60 +1,12 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
 import { HuntBean } from "./EasterEggs.jsx";
+import { PROJETS } from "../lib/projets.jsx";
 
-/* ── Projets du groupe (réalisés avec Nooki, même maison) ─────── */
-const PROJECTS = [
-  {
-    n: "01",
-    title: "Kinteraction",
-    tags: "Site web · Graphisme",
-    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-kinteraction.webp",
-    alt: "Projet Kinteraction — création de site web et identité visuelle",
-    shadow: "#1FCE8A",
-  },
-  {
-    n: "02",
-    title: "Le 101",
-    tags: "Référencement SEO",
-    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-le-101.webp",
-    alt: "Projet Le 101 — stratégie de référencement naturel SEO",
-    shadow: "#F4A259",
-  },
-  {
-    n: "03",
-    title: "Efluenz",
-    tags: "Site web · Graphisme",
-    img: "https://nooki.fr/wp-content/uploads/2026/06/efluenz-projet.webp",
-    alt: "Projet Efluenz — site web et direction artistique",
-    shadow: "#FFD166",
-  },
-  {
-    n: "04",
-    title: "Xucom",
-    tags: "Graphisme · Web design · SEO",
-    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-xucom.webp",
-    alt: "Projet Xucom — identité de marque, web design et SEO",
-    shadow: "#FFD166",
-  },
-  {
-    n: "05",
-    title: "7 Plis",
-    tags: "Campagnes SEA",
-    img: "https://nooki.fr/wp-content/uploads/2025/07/projet-7-plis.webp",
-    alt: "Projet 7 Plis — campagnes publicitaires Google Ads",
-    shadow: "#1FCE8A",
-  },
-  {
-    n: "06",
-    title: "Agria",
-    tags: "Site web · Graphisme",
-    img: "https://nooki.fr/wp-content/uploads/2026/01/header-agria.webp",
-    alt: "Projet Agria Grand Est — création de site web",
-    shadow: "#F4A259",
-  },
-];
+const MotionLink = motion.create(Link);
 
 /* ── Carte projet avec tilt 3D ────────────────────────────────── */
 function ProjectCard({ p, rot }) {
@@ -73,7 +25,8 @@ function ProjectCard({ p, rot }) {
   }
 
   return (
-    <motion.div
+    <MotionLink
+      to={`/realisations/${p.slug}`}
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={() => {
@@ -85,8 +38,8 @@ function ProjectCard({ p, rot }) {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 100, damping: 18 }}
       style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      data-cursor="☕"
-      className="group relative rounded-3xl bg-white border-[3px] border-ink p-4 pb-5 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
+      data-cursor="Découvrir"
+      className="group relative block rounded-3xl bg-white border-[3px] border-ink p-4 pb-5 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
       whileHover={{ boxShadow: `12px 12px 0 ${p.shadow}` }}
     >
       <div className="relative rounded-2xl overflow-hidden border-[3px] border-ink">
@@ -115,7 +68,7 @@ function ProjectCard({ p, rot }) {
           <ArrowUpRight className="w-4 h-4" />
         </span>
       </div>
-    </motion.div>
+    </MotionLink>
   );
 }
 
@@ -249,8 +202,8 @@ export default function Showcase() {
         </div>
 
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.n} p={p} rot={i % 2 ? 1 : -1} />
+          {PROJETS.map((p, i) => (
+            <ProjectCard key={p.slug} p={p} rot={i % 2 ? 1 : -1} />
           ))}
         </div>
 
