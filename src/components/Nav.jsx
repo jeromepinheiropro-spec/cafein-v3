@@ -14,6 +14,7 @@ const LINKS = [
   { label: "Création de site", to: "/creation-site-web" },
   { label: "SEO & GEO", to: "/seo-geo" },
   { label: "Communication", to: "/communication" },
+  { label: "L'équipe", to: "/equipe" },
 ];
 
 export default function Nav() {

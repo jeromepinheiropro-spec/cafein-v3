@@ -9,6 +9,7 @@ const LINKS = [
   { label: "Création", to: "/creation-site-web" },
   { label: "SEO & GEO", to: "/seo-geo" },
   { label: "Communication", to: "/communication" },
+  { label: "L'équipe", to: "/equipe" },
   { label: "Lexique", to: "/lexique" },
   { label: "Blog", to: "/#blog" },
   { label: "Contact", to: "/#contact" },
