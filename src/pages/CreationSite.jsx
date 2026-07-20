@@ -3,32 +3,134 @@ import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Steps, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import { Spark } from "../lib/ui.jsx";
+import { useEggSpeed } from "../components/EasterEggs.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 
-/* Mockup navigateur pour le hero */
+/* Mockup navigateur animé : le site se construit en boucle sous vos yeux */
 function BrowserDeco() {
+  const eggSpeed = useEggSpeed();
+  const D = 8 / eggSpeed; // durée d'un cycle complet
+
+  /* aide : élément qui "pop" à t0, reste, puis disparaît pour la boucle */
+  const pop = (t0) => ({
+    initial: false,
+    animate: { opacity: [0, 1, 1, 0], scale: [0.4, 1.08, 1, 0.6], y: [14, 0, 0, 8] },
+    transition: { duration: D, times: [t0, Math.min(t0 + 0.05, 1), 0.93, 1], repeat: Infinity, ease: "easeOut" },
+  });
+  const grow = (t0) => ({
+    initial: false,
+    animate: { opacity: [0, 1, 1, 0], scaleX: [0, 1, 1, 0] },
+    transition: { duration: D, times: [t0, Math.min(t0 + 0.07, 1), 0.93, 1], repeat: Infinity, ease: "easeOut" },
+  });
+
   return (
-    <div className="rounded-2xl overflow-hidden border-2 border-cream/20 bg-espresso-2 shadow-2xl">
-      <div className="flex items-center gap-1.5 px-4 py-3 border-b border-cream/10">
-        <span className="w-2.5 h-2.5 rounded-full bg-caramel" />
-        <span className="w-2.5 h-2.5 rounded-full bg-sun" />
-        <span className="w-2.5 h-2.5 rounded-full bg-mint" />
-        <span className="ml-3 font-mono text-[10px] tracking-widest text-cream/40 uppercase">https://votre-site.lu</span>
-      </div>
-      <div className="p-6 space-y-3">
-        <div className="h-8 w-2/3 rounded bg-cream/90" />
-        <div className="h-3 w-full rounded bg-cream/20" />
-        <div className="h-3 w-4/5 rounded bg-cream/20" />
-        <div className="flex gap-2 pt-2">
-          <div className="h-9 w-28 rounded-full bg-mint" />
-          <div className="h-9 w-28 rounded-full border border-cream/30" />
+    <div className="relative select-none" aria-hidden>
+      <motion.div
+        initial={{ opacity: 0, y: 40, rotate: 2 }}
+        animate={{ opacity: 1, y: 0, rotate: 1.5 }}
+        transition={{ type: "spring", stiffness: 110, damping: 16 }}
+        whileHover={{ rotate: 0, scale: 1.02 }}
+        className="rounded-3xl overflow-hidden border-[3px] border-ink bg-espresso-2 shadow-[10px_10px_0_#0A0F0D]"
+      >
+        {/* barre du navigateur */}
+        <div className="flex items-center gap-1.5 px-4 py-3 bg-espresso border-b-[3px] border-ink">
+          <span className="w-2.5 h-2.5 rounded-full bg-caramel" />
+          <span className="w-2.5 h-2.5 rounded-full bg-sun" />
+          <span className="w-2.5 h-2.5 rounded-full bg-mint" />
+          <div className="ml-3 overflow-hidden">
+            <motion.span
+              animate={{ clipPath: ["inset(0 100% 0 0)", "inset(0 0% 0 0)", "inset(0 0% 0 0)", "inset(0 100% 0 0)"] }}
+              transition={{ duration: D, times: [0.02, 0.14, 0.95, 1], repeat: Infinity, ease: "linear" }}
+              className="inline-block font-mono text-[10px] tracking-widest text-mint uppercase"
+            >
+              https://votre-site.lu
+            </motion.span>
+          </div>
         </div>
-        <div className="grid grid-cols-3 gap-2 pt-2">
-          <div className="h-16 rounded bg-mint/20" />
-          <div className="h-16 rounded bg-caramel/20" />
-          <div className="h-16 rounded bg-sun/20" />
+
+        {/* la page qui se construit */}
+        <div className="p-6 space-y-3 relative">
+          <motion.div {...grow(0.14)} className="h-8 w-2/3 rounded-lg bg-cream/90 origin-left" />
+          <motion.div {...grow(0.2)} className="h-3 w-full rounded bg-cream/20 origin-left" />
+          <motion.div {...grow(0.24)} className="h-3 w-4/5 rounded bg-cream/20 origin-left" />
+          <div className="flex gap-2 pt-2">
+            <motion.div
+              animate={{
+                opacity: [0, 1, 1, 1, 1, 0],
+                scale: [0.4, 1.08, 1, 0.85, 1.12, 0.6],
+              }}
+              transition={{ duration: D, times: [0.3, 0.35, 0.44, 0.47, 0.51, 1], repeat: Infinity, ease: "easeOut" }}
+              className="h-9 w-28 rounded-full bg-mint"
+            />
+            <motion.div {...pop(0.34)} className="h-9 w-28 rounded-full border-2 border-cream/30" />
+          </div>
+          <div className="grid grid-cols-3 gap-2 pt-2">
+            {["bg-mint/30", "bg-caramel/30", "bg-sun/30"].map((c, i) => (
+              <motion.div key={c} {...pop(0.52 + i * 0.05)} className={`h-16 rounded-lg ${c}`} />
+            ))}
+          </div>
+
+          {/* curseur qui construit la page */}
+          <motion.svg
+            viewBox="0 0 24 24"
+            animate={{
+              opacity: [0, 1, 1, 1, 1, 0],
+              x: [230, 90, 60, 60, 200, 260],
+              y: [-20, -60, 36, 36, 84, 110],
+              scale: [1, 1, 1, 0.8, 1, 1],
+            }}
+            transition={{ duration: D, times: [0.26, 0.34, 0.44, 0.47, 0.58, 0.68], repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-1/2 left-0 w-6 h-6 drop-shadow-md pointer-events-none"
+          >
+            <path d="M5 3l14 8-6 1.5L10 19z" fill="#F5EFE2" stroke="#141A17" strokeWidth="1.6" strokeLinejoin="round" />
+          </motion.svg>
         </div>
-      </div>
+      </motion.div>
+
+      {/* tampon "EN LIGNE !" qui claque à la fin du cycle */}
+      <motion.div
+        animate={{ opacity: [0, 1, 1, 0], scale: [2.2, 1, 1, 0.7], rotate: [-18, -8, -8, 0] }}
+        transition={{ duration: D, times: [0.7, 0.74, 0.92, 0.97], repeat: Infinity, ease: "easeOut" }}
+        className="absolute -top-5 -right-3 rounded-full bg-sun border-[3px] border-ink px-4 py-2 font-display font-extrabold text-ink text-sm shadow-[4px_4px_0_#0A0F0D]"
+      >
+        EN LIGNE !
+      </motion.div>
+
+      {/* étincelles au moment du tampon */}
+      {[
+        { x: "-right-6", y: "top-8", d: 0.72 },
+        { x: "right-16", y: "-top-8", d: 0.75 },
+      ].map((s, i) => (
+        <motion.span
+          key={i}
+          animate={{ opacity: [0, 1, 0], scale: [0, 1.3, 0], rotate: [0, 90, 180] }}
+          transition={{ duration: D, times: [s.d, s.d + 0.06, s.d + 0.14], repeat: Infinity }}
+          className={`absolute ${s.x} ${s.y}`}
+        >
+          <Spark className="w-6 h-6 text-mint-dark" />
+        </motion.span>
+      ))}
+
+      {/* chips flottantes autour de la fenêtre */}
+      {[
+        { label: "Responsive", cls: "-left-4 -bottom-5 bg-mint", delay: 0 },
+        { label: "Rapide", cls: "left-28 -bottom-8 bg-caramel", delay: 0.6 },
+        { label: "SEO ready", cls: "-right-3 -bottom-6 bg-cream-2", delay: 1.2 },
+      ].map((c) => (
+        <motion.span
+          key={c.label}
+          initial={{ opacity: 0, y: 20, scale: 0.6 }}
+          animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
+          transition={{
+            opacity: { delay: 0.8 + c.delay, duration: 0.4 },
+            scale: { delay: 0.8 + c.delay, type: "spring", stiffness: 260, damping: 14 },
+            y: { delay: 1.2 + c.delay, repeat: Infinity, duration: 3.2 / eggSpeed, ease: "easeInOut" },
+          }}
+          className={`absolute ${c.cls} rounded-full border-[3px] border-ink px-4 py-1.5 font-display font-bold text-xs text-ink shadow-[3px_3px_0_#0A0F0D]`}
+        >
+          {c.label}
+        </motion.span>
+      ))}
     </div>
   );
 }

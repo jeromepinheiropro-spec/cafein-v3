@@ -1,9 +1,101 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
+
+/* Commentaires réels sous la publication (API /api/comments) */
+function PubComments() {
+  const [items, setItems] = useState(null);
+  const [name, setName] = useState("");
+  const [text, setText] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    fetch("/api/comments")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then(setItems)
+      .catch(() => setItems([]));
+  }, []);
+
+  async function submit(e) {
+    e.preventDefault();
+    if (busy || !name.trim() || !text.trim()) return;
+    setBusy(true);
+    setErr("");
+    try {
+      const r = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, text }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Oups, réessayez.");
+      setItems((l) => [...(l || []), d]);
+      setText("");
+    } catch (e2) {
+      setErr(e2.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const shown = (items || []).slice(-30);
+  return (
+    <div className="mt-4 border-t border-cream/10 pt-3">
+      {shown.length > 0 && (
+        <ul className="max-h-36 overflow-y-auto space-y-2 pr-1 mb-3">
+          <AnimatePresence initial={false}>
+            {shown.map((c) => (
+              <motion.li
+                key={c.id}
+                initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-sm leading-snug"
+              >
+                <span className="font-bold text-mint">{c.name}</span>{" "}
+                <span className="text-cream/75 font-medium break-words">{c.text}</span>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </ul>
+      )}
+      <form onSubmit={submit} className="space-y-2">
+        <div className="flex gap-2">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={30}
+            placeholder="Pseudo"
+            aria-label="Votre pseudo"
+            className="w-24 shrink-0 rounded-full bg-espresso border border-cream/20 px-3 py-1.5 text-xs text-cream placeholder:text-cream/35 focus:outline-none focus:border-mint"
+          />
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            maxLength={280}
+            placeholder="Ajouter un commentaire…"
+            aria-label="Votre commentaire"
+            className="flex-1 min-w-0 rounded-full bg-espresso border border-cream/20 px-3 py-1.5 text-xs text-cream placeholder:text-cream/35 focus:outline-none focus:border-mint"
+          />
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            type="submit"
+            disabled={busy || !name.trim() || !text.trim()}
+            data-cursor="Publier"
+            className="shrink-0 rounded-full bg-mint text-ink font-display font-bold text-xs px-3.5 py-1.5 disabled:opacity-40"
+          >
+            {busy ? "…" : "Publier"}
+          </motion.button>
+        </div>
+        {err && <p className="text-caramel text-[11px] font-medium">{err}</p>}
+      </form>
+    </div>
+  );
+}
 
 /* Mockup post social pour le hero */
 function PostDeco() {
@@ -24,11 +116,24 @@ function PostDeco() {
       <p className="mt-4 text-cream/80 font-medium text-sm leading-relaxed">
         Nouveau site en ligne pour un client luxembourgeois, propre, rapide, efficace. ☕
       </p>
+      {/* visuel de la publication */}
+      <div className="mt-4 rounded-xl overflow-hidden border-2 border-cream/15 relative">
+        <img
+          src="https://nooki.fr/wp-content/uploads/2025/07/projet-kinteraction.webp"
+          alt="Publication : aperçu du nouveau site mis en ligne"
+          loading="lazy"
+          className="w-full h-40 object-cover"
+        />
+        <span className="absolute bottom-2 right-2 rounded-full bg-espresso/80 backdrop-blur px-2.5 py-1 font-mono text-[9px] tracking-widest uppercase text-mint">
+          cafein.lu
+        </span>
+      </div>
       <div className="mt-4 flex items-center gap-5 font-mono text-xs text-cream/50">
         <span className="text-mint font-bold">♥ 128</span>
-        <span>💬 24</span>
+        <span>💬 En direct</span>
         <span>↗ 12</span>
       </div>
+      <PubComments />
       <motion.span
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}

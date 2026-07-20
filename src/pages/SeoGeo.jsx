@@ -23,11 +23,11 @@ function SerpDeco() {
         transition={{ repeat: Infinity, duration: (3) / eggSpeed }}
         className="rounded-2xl border-2 border-mint/50 bg-mint/10 p-6"
       >
-        <p className="font-mono text-[10px] tracking-widest text-mint uppercase mb-2">Assistant IA</p>
-        <p className="text-cream/85 font-medium text-sm leading-relaxed">
+        <p className="font-mono text-[10px] tracking-widest text-mint-dark uppercase mb-2">Assistant IA</p>
+        <p className="text-ink/80 font-medium text-sm leading-relaxed">
           « Quelle agence web recommandes-tu au Luxembourg ? »
         </p>
-        <p className="mt-2 text-mint font-bold text-sm">→ Cafein, cité en source.</p>
+        <p className="mt-2 text-mint-dark font-bold text-sm">→ Cafein, cité en source.</p>
       </motion.div>
     </div>
   );
@@ -113,22 +113,26 @@ export default function SeoGeo() {
         <SerpDeco />
       </PageHero>
 
-      {/* Stats */}
-      <section className="bg-espresso pb-20 border-b border-cream/10">
-        <div className="mx-auto max-w-7xl px-6 md:px-10 grid grid-cols-2 lg:grid-cols-4 gap-px bg-cream/15 rounded-3xl overflow-hidden border border-cream/15">
-          {STATS.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-espresso p-7 md:p-9"
-            >
-              <p className="font-display font-extrabold text-3xl md:text-4xl text-mint">{s.big}</p>
-              <p className="mt-2 font-mono text-[10px] md:text-xs tracking-[0.18em] uppercase text-cream/60">{s.label}</p>
-            </motion.div>
-          ))}
+      {/* Stats : cartes autocollants sur fond espresso */}
+      <section className="bg-espresso pb-24 border-b border-cream/10">
+        <div className="mx-auto max-w-7xl px-6 md:px-10 grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+          {STATS.map((s, i) => {
+            const bgs = ["bg-mint", "bg-caramel", "bg-sun", "bg-cream-2"];
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 46, rotate: i % 2 ? 3 : -3 }}
+                whileInView={{ opacity: 1, y: 0, rotate: i % 2 ? 1.5 : -1.5 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: i * 0.1, type: "spring", stiffness: 130, damping: 14 }}
+                whileHover={{ y: -8, rotate: 0 }}
+                className={`${bgs[i % 4]} rounded-3xl border-[3px] border-ink p-6 md:p-8 shadow-[6px_6px_0_rgba(31,206,138,0.35)] text-ink`}
+              >
+                <p className="font-display font-extrabold text-3xl md:text-4xl leading-none">{s.big}</p>
+                <p className="mt-3 font-mono text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase text-ink/60 leading-relaxed">{s.label}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
