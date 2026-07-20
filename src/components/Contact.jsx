@@ -67,13 +67,33 @@ export default function Contact() {
   const { lang } = useLang();
   const t = useT();
   const [form, setForm] = useState({ nom: "", email: "", message: "" });
-  const [status, setStatus] = useState("idle"); // idle | sending | done
+  const [status, setStatus] = useState("idle"); // idle | sending | done | error
+  const [errMsg, setErrMsg] = useState("");
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
-    if (status !== "idle") return;
+    if (status === "sending" || status === "done") return;
     setStatus("sending");
-    setTimeout(() => setStatus("done"), 900);
+    setErrMsg("");
+    try {
+      const r = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, lang }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "");
+      setStatus("done");
+    } catch (e2) {
+      setStatus("error");
+      setErrMsg(
+        e2.message ||
+          t(
+            "Envoi impossible pour le moment. Réessayez ou écrivez-nous à hello@cafein.lu.",
+            "Couldn't send right now. Please retry or email us at hello@cafein.lu."
+          )
+      );
+    }
   }
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -134,7 +154,13 @@ export default function Contact() {
             className="mt-10 flex flex-wrap gap-3 font-mono text-xs tracking-[0.2em] uppercase text-cream/50"
           >
             <span className="rounded-full border border-cream/20 px-4 py-2">Luxembourg</span>
-            <span className="rounded-full border border-cream/20 px-4 py-2">FR / EN</span>
+            <a
+              href="mailto:hello@cafein.lu"
+              data-cursor="hello@cafein.lu"
+              className="rounded-full border border-cream/20 px-4 py-2 hover:border-mint hover:text-mint transition-colors"
+            >
+              hello@cafein.lu
+            </a>
             <span className="rounded-full border border-cream/20 px-4 py-2">{t("Réponse rapide", "Quick reply")}</span>
           </motion.div>
         </div>
@@ -204,6 +230,11 @@ export default function Contact() {
                     )}
                   </button>
                 </Magnetic>
+                {status === "error" && (
+                  <p className="text-caramel font-medium text-sm">
+                    {errMsg}
+                  </p>
+                )}
               </motion.form>
             )}
           </AnimatePresence>
