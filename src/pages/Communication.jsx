@@ -22,7 +22,7 @@ function PostDeco() {
         </div>
       </div>
       <p className="mt-4 text-cream/80 font-medium text-sm leading-relaxed">
-        Nouveau site en ligne pour un client luxembourgeois — propre, rapide, efficace. ☕
+        Nouveau site en ligne pour un client luxembourgeois, propre, rapide, efficace. ☕
       </p>
       <div className="mt-4 flex items-center gap-5 font-mono text-xs text-cream/50">
         <span className="text-mint font-bold">♥ 128</span>
@@ -44,7 +44,7 @@ function PostDeco() {
 const SERVICES = [
   { t: "Stratégie", d: "Positionnement, ligne éditoriale, choix des canaux : un plan clair avant de publier quoi que ce soit.", bg: "bg-mint" },
   { t: "Social media", d: "Gestion de vos réseaux (LinkedIn, Instagram, Facebook...) : publications, communauté, réputation.", bg: "bg-caramel" },
-  { t: "Contenus", d: "Textes, visuels et formats courts qui portent votre voix — cohérents avec votre marque et votre marché.", bg: "bg-sun" },
+  { t: "Contenus", d: "Textes, visuels et formats courts qui portent votre voix, cohérents avec votre marque et votre marché.", bg: "bg-sun" },
   { t: "Campagnes", d: "Campagnes sponsorisées ciblées Luxembourg et Grande Région, pilotées aux résultats.", bg: "bg-cream-2" },
 ];
 
@@ -59,7 +59,7 @@ const WEEK = [
 const FAQ = [
   {
     q: "Sur quels réseaux intervenez-vous ?",
-    a: "Principalement LinkedIn, Instagram et Facebook — les canaux les plus pertinents pour les entreprises luxembourgeoises. Le choix final dépend de votre cible : on ne vous fera jamais publier partout pour publier partout.",
+    a: "Principalement LinkedIn, Instagram et Facebook, les canaux les plus pertinents pour les entreprises luxembourgeoises. Le choix final dépend de votre cible : on ne vous fera jamais publier partout pour publier partout.",
   },
   {
     q: "Créez-vous aussi les visuels et les vidéos ?",
@@ -76,7 +76,7 @@ export default function Communication() {
     <>
       <Seo
         title="Communication digitale & réseaux sociaux au Luxembourg | Cafein"
-        description="Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook — sans jargon."
+        description="Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook, sans jargon."
         path="/communication"
         jsonLd={[
           serviceLd("Communication digitale", "Stratégie, réseaux sociaux, contenus et campagnes au Luxembourg et dans la Grande Région.", "/communication"),
@@ -169,7 +169,7 @@ export default function Communication() {
         kicker="Communiquer au Luxembourg"
         title={<>Une marque qu'on remarque, <span className="squiggle">et qu'on retient</span></>}
         paragraphs={[
-          <>La communication digitale au Luxembourg a une particularité : un marché multilingue, local et où le bouche-à-oreille compte double. Une présence bien pensée sur LinkedIn, Instagram ou Facebook fait plus que « poster » — elle installe votre marque dans le paysage, rassure vos prospects et fait revenir vos clients.</>,
+          <>La communication digitale au Luxembourg a une particularité : un marché multilingue, local et où le bouche-à-oreille compte double. Une présence bien pensée sur LinkedIn, Instagram ou Facebook fait plus que « poster », elle installe votre marque dans le paysage, rassure vos prospects et fait revenir vos clients.</>,
           <>Notre approche : une stratégie claire avant le premier post, des contenus qui portent votre voix, et des campagnes pilotées aux résultats plutôt qu'aux likes. On commence petit si besoin, on mesure tout, et on amplifie ce qui fonctionne. Votre communication devient un investissement, pas une corvée.</>,
         ]}
         links={[

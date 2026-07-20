@@ -17,7 +17,7 @@ export default function Home({ started }) {
   return (
     <>
       <Seo
-        title="Cafein — Agence web & communication digitale au Luxembourg"
+        title="Cafein | Agence web & communication digitale au Luxembourg"
         description="Cafein, agence de marketing web au Luxembourg : création de sites internet sur mesure, référencement SEO & GEO, réseaux sociaux et communication digitale. Devis gratuit, conseils francs."
         path="/"
         jsonLd={[WEBSITE_LD, faqLd(FAQS)]}

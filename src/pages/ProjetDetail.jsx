@@ -95,7 +95,7 @@ export default function ProjetDetail() {
   return (
     <>
       <Seo
-        title={`${p.title} — réalisation ${p.tags.toLowerCase()} | Cafein`}
+        title={`${p.title} : réalisation ${p.tags.toLowerCase()} | Cafein`}
         description={`${p.client} Découvrez ce que notre groupe a réalisé : ${p.tags.toLowerCase()}.`}
         path={`/realisations/${p.slug}`}
         jsonLd={[
@@ -268,7 +268,7 @@ export default function ProjetDetail() {
 
       <CtaBand
         title="Envie d'un projet comme celui-ci ?"
-        sub="Racontez-nous le vôtre autour d'un café — devis gratuit, sans engagement."
+        sub="Racontez-nous le vôtre autour d'un café, devis gratuit, sans engagement."
         label="Parlons-en"
       />
     </>

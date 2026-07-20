@@ -89,7 +89,7 @@ const FAQ = [
   },
   {
     q: "La maintenance est-elle incluse ?",
-    a: "Un mois de support est inclus après chaque lancement. Ensuite, on propose des formules de maintenance (mises à jour, sauvegardes, sécurité, petites évolutions) adaptées à votre budget — sans engagement forcé.",
+    a: "Un mois de support est inclus après chaque lancement. Ensuite, on propose des formules de maintenance (mises à jour, sauvegardes, sécurité, petites évolutions) adaptées à votre budget, sans engagement forcé.",
   },
   {
     q: "Vous intervenez aussi sur des sites existants ?",
@@ -101,7 +101,7 @@ export default function CreationSite() {
   return (
     <>
       <Seo
-        title="Création de site internet au Luxembourg — vitrine, e-commerce, sur mesure | Cafein"
+        title="Création de site internet au Luxembourg : vitrine, e-commerce, sur mesure | Cafein"
         description="Cafein crée votre site internet au Luxembourg : site vitrine, boutique e-commerce ou plateforme sur mesure. Design soigné, SEO intégré dès le départ, RGPD, un mois de support inclus."
         path="/creation-site-web"
         jsonLd={[
@@ -274,7 +274,7 @@ export default function CreationSite() {
         kicker="Créer un site au Luxembourg"
         title={<>Un bon site, c'est un commercial <span className="squiggle">qui ne dort jamais</span></>}
         paragraphs={[
-          <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact — que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,
+          <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact, que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,
           <>Chez Cafein, chaque projet démarre avec les fondations qui comptent pour Google : structure claire, vitesse de chargement, version mobile impeccable et référencement naturel intégré dès la conception. Résultat : un site beau à visiter, simple à mettre à jour, et surtout facile à trouver. Le café est offert, le devis aussi.</>,
         ]}
         links={[

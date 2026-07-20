@@ -21,7 +21,7 @@ const LIST_LD = {
 };
 
 /*
-  La grille des 12 expertises Cafein, façon nooki.fr/notre-expertise —
+  La grille des 12 expertises Cafein, façon nooki.fr/notre-expertise :
   chaque carte mène à sa page dédiée.
 */
 function ExpertiseCard({ e, i }) {
@@ -68,7 +68,7 @@ export default function Expertise() {
     <>
       <Seo
         title="Nos 12 expertises web & digital au Luxembourg | Cafein"
-        description="Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg — un seul interlocuteur du premier appel au suivi."
+        description="Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg, un seul interlocuteur du premier appel au suivi."
         path="/notre-expertise"
         jsonLd={[
           LIST_LD,
@@ -86,7 +86,7 @@ export default function Expertise() {
             Une expertise complète, <span className="text-mint-dark">servie bien serrée</span>
           </>
         }
-        subtitle="Des années d'expérience réunies autour d'une même tasse : sites web, visibilité, communication et data. Douze savoir-faire complémentaires, un seul interlocuteur — au Luxembourg et dans la Grande Région."
+        subtitle="Des années d'expérience réunies autour d'une même tasse : sites web, visibilité, communication et data. Douze savoir-faire complémentaires, un seul interlocuteur, au Luxembourg et dans la Grande Région."
       >
         <div className="relative select-none" aria-hidden>
           {/* pile de tasses façon autocollants */}
@@ -132,7 +132,7 @@ export default function Expertise() {
             transition={{ delay: 0.15 }}
             className="mt-4 text-lg text-ink/70 font-medium max-w-2xl"
           >
-            Chaque expertise a sa page dédiée — cliquez, explorez, c'est ensemble qu'elles donnent le meilleur mélange.
+            Chaque expertise a sa page dédiée, cliquez, explorez, c'est ensemble qu'elles donnent le meilleur mélange.
           </motion.p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -158,7 +158,7 @@ export default function Expertise() {
           {[
             { big: "1", label: "interlocuteur unique, du premier appel au suivi" },
             { big: "3", label: "métiers complémentaires : site, visibilité, communication" },
-            { big: "0", label: "jargon — on vous explique tout, simplement" },
+            { big: "0", label: "jargon, on vous explique tout, simplement" },
           ].map((s, i) => (
             <motion.div
               key={s.label}
@@ -178,7 +178,7 @@ export default function Expertise() {
         kicker="Une agence, tout le digital"
         title={<>Douze expertises, <span className="squiggle">un seul café à payer</span></>}
         paragraphs={[
-          <>Faire appel à une agence digitale au Luxembourg qui réunit création de sites, référencement et communication, c'est éviter le grand écart entre trois prestataires qui ne se parlent pas. Votre site nourrit votre SEO, vos contenus alimentent vos réseaux, vos données guident les décisions : tout se tient — et tout est sous le même toit.</>,
+          <>Faire appel à une agence digitale au Luxembourg qui réunit création de sites, référencement et communication, c'est éviter le grand écart entre trois prestataires qui ne se parlent pas. Votre site nourrit votre SEO, vos contenus alimentent vos réseaux, vos données guident les décisions : tout se tient, et tout est sous le même toit.</>,
         ]}
         links={[
           { to: "/creation-site-web", label: "Création de site" },
@@ -189,7 +189,7 @@ export default function Expertise() {
 
       <CtaBand
         title="Une idée ? On a l'expertise qui va avec."
-        sub="Racontez-nous votre projet autour d'un café — devis gratuit, sans engagement."
+        sub="Racontez-nous votre projet autour d'un café, devis gratuit, sans engagement."
         label="Parlons-en"
       />
     </>

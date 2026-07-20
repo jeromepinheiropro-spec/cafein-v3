@@ -14,7 +14,7 @@ function SerpDeco() {
       <div className="rounded-2xl border-2 border-cream/20 bg-espresso-2 p-6 shadow-2xl">
         <p className="font-mono text-[10px] tracking-widest text-mint uppercase mb-3">#1 · cafein.lu</p>
         <p className="font-display font-bold text-cream text-lg leading-snug">
-          Cafein — Agence de marketing web au Luxembourg
+          Cafein | Agence de marketing web au Luxembourg
         </p>
         <p className="text-cream/50 text-sm mt-1">Sites sur mesure, SEO & GEO, communication digitale…</p>
       </div>
@@ -92,7 +92,7 @@ export default function SeoGeo() {
   return (
     <>
       <Seo
-        title="Agence SEO & GEO au Luxembourg — référencement Google et IA | Cafein"
+        title="Agence SEO & GEO au Luxembourg : référencement Google et IA | Cafein"
         description="Référencement naturel (SEO) et visibilité dans les IA (GEO) au Luxembourg : audit, optimisation technique, contenus et suivi des positions. Être trouvé sur Google comme dans ChatGPT."
         path="/seo-geo"
         jsonLd={[
@@ -219,8 +219,8 @@ export default function SeoGeo() {
         kicker="Le référencement, expliqué simplement"
         title={<>Être premier sur Google, <span className="squiggle">et cité par les IA</span></>}
         paragraphs={[
-          <>Le référencement naturel au Luxembourg est une course de fond, pas un sprint : Google récompense les sites techniquement propres, rapides et riches d'un contenu qui répond vraiment aux questions de vos clients. C'est exactement ce qu'on construit, mot-clé par mot-clé, page par page — avec un suivi transparent de vos positions chaque mois.</>,
-          <>Et pendant que tout le monde regarde Google, une nouvelle porte d'entrée s'est ouverte : ChatGPT, Perplexity et Gemini recommandent désormais des entreprises. Le GEO — l'art d'être cité comme source par les IA — est encore rare au Luxembourg, et c'est précisément notre spécialité. Deux moteurs, une seule stratégie de visibilité.</>,
+          <>Le référencement naturel au Luxembourg est une course de fond, pas un sprint : Google récompense les sites techniquement propres, rapides et riches d'un contenu qui répond vraiment aux questions de vos clients. C'est exactement ce qu'on construit, mot-clé par mot-clé, page par page, avec un suivi transparent de vos positions chaque mois.</>,
+          <>Et pendant que tout le monde regarde Google, une nouvelle porte d'entrée s'est ouverte : ChatGPT, Perplexity et Gemini recommandent désormais des entreprises. Le GEO, l'art d'être cité comme source par les IA, est encore rare au Luxembourg, et c'est précisément notre spécialité. Deux moteurs, une seule stratégie de visibilité.</>,
         ]}
         links={[
           { to: "/notre-expertise/seo", label: "SEO" },
