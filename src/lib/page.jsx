@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Magnetic, ArrowUpRight, Spark, Bean, SectionLabel } from "./ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
+import { useLang, useT } from "./lang.jsx";
 
 /* ── Titre qui tombe mot à mot, comme les lettres du hero d'accueil ── */
 function SpringTitle({ children, className }) {
@@ -225,6 +226,7 @@ export function CtaBand({ title, sub, label }) {
 /* ── FAQ compacte réutilisable (fond crème) ───────────────────── */
 export function MiniFaq({ items }) {
   const [open, setOpen] = React.useState(0);
+  const { lang } = useLang();
   return (
     <section className="bg-cream py-20 md:py-28">
       <div className="mx-auto max-w-4xl px-6 md:px-10">
@@ -234,7 +236,11 @@ export function MiniFaq({ items }) {
           viewport={{ once: true, margin: "-80px" }}
           className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight mb-10"
         >
-          Questions <span className="squiggle">fréquentes</span>
+          {lang === "en" ? (
+            <>Frequently asked <span className="squiggle">questions</span></>
+          ) : (
+            <>Questions <span className="squiggle">fréquentes</span></>
+          )}
         </motion.h2>
         {items.map((f, i) => {
           const isOpen = open === i;
