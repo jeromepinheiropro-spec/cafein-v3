@@ -87,7 +87,7 @@ export default function Footer() {
           </p>
           <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-cream/40 flex items-center gap-2">
             Fait avec <span className="text-mint">beaucoup</span> de café
-            <LeafMark className="h-3.5 w-auto" />
+            <HuntBean id="footer" className="w-4 h-4" />
           </p>
         </div>
       </div>
