@@ -122,7 +122,7 @@ export const EXPERTISES = [
       "Restaurants, cabinets, artisans, indépendants : votre vitrine en ligne travaille pour vous 24h/24. On la rend belle, rapide, et surtout pensée pour transformer un visiteur curieux en prise de contact.",
     words: ["Vitrine", "Design", "Rapide", "Conversion", "Luxembourg"],
     features: [
-      "Design sur mesure aligné avec votre identité — jamais de template générique",
+      "Design sur mesure aligné avec votre identité, jamais de template générique",
       "Structure pensée pour convertir : parcours clair, appels à l'action visibles",
       "Responsive parfait : mobile, tablette, ordinateur",
       "Textes travaillés avec vous, dans votre ton",
@@ -135,7 +135,7 @@ export const EXPERTISES = [
       { big: 1, suffix: " mois", label: "de support offert après le lancement" },
     ],
     steps: [
-      { n: "01", title: "Découverte", desc: "On écoute votre métier, vos clients, vos objectifs — autour d'un café." },
+      { n: "01", title: "Découverte", desc: "On écoute votre métier, vos clients, vos objectifs, autour d'un café." },
       { n: "02", title: "Maquette", desc: "Un design qui vous ressemble, validé ensemble avant la moindre ligne de code." },
       { n: "03", title: "Développement", desc: "Intégration soignée, animations légères, performance au rendez-vous." },
       { n: "04", title: "Lancement", desc: "Mise en ligne, indexation Google et suivi des premiers contacts." },
@@ -143,7 +143,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Combien coûte un site vitrine ?",
-        a: "Cela dépend du nombre de pages et des fonctionnalités. On établit un devis gratuit après un premier échange — sans engagement et sans jargon.",
+        a: "Cela dépend du nombre de pages et des fonctionnalités. On établit un devis gratuit après un premier échange, sans engagement et sans jargon.",
       },
       {
         q: "Pourrai-je modifier le contenu moi-même ?",
@@ -211,7 +211,7 @@ export const EXPERTISES = [
       </>
     ),
     subtitle:
-      "Quand un template ne suffit plus : SaaS, portails clients, outils internes, intégrations spécifiques. On conçoit des applications robustes qui épousent vos processus — pas l'inverse.",
+      "Quand un template ne suffit plus : SaaS, portails clients, outils internes, intégrations spécifiques. On conçoit des applications robustes qui épousent vos processus, pas l'inverse.",
     words: ["SaaS", "Plateforme", "API", "React", "Performance"],
     features: [
       "Architecture pensée pour évoluer avec votre activité",
@@ -235,7 +235,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Quel budget pour du sur mesure ?",
-        a: "Un développement sur mesure commence généralement à quelques milliers d'euros et dépend fortement du périmètre. Après cadrage, vous recevez un devis détaillé par fonctionnalité — vous décidez de ce qui entre dans la V1.",
+        a: "Un développement sur mesure commence généralement à quelques milliers d'euros et dépend fortement du périmètre. Après cadrage, vous recevez un devis détaillé par fonctionnalité, vous décidez de ce qui entre dans la V1.",
       },
       {
         q: "Qui possède le code ?",
@@ -270,7 +270,7 @@ export const EXPERTISES = [
     stats: [
       { big: 90, suffix: "+", label: "score PageSpeed visé sur les sites que l'on optimise" },
       { big: 0, suffix: " €", label: "par clic : le trafic SEO est gratuit une fois acquis" },
-      { big: 12, suffix: " mois", label: "l'horizon d'un vrai travail SEO — on est francs là-dessus" },
+      { big: 12, suffix: " mois", label: "l'horizon d'un vrai travail SEO, on est francs là-dessus" },
     ],
     steps: [
       { n: "01", title: "Audit", desc: "État des lieux technique et concurrentiel : où vous êtes, où aller." },
@@ -281,11 +281,11 @@ export const EXPERTISES = [
     faq: [
       {
         q: "En combien de temps voit-on des résultats ?",
-        a: "Les premières progressions arrivent souvent sous 3 mois, les résultats solides entre 6 et 12 mois. Le SEO est un investissement durable, pas un sprint — méfiez-vous de ceux qui promettent la première position en 30 jours.",
+        a: "Les premières progressions arrivent souvent sous 3 mois, les résultats solides entre 6 et 12 mois. Le SEO est un investissement durable, pas un sprint, méfiez-vous de ceux qui promettent la première position en 30 jours.",
       },
       {
         q: "Le SEO fonctionne-t-il encore avec l'IA ?",
-        a: "Plus que jamais : les moteurs IA s'appuient sur les contenus bien référencés. C'est pour ça qu'on couple systématiquement SEO et GEO — voir notre expertise dédiée.",
+        a: "Plus que jamais : les moteurs IA s'appuient sur les contenus bien référencés. C'est pour ça qu'on couple systématiquement SEO et GEO, voir notre expertise dédiée.",
       },
     ],
     related: ["geo-visibilite-ia", "seo-local-luxembourg", "contenus-copywriting"],
@@ -295,7 +295,7 @@ export const EXPERTISES = [
     slug: "geo-visibilite-ia",
     icon: "geo",
     bg: "bg-sun",
-    title: "GEO — visibilité IA",
+    title: "GEO : visibilité IA",
     desc: "Être trouvé et cité par ChatGPT, Perplexity et Gemini : le référencement nouvelle génération.",
     tagline: (
       <>
@@ -349,7 +349,7 @@ export const EXPERTISES = [
       </>
     ),
     subtitle:
-      "« Restaurant Esch », « plombier Luxembourg-ville », « agence web Grande Région » : quand vos clients cherchent près de chez eux, votre entreprise doit sortir en premier — sur Google Maps comme dans les résultats classiques.",
+      "« Restaurant Esch », « plombier Luxembourg-ville », « agence web Grande Région » : quand vos clients cherchent près de chez eux, votre entreprise doit sortir en premier, sur Google Maps comme dans les résultats classiques.",
     words: ["Google Maps", "Fiche locale", "Avis", "Grande Région", "Proximité"],
     features: [
       "Fiche Google Business Profile optimisée de A à Z",
@@ -377,7 +377,7 @@ export const EXPERTISES = [
       },
       {
         q: "Que faire des avis négatifs ?",
-        a: "Y répondre vite, avec professionnalisme — c'est souvent plus convaincant qu'une note parfaite. On vous fournit des trames de réponse et on vous accompagne.",
+        a: "Y répondre vite, avec professionnalisme, c'est souvent plus convaincant qu'une note parfaite. On vous fournit des trames de réponse et on vous accompagne.",
       },
     ],
     related: ["seo", "sites-vitrine", "campagnes-publicitaires"],
@@ -395,7 +395,7 @@ export const EXPERTISES = [
       </>
     ),
     subtitle:
-      "Instagram, LinkedIn, Facebook, TikTok : on définit la stratégie, on crée les contenus, on publie, on répond. Votre marque vit sur les réseaux — et vous, vous vous concentrez sur votre métier.",
+      "Instagram, LinkedIn, Facebook, TikTok : on définit la stratégie, on crée les contenus, on publie, on répond. Votre marque vit sur les réseaux, et vous, vous vous concentrez sur votre métier.",
     words: ["Instagram", "LinkedIn", "TikTok", "Communauté", "Engagement"],
     features: [
       "Stratégie éditoriale alignée avec vos objectifs business",
@@ -419,11 +419,11 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Sur quels réseaux faut-il être présent ?",
-        a: "Ceux où sont vos clients — pas forcément tous. Un B2B misera sur LinkedIn, un restaurant sur Instagram. On choisit ensemble 2 ou 3 canaux et on les traite très bien.",
+        a: "Ceux où sont vos clients, pas forcément tous. Un B2B misera sur LinkedIn, un restaurant sur Instagram. On choisit ensemble 2 ou 3 canaux et on les traite très bien.",
       },
       {
         q: "Devrai-je fournir les photos et vidéos ?",
-        a: "Idéalement quelques matières brutes de votre quotidien — c'est ce qui sonne le plus vrai. On s'occupe de tout le reste : cadrage, montage, habillage, textes.",
+        a: "Idéalement quelques matières brutes de votre quotidien, c'est ce qui sonne le plus vrai. On s'occupe de tout le reste : cadrage, montage, habillage, textes.",
       },
     ],
     related: ["contenus-copywriting", "branding-identite", "campagnes-publicitaires"],
@@ -441,7 +441,7 @@ export const EXPERTISES = [
       </>
     ),
     subtitle:
-      "Un bon texte vend, rassure, référence. Pages de site, articles de blog, newsletters, posts : on écrit dans votre ton des contenus que vos clients lisent — et que Google et les IA adorent.",
+      "Un bon texte vend, rassure, référence. Pages de site, articles de blog, newsletters, posts : on écrit dans votre ton des contenus que vos clients lisent, et que Google et les IA adorent.",
     words: ["Copywriting", "Blog", "Storytelling", "SEO", "Ton de marque"],
     features: [
       "Pages de vente et d'accueil qui convertissent",
@@ -465,7 +465,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Utilisez-vous l'IA pour rédiger ?",
-        a: "Comme outil, jamais comme rédacteur final. Chaque texte est pensé, structuré et relu par un humain qui connaît votre dossier — l'IA nous fait gagner du temps, pas de la qualité.",
+        a: "Comme outil, jamais comme rédacteur final. Chaque texte est pensé, structuré et relu par un humain qui connaît votre dossier, l'IA nous fait gagner du temps, pas de la qualité.",
       },
       {
         q: "Combien de temps pour voir l'effet SEO d'un blog ?",
@@ -504,14 +504,14 @@ export const EXPERTISES = [
     ],
     steps: [
       { n: "01", title: "Exploration", desc: "Votre histoire, vos valeurs, vos concurrents : on cherche l'angle juste." },
-      { n: "02", title: "Pistes", desc: "Trois directions créatives argumentées — vous choisissez, on affine." },
+      { n: "02", title: "Pistes", desc: "Trois directions créatives argumentées, vous choisissez, on affine." },
       { n: "03", title: "Déclinaison", desc: "Logo, couleurs, typos, ton : l'identité complète prend forme." },
       { n: "04", title: "Charte", desc: "Tout est documenté pour une cohérence durable, partout." },
     ],
     faq: [
       {
         q: "J'ai déjà un logo, faut-il tout refaire ?",
-        a: "Pas forcément. On évalue ce qui fonctionne encore et on propose soit un rafraîchissement en douceur, soit une refonte — en préservant ce que vos clients reconnaissent.",
+        a: "Pas forcément. On évalue ce qui fonctionne encore et on propose soit un rafraîchissement en douceur, soit une refonte, en préservant ce que vos clients reconnaissent.",
       },
       {
         q: "Que contient exactement la charte graphique ?",
@@ -533,7 +533,7 @@ export const EXPERTISES = [
       </>
     ),
     subtitle:
-      "Google Ads pour capter l'intention, social ads pour créer la demande : on conçoit, lance et optimise des campagnes dont chaque euro est suivi — visibilité immédiate, résultats mesurables.",
+      "Google Ads pour capter l'intention, social ads pour créer la demande : on conçoit, lance et optimise des campagnes dont chaque euro est suivi, visibilité immédiate, résultats mesurables.",
     words: ["Google Ads", "Social Ads", "Ciblage", "ROI", "Conversion"],
     features: [
       "Campagnes Google Ads : recherche, display, shopping",
@@ -545,7 +545,7 @@ export const EXPERTISES = [
     ],
     stats: [
       { big: 24, suffix: "h", label: "pour être visible : la pub, c'est immédiat" },
-      { big: 100, suffix: "%", label: "des conversions tracées — pas de dépense aveugle" },
+      { big: 100, suffix: "%", label: "des conversions tracées, pas de dépense aveugle" },
       { big: 0, suffix: " engagement", label: "de durée : les budgets s'ajustent chaque mois" },
     ],
     steps: [
@@ -557,7 +557,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Quel budget publicitaire minimum ?",
-        a: "On recommande rarement moins de 500 €/mois de média pour obtenir des données exploitables. En dessous, mieux vaut souvent investir dans le SEO — on vous le dira franchement.",
+        a: "On recommande rarement moins de 500 €/mois de média pour obtenir des données exploitables. En dessous, mieux vaut souvent investir dans le SEO, on vous le dira franchement.",
       },
       {
         q: "SEO ou publicité, que choisir ?",
@@ -592,7 +592,7 @@ export const EXPERTISES = [
     stats: [
       { big: 36, suffix: "×", label: "le retour moyen de l'e-mail : 36 € par euro investi" },
       { big: 100, suffix: "%", label: "votre liste vous appartient, aucun algorithme ne la confisque" },
-      { big: 1, suffix: " clic", label: "pour se désinscrire — le respect fidélise aussi" },
+      { big: 1, suffix: " clic", label: "pour se désinscrire, le respect fidélise aussi" },
     ],
     steps: [
       { n: "01", title: "Fondations", desc: "Outil (Brevo ou autre), domaine d'envoi, import propre de vos contacts." },
@@ -603,7 +603,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Je n'ai pas encore de liste d'e-mails, par où commencer ?",
-        a: "Par la collecte : un formulaire bien placé, un aimant utile (guide, réduction, checklist) et quelques semaines suffisent pour démarrer une liste saine — cent vrais abonnés valent mieux que mille contacts achetés.",
+        a: "Par la collecte : un formulaire bien placé, un aimant utile (guide, réduction, checklist) et quelques semaines suffisent pour démarrer une liste saine, cent vrais abonnés valent mieux que mille contacts achetés.",
       },
       {
         q: "À quelle fréquence envoyer ?",
@@ -649,7 +649,7 @@ export const EXPERTISES = [
     faq: [
       {
         q: "Mes données Analytics actuelles sont-elles fiables ?",
-        a: "C'est la première chose que l'on vérifie : filtres manquants, conversions non tracées, spam… Un audit rapide dit si vos chiffres reflètent la réalité — souvent, il y a des surprises.",
+        a: "C'est la première chose que l'on vérifie : filtres manquants, conversions non tracées, spam… Un audit rapide dit si vos chiffres reflètent la réalité, souvent, il y a des surprises.",
       },
       {
         q: "Est-ce conforme au RGPD ?",

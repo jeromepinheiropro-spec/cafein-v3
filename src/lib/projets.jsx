@@ -14,11 +14,11 @@ export const PROJETS = [
     tags: "Site web · Graphisme",
     tagList: ["Site web", "Graphisme", "SEO", "UX"],
     img: "https://nooki.fr/wp-content/uploads/2025/07/projet-kinteraction.webp",
-    alt: "Projet Kinteraction — création de site web et identité visuelle",
+    alt: "Projet Kinteraction : création de site web et identité visuelle",
     shadow: "#1FCE8A",
     bg: "bg-mint",
     client:
-      "Jeune marque éducative, Kinteraction aide les parents à initier leurs enfants à l'anglais dès le plus jeune âge — naturellement, et sans écran.",
+      "Jeune marque éducative, Kinteraction aide les parents à initier leurs enfants à l'anglais dès le plus jeune âge, naturellement, et sans écran.",
     tagline: (
       <>
         Un site aussi ludique que <span className="text-mint-dark">la méthode qu'il présente</span>
@@ -48,7 +48,7 @@ export const PROJETS = [
     tags: "Référencement SEO",
     tagList: ["SEO", "Contenus", "Visibilité locale"],
     img: "https://nooki.fr/wp-content/uploads/2025/07/projet-le-101.webp",
-    alt: "Projet Le 101 — stratégie de référencement naturel SEO pour une galerie d'art",
+    alt: "Projet Le 101 : stratégie de référencement naturel SEO pour une galerie d'art",
     shadow: "#F4A259",
     bg: "bg-caramel",
     client:
@@ -59,7 +59,7 @@ export const PROJETS = [
       </>
     ),
     mission: [
-      "L'objectif : attirer les amateurs d'art et les collectionneurs en positionnant Le 101 comme un lieu incontournable de la scène bordelaise. Le référencement a été travaillé en profondeur autour des expositions, des artistes et des œuvres — un contenu vivant, qui évolue au rythme de la galerie.",
+      "L'objectif : attirer les amateurs d'art et les collectionneurs en positionnant Le 101 comme un lieu incontournable de la scène bordelaise. Le référencement a été travaillé en profondeur autour des expositions, des artistes et des œuvres, un contenu vivant, qui évolue au rythme de la galerie.",
       "En quatre mois, le trafic organique a décollé : les impressions ont plus que doublé et la galerie s'est installée en première position sur des mots-clés stratégiques de son univers.",
     ],
     done: [
@@ -86,7 +86,7 @@ export const PROJETS = [
     tags: "Site web · Graphisme",
     tagList: ["Site web", "Graphisme", "Multilingue"],
     img: "https://nooki.fr/wp-content/uploads/2026/06/efluenz-projet.webp",
-    alt: "Projet Efluenz — site web multilingue pour une agence d'influence marketing",
+    alt: "Projet Efluenz : site web multilingue pour une agence d'influence marketing",
     shadow: "#FFD166",
     bg: "bg-sun",
     client:
@@ -98,7 +98,7 @@ export const PROJETS = [
     ),
     mission: [
       "Le défi d'Efluenz : s'adresser à deux cibles très différentes sur un même site. D'un côté les marques qui cherchent des campagnes d'influence performantes, de l'autre les créateurs de contenu qui veulent rejoindre le réseau. Chacun devait trouver son chemin en quelques secondes.",
-      "Nous avons conçu une architecture claire à double entrée, avec une expérience pensée pour guider chaque visiteur vers la bonne action — demander une campagne ou postuler comme influenceur — le tout en plusieurs langues, à l'image de son positionnement européen.",
+      "Nous avons conçu une architecture claire à double entrée, avec une expérience pensée pour guider chaque visiteur vers la bonne action, demander une campagne ou postuler comme influenceur, le tout en plusieurs langues, à l'image de son positionnement européen.",
     ],
     done: [
       "Site web multilingue à l'image du positionnement européen",
@@ -120,7 +120,7 @@ export const PROJETS = [
     tags: "Graphisme · Web design · SEO",
     tagList: ["Graphisme", "Web design", "SEO"],
     img: "https://nooki.fr/wp-content/uploads/2025/07/projet-xucom.webp",
-    alt: "Projet Xucom — refonte de site, identité visuelle et SEO pour une agence print",
+    alt: "Projet Xucom : refonte de site, identité visuelle et SEO pour une agence print",
     shadow: "#FFD166",
     bg: "bg-cream-2",
     client:
@@ -154,11 +154,11 @@ export const PROJETS = [
     tags: "Campagnes SEA",
     tagList: ["SEA", "Google Ads", "E-commerce"],
     img: "https://nooki.fr/wp-content/uploads/2025/07/projet-7-plis.webp",
-    alt: "Projet 7 Plis — campagnes Google Ads pour un shop de skateboards recyclés",
+    alt: "Projet 7 Plis : campagnes Google Ads pour un shop de skateboards recyclés",
     shadow: "#1FCE8A",
     bg: "bg-mint",
     client:
-      "7 Plis est un shop en ligne qui crée des accessoires uniques à partir de skateboards recyclés — une marque street et écoresponsable.",
+      "7 Plis est un shop en ligne qui crée des accessoires uniques à partir de skateboards recyclés, une marque street et écoresponsable.",
     tagline: (
       <>
         Des campagnes Google Ads <span className="text-mint-dark">qui roulent toutes seules</span>
@@ -166,7 +166,7 @@ export const PROJETS = [
     ),
     mission: [
       "La mission : attirer un maximum de passionnés vers la boutique et booster les ventes en ligne, avec un budget maîtrisé de 200 € par mois. Les annonces jouent à fond sur l'image street et écoresponsable de la marque pour capter les visiteurs en quête de produits originaux.",
-      "Résultat : en neuf mois, des campagnes ciblées et ajustées en continu ont généré plus de 400 conversions pour un coût par clic de 0,13 € — sur un marché pourtant concurrentiel. La preuve qu'un petit budget bien piloté peut faire de grandes choses.",
+      "Résultat : en neuf mois, des campagnes ciblées et ajustées en continu ont généré plus de 400 conversions pour un coût par clic de 0,13 €, sur un marché pourtant concurrentiel. La preuve qu'un petit budget bien piloté peut faire de grandes choses.",
     ],
     done: [
       "Stratégie Google Ads adaptée à un budget de 200 €/mois",
@@ -192,7 +192,7 @@ export const PROJETS = [
     tags: "Site web · Graphisme",
     tagList: ["Site web", "Graphisme", "Refonte"],
     img: "https://nooki.fr/wp-content/uploads/2026/01/header-agria.webp",
-    alt: "Projet Agria Grand Est — refonte du site web d'un collectif agroalimentaire",
+    alt: "Projet Agria Grand Est : refonte du site web d'un collectif agroalimentaire",
     shadow: "#F4A259",
     bg: "bg-caramel",
     client:
