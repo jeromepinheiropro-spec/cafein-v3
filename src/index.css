@@ -16,7 +16,9 @@
 html {
   scroll-behavior: auto;
   /* bloque tout déplacement horizontal (mobile) : les éléments inclinés
-     (bandeau, blobs) débordent volontairement mais ne doivent pas créer de scroll */
+     (bandeau, blobs) débordent volontairement mais ne doivent pas créer de scroll.
+     `hidden` d'abord : les Safari plus anciens ignorent `clip`. */
+  overflow-x: hidden;
   overflow-x: clip;
   max-width: 100%;
   /* pas de pull-to-refresh ni de rebond : indispensable pour le Konami en glissements */
@@ -25,9 +27,24 @@ html {
 
 body {
   @apply bg-cream text-ink font-body antialiased;
+  overflow-x: hidden;
   overflow-x: clip;
   max-width: 100%;
   overscroll-behavior-y: none;
+}
+
+/* ── Allègements Safari / mobile : les gros flous et le grain animé
+      plein écran font ramer WebKit ─────────────────────────────── */
+@media (pointer: coarse) {
+  .grain::before {
+    animation: none;
+  }
+  .blur-3xl {
+    filter: blur(26px) !important;
+  }
+  .blur-2xl {
+    filter: blur(18px) !important;
+  }
 }
 
 /* Hide native cursor only on fine pointers (desktop) */
