@@ -19,6 +19,7 @@ import Expertise from "./pages/Expertise.jsx";
 import ExpertiseDetail from "./pages/ExpertiseDetail.jsx";
 import ProjetDetail from "./pages/ProjetDetail.jsx";
 import Equipe from "./pages/Equipe.jsx";
+import Moderation from "./pages/Moderation.jsx";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -94,6 +95,7 @@ export default function App() {
           <Route path="/notre-expertise/:slug" element={<ExpertiseDetail />} />
           <Route path="/realisations/:slug" element={<ProjetDetail />} />
           <Route path="/equipe" element={<Equipe />} />
+          <Route path="/moderation" element={<Moderation />} />
           <Route path="*" element={<Home started={!loading} />} />
         </Routes>
       </main>
