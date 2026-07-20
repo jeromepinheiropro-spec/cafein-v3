@@ -5,6 +5,7 @@ import { LeafMark } from "../lib/ui.jsx";
 import { HuntBean, useEggSpeed } from "./EasterEggs.jsx";
 
 const LINKS = [
+  { label: "Expertise", to: "/notre-expertise" },
   { label: "Création", to: "/creation-site-web" },
   { label: "SEO & GEO", to: "/seo-geo" },
   { label: "Communication", to: "/communication" },

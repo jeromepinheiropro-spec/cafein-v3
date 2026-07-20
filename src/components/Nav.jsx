@@ -10,6 +10,7 @@ import { LeafMark, Wordmark, Magnetic } from "../lib/ui.jsx";
 import { useEgg } from "./EasterEggs.jsx";
 
 const LINKS = [
+  { label: "Notre expertise", to: "/notre-expertise" },
   { label: "Création de site", to: "/creation-site-web" },
   { label: "SEO & GEO", to: "/seo-geo" },
   { label: "Communication", to: "/communication" },
