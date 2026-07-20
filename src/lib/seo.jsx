@@ -1,12 +1,23 @@
 import { useEffect } from "react";
+import { useLang } from "./lang.jsx";
 
-/* ── SEO léger pour SPA ────────────────────────────────────────
-   Met à jour <title>, meta description, canonical, Open Graph
-   et injecte le JSON-LD (schema.org) propre à chaque route.
-   Zéro dépendance, zéro rendu : le composant retourne null. */
+/* ── SEO léger pour SPA, bilingue FR/EN ────────────────────────
+   Met à jour <title>, meta description, canonical, Open Graph,
+   les balises hreflang (fr / en / x-default) et injecte le JSON-LD.
+   `path` = chemin NEUTRE (version FR, ex. "/seo-geo") ; la version EN
+   est déduite en préfixant /en. La langue vient de l'URL (useLang).
+   Zéro rendu : le composant retourne null. */
 
 export const SITE = "https://www.cafein.lu";
 export const SITE_NAME = "Cafein";
+
+/* Construit l'URL absolue d'un chemin neutre pour une langue donnée.
+   FR : SITE/ , SITE/seo-geo   |   EN : SITE/en , SITE/en/seo-geo */
+function urlFor(path, lang) {
+  const neutral = path === "/" ? "" : path;
+  if (lang === "en") return SITE + "/en" + neutral;
+  return SITE + (neutral || "/");
+}
 
 function upsertMeta(attr, key, content) {
   let el = document.head.querySelector(`meta[${attr}="${key}"]`);
@@ -19,7 +30,7 @@ function upsertMeta(attr, key, content) {
 }
 
 function upsertLink(rel, href) {
-  let el = document.head.querySelector(`link[rel="${rel}"]`);
+  let el = document.head.querySelector(`link[rel="${rel}"]:not([hreflang])`);
   if (!el) {
     el = document.createElement("link");
     el.setAttribute("rel", rel);
@@ -28,21 +39,53 @@ function upsertLink(rel, href) {
   el.setAttribute("href", href);
 }
 
-export default function Seo({ title, description, path = "/", jsonLd = [] }) {
+/* Réécrit proprement les balises hreflang (une par langue + x-default).
+   On retire TOUTES les alternates existantes, y compris celles statiques
+   d'index.html, pour éviter les doublons pointant vers la mauvaise page. */
+function setHreflang(frUrl, enUrl) {
+  document.head
+    .querySelectorAll('link[rel="alternate"][hreflang]')
+    .forEach((el) => el.remove());
+  const alts = [
+    ["fr", frUrl],
+    ["en", enUrl],
+    ["x-default", frUrl],
+  ];
+  for (const [hl, href] of alts) {
+    const l = document.createElement("link");
+    l.setAttribute("rel", "alternate");
+    l.setAttribute("hreflang", hl);
+    l.setAttribute("href", href);
+    l.setAttribute("data-i18n", "1");
+    document.head.appendChild(l);
+  }
+}
+
+export default function Seo({ title, titleEn, description, descriptionEn, path = "/", jsonLd = [] }) {
+  const { lang } = useLang();
+  const t = lang === "en" && titleEn ? titleEn : title;
+  const d = lang === "en" && descriptionEn ? descriptionEn : description;
+
   useEffect(() => {
-    const url = SITE + (path === "/" ? "/" : path);
-    document.title = title;
-    upsertMeta("name", "description", description);
-    upsertLink("canonical", url);
-    upsertMeta("property", "og:title", title);
-    upsertMeta("property", "og:description", description);
-    upsertMeta("property", "og:url", url);
+    const frUrl = urlFor(path, "fr");
+    const enUrl = urlFor(path, "en");
+    const canonical = lang === "en" ? enUrl : frUrl;
+
+    document.title = t;
+    upsertMeta("name", "description", d);
+    upsertLink("canonical", canonical);
+    upsertMeta("property", "og:title", t);
+    upsertMeta("property", "og:description", d);
+    upsertMeta("property", "og:url", canonical);
     upsertMeta("property", "og:type", "website");
     upsertMeta("property", "og:site_name", SITE_NAME);
-    upsertMeta("property", "og:locale", "fr_FR");
+    upsertMeta("property", "og:locale", lang === "en" ? "en_US" : "fr_FR");
+    upsertMeta("property", "og:locale:alternate", lang === "en" ? "fr_FR" : "en_US");
     upsertMeta("name", "twitter:card", "summary");
-    upsertMeta("name", "twitter:title", title);
-    upsertMeta("name", "twitter:description", description);
+    upsertMeta("name", "twitter:title", t);
+    upsertMeta("name", "twitter:description", d);
+
+    setHreflang(frUrl, enUrl);
 
     /* JSON-LD : un seul script géré par route */
     document.getElementById("seo-jsonld")?.remove();
@@ -53,7 +96,7 @@ export default function Seo({ title, description, path = "/", jsonLd = [] }) {
     s.textContent = JSON.stringify(blocks.length === 1 ? blocks[0] : blocks);
     document.head.appendChild(s);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, path, JSON.stringify(jsonLd)]);
+  }, [t, d, path, lang, JSON.stringify(jsonLd)]);
   return null;
 }
 

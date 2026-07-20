@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "./link.jsx";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Magnetic, ArrowUpRight, Spark, Bean, SectionLabel } from "./ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
-import { useLang, useT } from "./lang.jsx";
+import { useLang, useT, useLocalize } from "./lang.jsx";
 
 /* ── Titre qui tombe mot à mot, comme les lettres du hero d'accueil ── */
 function SpringTitle({ children, className }) {
@@ -168,6 +168,7 @@ export function PageHero({ n, tag, title, subtitle, children }) {
 
 /* ── Bande CTA de fin de page (espresso, bouton cartoon) ─────── */
 export function CtaBand({ title, sub, label }) {
+  const localize = useLocalize();
   return (
     <section className="relative bg-espresso py-24 md:py-32 overflow-hidden border-t-4 border-mint">
       <div className="absolute inset-0 pointer-events-none">
@@ -209,7 +210,7 @@ export function CtaBand({ title, sub, label }) {
         >
           <Magnetic strength={0.25}>
             <a
-              href="/#contact"
+              href={localize("/#contact")}
               data-cursor="Go !"
               className="group inline-flex items-center gap-3 rounded-full bg-mint text-ink font-display font-bold text-lg px-9 py-4 border-[3px] border-ink shadow-[6px_6px_0_#F5EFE2] hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
             >
