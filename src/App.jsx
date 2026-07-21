@@ -11,6 +11,8 @@ import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
 import Footer from "./components/Footer.jsx";
 import Mascot from "./components/Mascot.jsx";
+import Barista from "./components/Barista.jsx";
+import SoundToggle from "./components/SoundToggle.jsx";
 
 import Home from "./pages/Home.jsx";
 import CreationSite from "./pages/CreationSite.jsx";
@@ -116,6 +118,8 @@ export default function App() {
       </main>
       <Footer />
       <Mascot />
+      <Barista />
+      <SoundToggle />
     </div>
     </EggProvider>
     </LangProvider>
