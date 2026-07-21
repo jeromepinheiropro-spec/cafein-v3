@@ -130,15 +130,27 @@ app.post("/api/contact", async (req, res) => {
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "?";
   if (rateLimited(ip)) return res.status(429).json({ error: "Trop d'envois. Réessayez dans un instant." });
 
-  let { nom, email, message, lang } = req.body || {};
+  let { nom, email, message, lang, source, scores } = req.body || {};
   nom = String(nom || "").trim().slice(0, 80);
   email = String(email || "").trim().slice(0, 120);
   message = String(message || "").trim().slice(0, 4000);
   lang = lang === "en" ? "en" : "fr";
+  source = source === "audit" ? "audit" : "contact";
+  /* scores : uniquement les 4 métriques PageSpeed, bornées 0-100, sinon ignoré */
+  let cleanScores = null;
+  if (scores && typeof scores === "object") {
+    const pick = (v) => (Number.isFinite(+v) ? Math.max(0, Math.min(100, Math.round(+v))) : null);
+    cleanScores = {
+      performance: pick(scores.performance),
+      seo: pick(scores.seo),
+      accessibility: pick(scores.accessibility),
+      bestPractices: pick(scores.bestPractices),
+    };
+  }
   if (!nom || !email || !message) return res.status(400).json({ error: "Champs manquants." });
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: "E-mail invalide." });
 
-  const entry = { id: crypto.randomUUID(), nom, email, message, lang, date: new Date().toISOString(), ip };
+  const entry = { id: crypto.randomUUID(), nom, email, message, lang, source, scores: cleanScores, handled: false, date: new Date().toISOString(), ip };
   let contacts = loadContacts();
   contacts.push(entry);
   if (contacts.length > 1000) contacts = contacts.slice(-1000);
@@ -158,6 +170,17 @@ app.post("/api/contact", async (req, res) => {
 app.get("/api/contact", (req, res) => {
   if (req.headers["x-admin-key"] !== ADMIN_KEY || !ADMIN_KEY) return res.status(401).json({ error: "Clé invalide." });
   res.json(loadContacts());
+});
+
+/* Marquer un lead comme traité / non traité (espace équipe) */
+app.patch("/api/contact/:id", (req, res) => {
+  if (req.headers["x-admin-key"] !== ADMIN_KEY || !ADMIN_KEY) return res.status(401).json({ error: "Clé invalide." });
+  const contacts = loadContacts();
+  const entry = contacts.find((c) => c.id === req.params.id);
+  if (!entry) return res.status(404).json({ error: "Introuvable." });
+  entry.handled = !!req.body?.handled;
+  fs.writeFileSync(CONTACT_FILE, JSON.stringify(contacts, null, 2));
+  res.json({ ok: true, handled: entry.handled });
 });
 
 app.delete("/api/contact/:id", (req, res) => {
