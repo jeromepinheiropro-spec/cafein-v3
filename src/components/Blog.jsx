@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "../lib/link.jsx";
 import { SectionLabel, ArrowUpRight, Bean, Spark, Cup } from "../lib/ui.jsx";
 import { useEggSpeed } from "./EasterEggs.jsx";
 import { useLang, useT } from "../lib/lang.jsx";
@@ -127,14 +128,14 @@ export default function Blog() {
               )}
             </motion.h2>
           </div>
-          <a
-            href="#blog"
-            data-cursor={t("Tout lire", "Read all")}
+          <Link
+            to="/lexique"
+            data-cursor={t("Explorer", "Explore")}
             className="group inline-flex items-center gap-2 font-display font-bold text-ink border-b-[3px] border-mint pb-1 hover:gap-4 transition-all"
           >
-            {t("Voir tous les articles", "See all articles")}
+            {t("Explorer le lexique du web", "Explore the web glossary")}
             <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
-          </a>
+          </Link>
         </div>
 
         <div className="mt-12 grid md:grid-cols-3 gap-6">
