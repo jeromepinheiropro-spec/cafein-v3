@@ -119,13 +119,30 @@ export const ORG_LD = {
     { "@type": "Place", name: "Grande Région" },
   ],
   address: { "@type": "PostalAddress", addressCountry: "LU" },
+  email: "hello@cafein.lu",
   priceRange: "€€",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "hello@cafein.lu",
+    contactType: "sales",
+    areaServed: "LU",
+    availableLanguage: ["French", "English"],
+  },
   knowsAbout: [
     "Création de site internet",
+    "Refonte de site web",
     "SEO",
+    "SEO local Luxembourg",
     "GEO (Generative Engine Optimization)",
+    "Optimisation pour les IA (ChatGPT, Perplexity, Gemini)",
     "Communication digitale",
+    "Réseaux sociaux",
     "E-commerce",
+  ],
+  makesOffer: [
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Création de site internet" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Référencement SEO & GEO" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Communication digitale" } },
   ],
 };
 
