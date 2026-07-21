@@ -1,5 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useLang } from "./lang.jsx";
+
+/* ── Surcharges SEO pilotées depuis le back-office ──────────────
+   On récupère /api/seo une seule fois (partagé entre tous les <Seo>),
+   puis chaque page applique la surcharge title/description de son chemin
+   quand elle existe. Sans surcharge, les valeurs par défaut de la page
+   sont conservées. */
+let _seoCache = null;
+let _seoLoading = false;
+const _seoSubs = new Set();
+function fetchSeoOverrides() {
+  if (_seoCache || _seoLoading) return;
+  _seoLoading = true;
+  fetch("/api/seo")
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((m) => {
+      _seoCache = m && typeof m === "object" ? m : {};
+    })
+    .catch(() => {
+      _seoCache = {};
+    })
+    .finally(() => {
+      _seoLoading = false;
+      _seoSubs.forEach((fn) => fn());
+    });
+}
+function useSeoOverrides() {
+  const [, bump] = useReducer((x) => x + 1, 0);
+  useEffect(() => {
+    if (_seoCache) return;
+    _seoSubs.add(bump);
+    fetchSeoOverrides();
+    return () => _seoSubs.delete(bump);
+  }, []);
+  return _seoCache || {};
+}
 
 /* ── SEO léger pour SPA, bilingue FR/EN ────────────────────────
    Met à jour <title>, meta description, canonical, Open Graph,
@@ -63,8 +98,14 @@ function setHreflang(frUrl, enUrl) {
 
 export default function Seo({ title, titleEn, description, descriptionEn, path = "/", jsonLd = [], noindex = false }) {
   const { lang } = useLang();
-  const t = lang === "en" && titleEn ? titleEn : title;
-  const d = lang === "en" && descriptionEn ? descriptionEn : description;
+  const overrides = useSeoOverrides();
+  const ov = overrides[path] || {};
+  const baseT = lang === "en" && titleEn ? titleEn : title;
+  const baseD = lang === "en" && descriptionEn ? descriptionEn : description;
+  /* La surcharge du back-office l'emporte quand elle est renseignée ;
+     en EN, on retombe sur la surcharge FR si l'EN n'est pas défini. */
+  const t = (lang === "en" ? ov.titleEn || ov.title : ov.title) || baseT;
+  const d = (lang === "en" ? ov.descriptionEn || ov.description : ov.description) || baseD;
 
   useEffect(() => {
     const frUrl = urlFor(path, "fr");
