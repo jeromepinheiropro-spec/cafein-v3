@@ -309,6 +309,103 @@ app.post("/api/barista", async (req, res) => {
   }
 });
 
+/* ── Audit PageSpeed en direct ─────────────────────────────────
+   Le visiteur tape l'URL de son site ; on interroge l'API gratuite
+   Google PageSpeed Insights et on renvoie ses vrais scores (perf,
+   SEO, accessibilité, bonnes pratiques). Une clé (PAGESPEED_API_KEY,
+   gratuite via Google Cloud) est vivement conseillée : sans clé,
+   l'API est vite limitée (429). AUDIT_MOCK=1 = scores simulés (dev). */
+const PAGESPEED_API_KEY = process.env.PAGESPEED_API_KEY || "";
+const AUDIT_MOCK = process.env.AUDIT_MOCK === "1";
+
+const auditHits = new Map();
+function auditRateLimited(ip) {
+  const now = Date.now();
+  const arr = (auditHits.get(ip) || []).filter((t) => now - t < 3600_000);
+  if (arr.length >= 12) return true;
+  arr.push(now);
+  auditHits.set(ip, arr);
+  return false;
+}
+
+function normalizeUrl(raw) {
+  let u = String(raw || "").trim();
+  if (!u) return null;
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  try {
+    const parsed = new URL(u);
+    if (!/^https?:$/.test(parsed.protocol)) return null;
+    if (!parsed.hostname.includes(".")) return null;
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
+function mockScores(url) {
+  let h = 0;
+  for (const c of url) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const pick = (base, span, salt) => base + ((h >> salt) % span);
+  return {
+    performance: pick(38, 45, 0),   // 38-82, souvent rouge/orange
+    seo: pick(62, 33, 3),           // 62-94
+    accessibility: pick(58, 38, 6), // 58-95
+    bestPractices: pick(55, 40, 9), // 55-94
+  };
+}
+
+app.post("/api/audit", async (req, res) => {
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "?";
+  if (auditRateLimited(ip)) return res.status(429).json({ error: "Trop d'analyses d'affilée. Réessayez dans un moment." });
+
+  const url = normalizeUrl(req.body?.url);
+  if (!url) return res.status(400).json({ error: "Adresse de site invalide." });
+
+  if (AUDIT_MOCK) {
+    await new Promise((r) => setTimeout(r, 1600));
+    return res.json({ ok: true, url, mock: true, ...mockScores(url) });
+  }
+
+  const cats = ["performance", "seo", "accessibility", "best-practices"];
+  const api =
+    "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=" +
+    encodeURIComponent(url) +
+    "&strategy=mobile&" +
+    cats.map((c) => "category=" + c).join("&") +
+    (PAGESPEED_API_KEY ? "&key=" + PAGESPEED_API_KEY : "");
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 58_000);
+  try {
+    const r = await fetch(api, { signal: ctrl.signal });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || data.error) {
+      const msg = data.error?.message || "";
+      if (r.status === 429 || /quota/i.test(msg))
+        return res.status(429).json({ error: "quota", detail: "Analyse momentanément indisponible. Réessayez dans un instant." });
+      return res.status(422).json({ error: "unreachable", detail: "On n'a pas pu analyser cette adresse. Vérifiez qu'elle est correcte et en ligne." });
+    }
+    const c = data.lighthouseResult?.categories || {};
+    const pct = (x) => (x?.score == null ? null : Math.round(x.score * 100));
+    return res.json({
+      ok: true,
+      url: data.lighthouseResult?.finalDisplayedUrl || url,
+      performance: pct(c.performance),
+      seo: pct(c.seo),
+      accessibility: pct(c.accessibility),
+      bestPractices: pct(c["best-practices"]),
+    });
+  } catch (e) {
+    const aborted = e?.name === "AbortError";
+    return res.status(aborted ? 504 : 502).json({
+      error: aborted ? "timeout" : "upstream",
+      detail: aborted ? "L'analyse a pris trop de temps. Réessayez ou écrivez-nous." : "Analyse indisponible pour le moment.",
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+});
+
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
