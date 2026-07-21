@@ -77,28 +77,30 @@ export function AvatarFlo({ className = "w-full h-auto" }) {
 export function AvatarBarista({ className = "w-full h-auto" }) {
   return (
     <svg viewBox="0 0 200 200" className={className} aria-hidden>
-      {/* soucoupe */}
-      <ellipse cx="100" cy="172" rx="60" ry="12" fill="#141A17" opacity="0.12" />
-      {/* tasse (couleur caramel façon gobelet de Pinoo) */}
-      <path d="M50 82 h100 v44 a50 33 0 0 1 -100 0 z" fill="#F4A259" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
-      {/* anse */}
-      <path d="M150 92 h14 a16 16 0 0 1 0 32 h-16" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
+      {/* ombre au sol */}
+      <ellipse cx="100" cy="184" rx="42" ry="8" fill="#141A17" opacity="0.12" />
+      {/* grand gobelet à emporter (silhouette haute et fuselée, façon Pinoo/Flo) */}
+      <path d="M60 72 L74 166 Q75 172 82 172 H118 Q125 172 126 166 L140 72 Z" fill="#F4A259" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
+      {/* rebord du gobelet */}
+      <path d="M56 72 H144" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
+      {/* manchon (bandeau to-go) */}
+      <path d="M70 132 H130 L127 152 H73 Z" fill="#F5EFE2" stroke="#141A17" strokeWidth="5" strokeLinejoin="round" />
       {/* casque audio de Flo : arceau + oreillettes */}
-      <path d="M56 92 Q100 42 144 92" fill="none" stroke="#141A17" strokeWidth="7" strokeLinecap="round" />
-      <rect x="49" y="92" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
-      <rect x="136" y="92" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
+      <path d="M60 72 Q100 40 140 72" fill="none" stroke="#141A17" strokeWidth="7" strokeLinecap="round" />
+      <rect x="50" y="78" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
+      <rect x="135" y="78" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
       {/* joues */}
-      <circle cx="73" cy="124" r="4.5" fill="#E8623E" opacity="0.4" />
-      <circle cx="127" cy="124" r="4.5" fill="#E8623E" opacity="0.4" />
+      <circle cx="74" cy="112" r="4.5" fill="#E8623E" opacity="0.4" />
+      <circle cx="126" cy="112" r="4.5" fill="#E8623E" opacity="0.4" />
       {/* lunettes rondes de Stan */}
-      <circle cx="81" cy="110" r="12" fill="#fff" stroke="#141A17" strokeWidth="5" />
-      <circle cx="119" cy="110" r="12" fill="#fff" stroke="#141A17" strokeWidth="5" />
-      <line x1="93" y1="110" x2="107" y2="110" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="82" cy="100" r="11" fill="#fff" stroke="#141A17" strokeWidth="5" />
+      <circle cx="118" cy="100" r="11" fill="#fff" stroke="#141A17" strokeWidth="5" />
+      <line x1="93" y1="100" x2="107" y2="100" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
       {/* œil gauche ouvert, œil droit qui fait le clin d'œil de Pinoo */}
-      <circle cx="81" cy="110" r="3.6" fill="#141A17" />
-      <path d="M113 110 q6 4 12 0" fill="none" stroke="#141A17" strokeWidth="4.5" strokeLinecap="round" />
+      <circle cx="82" cy="100" r="3.4" fill="#141A17" />
+      <path d="M112 100 q6 4 12 0" fill="none" stroke="#141A17" strokeWidth="4.5" strokeLinecap="round" />
       {/* sourire */}
-      <path d="M86 132 q14 10 28 0" fill="none" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
+      <path d="M88 118 q12 9 24 0" fill="none" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
     </svg>
   );
 }
