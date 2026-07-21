@@ -60,11 +60,26 @@ export default function App() {
   useEffect(() => {
     const lenis = window.__lenis;
     if (location.hash) {
-      const el = document.querySelector(location.hash);
-      if (el && lenis) {
-        setTimeout(() => lenis.scrollTo(el, { offset: -80, duration: 1.2 }), 150);
-        return;
-      }
+      /* Ancre : quand on arrive depuis une AUTRE page (ex. le bouton du
+         SiteBuilder sur /creation-site-web vers /#contact), le contenu vient
+         de changer et Lenis ne connaît pas encore la nouvelle hauteur. On
+         recalcule (resize) puis on vise la cible, avec quelques passes pour
+         corriger si la mise en page se stabilise après les animations. */
+      let n = 0;
+      const go = () => {
+        const el = document.querySelector(location.hash);
+        if (el) {
+          if (lenis) {
+            lenis.resize();
+            lenis.scrollTo(el, { offset: -80, duration: 1.0 });
+          } else {
+            el.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+        if (++n < 5) setTimeout(go, 260);
+      };
+      setTimeout(go, 120);
+      return;
     }
     if (lenis) lenis.scrollTo(0, { immediate: true });
     else window.scrollTo(0, 0);
