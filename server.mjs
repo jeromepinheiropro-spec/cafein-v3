@@ -176,8 +176,10 @@ app.get("/api/admin/check", (req, res) => {
 /* ── Barista IA ────────────────────────────────────────────────
    Petit assistant façon barista : répond aux questions simples sur
    Cafein et oriente vers la prise de contact. JAMAIS de prix.
-   Fonctionne avec Anthropic (ANTHROPIC_API_KEY) OU OpenAI (OPENAI_API_KEY).
-   Modèle surchargeable via BARISTA_MODEL. */
+   Fonctionne avec Google Gemini (GEMINI_API_KEY — offre gratuite), Anthropic
+   (ANTHROPIC_API_KEY) ou OpenAI (OPENAI_API_KEY). Priorité : Gemini > Anthropic
+   > OpenAI. Modèle surchargeable via BARISTA_MODEL. */
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const BARISTA_MODEL = process.env.BARISTA_MODEL || "";
@@ -225,6 +227,27 @@ async function callAnthropic(messages, system) {
   return (j.content || []).map((b) => b.text || "").join("").trim();
 }
 
+async function callGemini(messages, system) {
+  const model = BARISTA_MODEL || "gemini-2.0-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+  const contents = messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }));
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: system }] },
+      contents,
+      generationConfig: { maxOutputTokens: 300, temperature: 0.6 },
+    }),
+  });
+  if (!r.ok) throw new Error(`gemini-${r.status}:${(await r.text().catch(() => "")).slice(0, 150)}`);
+  const j = await r.json();
+  return (j.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+}
+
 async function callOpenAI(messages, system) {
   const r = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -244,7 +267,7 @@ async function callOpenAI(messages, system) {
 app.post("/api/barista", async (req, res) => {
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "?";
   if (baristaLimited(ip)) return res.status(429).json({ error: "Le barista souffle un peu ☕ Réessaie dans un moment." });
-  if (!ANTHROPIC_API_KEY && !OPENAI_API_KEY) return res.status(503).json({ error: "no-key" });
+  if (!GEMINI_API_KEY && !ANTHROPIC_API_KEY && !OPENAI_API_KEY) return res.status(503).json({ error: "no-key" });
 
   let { messages, lang } = req.body || {};
   lang = lang === "en" ? "en" : "fr";
@@ -257,7 +280,11 @@ app.post("/api/barista", async (req, res) => {
 
   try {
     const system = baristaSystem(lang);
-    const reply = ANTHROPIC_API_KEY ? await callAnthropic(clean, system) : await callOpenAI(clean, system);
+    const reply = GEMINI_API_KEY
+      ? await callGemini(clean, system)
+      : ANTHROPIC_API_KEY
+        ? await callAnthropic(clean, system)
+        : await callOpenAI(clean, system);
     const fallback = lang === "en"
       ? "Sorry, I blanked out for a sec. Ping us at hello@cafein.lu ☕"
       : "Désolé, j'ai eu un petit trou. Écris-nous à hello@cafein.lu ☕";
