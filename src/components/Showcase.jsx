@@ -95,39 +95,16 @@ function BeforeAfter() {
       transition={{ duration: 0.7 }}
       className="mt-16"
     >
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <h3 className="font-display font-extrabold text-2xl md:text-4xl text-ink">
           {t("Un site repensé de A à Z", "A site rebuilt from A to Z")}
         </h3>
-        {/* Flo apparaît et glisse un mot — le personnage + une bulle à côté */}
-        <motion.div
-          initial={{ opacity: 0, x: 24, scale: 0.85 }}
-          whileInView={{ opacity: 1, x: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ delay: 0.25, type: "spring", stiffness: 210, damping: 15 }}
-          className="flex items-center gap-2.5"
-        >
-          <div className="rounded-2xl rounded-br-md bg-white border-[2.5px] border-ink px-3.5 py-2 shadow-[3px_3px_0_#0A0F0D] max-w-[15rem]">
-            <span className="block font-mono text-[8px] tracking-[0.2em] uppercase text-mint-dark mb-0.5">
-              {t("Flo · créa", "Flo · design")}
-            </span>
-            <p className="font-medium text-xs md:text-sm text-ink leading-snug">
-              {t("Une refonte pensée pour vos clients et vos conversions.", "A redesign built around your clients and conversions.")}
-            </p>
-          </div>
-          <motion.span
-            animate={{ y: [0, -4, 0], rotate: [0, -3, 0] }}
-            transition={{ repeat: Infinity, duration: 3.2, ease: "easeInOut" }}
-            className="block w-16 h-16 shrink-0 drop-shadow-[2px_3px_0_rgba(10,15,13,0.25)]"
-          >
-            <AvatarFlo className="w-full h-full" />
-          </motion.span>
-        </motion.div>
+        <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-ink/50">
+          {t("← Glissez le curseur →", "← Drag the slider →")}
+        </p>
       </div>
-      <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-ink/40 mb-5 md:text-right">
-        {t("← Glissez le curseur →", "← Drag the slider →")}
-      </p>
 
+      <div className="relative">
       <div
         ref={containerRef}
         className="relative h-80 md:h-96 rounded-3xl border-[3px] border-ink overflow-hidden select-none touch-pan-y cursor-ew-resize"
@@ -197,6 +174,32 @@ function BeforeAfter() {
             </svg>
           </div>
         </div>
+      </div>
+
+      {/* Flo, en grand, à cheval sur le bord haut du bloc */}
+      <motion.div
+        initial={{ opacity: 0, y: 28, scale: 0.8 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 14 }}
+        className="absolute right-3 md:right-8 -top-12 md:-top-16 z-20 flex items-end gap-2.5 pointer-events-none"
+      >
+        <div className="rounded-2xl rounded-br-md bg-white border-[2.5px] border-ink px-3.5 py-2 shadow-[3px_3px_0_#0A0F0D] max-w-[11rem] md:max-w-[15rem]">
+          <span className="block font-mono text-[8px] tracking-[0.2em] uppercase text-mint-dark mb-0.5">
+            {t("Flo · créa", "Flo · design")}
+          </span>
+          <p className="font-medium text-xs md:text-sm text-ink leading-snug">
+            {t("Une refonte pensée pour vos clients et vos conversions.", "A redesign built around your clients and conversions.")}
+          </p>
+        </div>
+        <motion.span
+          animate={{ y: [0, -5, 0], rotate: [0, -4, 0] }}
+          transition={{ repeat: Infinity, duration: 3.2, ease: "easeInOut" }}
+          className="block w-24 h-24 md:w-28 md:h-28 shrink-0 drop-shadow-[3px_4px_0_rgba(10,15,13,0.3)]"
+        >
+          <AvatarFlo className="w-full h-full" />
+        </motion.span>
+      </motion.div>
       </div>
 
     </motion.div>
