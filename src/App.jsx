@@ -21,6 +21,7 @@ import Expertise from "./pages/Expertise.jsx";
 import ExpertiseDetail from "./pages/ExpertiseDetail.jsx";
 import ProjetDetail from "./pages/ProjetDetail.jsx";
 import Equipe from "./pages/Equipe.jsx";
+import BlogPost from "./pages/BlogPost.jsx";
 import Legal from "./pages/Legal.jsx";
 import Moderation from "./pages/Moderation.jsx";
 
@@ -117,6 +118,7 @@ export default function App() {
             { path: "/notre-expertise/:slug", element: <ExpertiseDetail /> },
             { path: "/realisations/:slug", element: <ProjetDetail /> },
             { path: "/equipe", element: <Equipe /> },
+            { path: "/blog/:slug", element: <BlogPost /> },
             { path: "/mentions-legales", element: <Legal kind="mentions" /> },
             { path: "/confidentialite", element: <Legal kind="confidentialite" /> },
             { path: "/politique-cookies", element: <Legal kind="cookies" /> },
