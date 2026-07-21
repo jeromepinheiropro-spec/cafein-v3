@@ -182,7 +182,7 @@ function BeforeAfter() {
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 14 }}
-        className="absolute right-3 md:right-8 -top-12 md:-top-16 z-20 flex items-end gap-2.5 pointer-events-none"
+        className="absolute right-3 md:right-8 -top-14 md:-top-20 z-20 flex items-start gap-1 pointer-events-none"
       >
         <div className="rounded-2xl rounded-br-md bg-white border-[2.5px] border-ink px-3.5 py-2 shadow-[3px_3px_0_#0A0F0D] max-w-[11rem] md:max-w-[15rem]">
           <span className="block font-mono text-[8px] tracking-[0.2em] uppercase text-mint-dark mb-0.5">
