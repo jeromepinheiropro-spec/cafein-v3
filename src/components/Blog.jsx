@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "../lib/link.jsx";
 import { SectionLabel, ArrowUpRight, Bean, Spark, Cup } from "../lib/ui.jsx";
@@ -100,10 +100,40 @@ function Deco({ kind }) {
   return <Cup className="w-14 h-14" stroke="#0A0F0D" />;
 }
 
+const CARD_BG = ["bg-mint", "bg-caramel", "bg-sun"];
+const CARD_DECO = ["seo", "geo", "web"];
+
+const MotionArticle = motion.create(Link);
+
+function fmtDate(iso, lang) {
+  try {
+    return new Date(iso).toLocaleDateString(lang === "en" ? "en-GB" : "fr-FR", { month: "long", year: "numeric" });
+  } catch {
+    return "";
+  }
+}
+
 export default function Blog() {
   const { lang } = useLang();
   const t = useT();
-  const posts = POSTS[lang];
+  const [apiPosts, setApiPosts] = useState(null);
+
+  /* On récupère les articles publiés depuis le back-office. Tant qu'il n'y en
+     a pas, on garde les cartes « teaser » d'origine (transition douce). */
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/posts")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => alive && setApiPosts(Array.isArray(d) ? d : []))
+      .catch(() => alive && setApiPosts([]));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const live = apiPosts && apiPosts.length > 0;
+  const posts = live ? apiPosts : POSTS[lang];
+
   return (
     <section id="blog" className="relative bg-cream py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -118,13 +148,9 @@ export default function Blog() {
               className="font-display font-extrabold text-4xl md:text-6xl text-ink mt-4 leading-[0.95]"
             >
               {lang === "en" ? (
-                <>
-                  Ideas <span className="text-mint-dark">freshly roasted</span>
-                </>
+                <>Ideas <span className="text-mint-dark">freshly roasted</span></>
               ) : (
-                <>
-                  Des idées <span className="text-mint-dark">fraîchement torréfiées</span>
-                </>
+                <>Des idées <span className="text-mint-dark">fraîchement torréfiées</span></>
               )}
             </motion.h2>
           </div>
@@ -139,38 +165,59 @@ export default function Blog() {
         </div>
 
         <div className="mt-12 grid md:grid-cols-3 gap-6">
-          {posts.map((p, i) => (
-            <motion.article
-              key={p.title}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.1, type: "spring", stiffness: 110, damping: 17 }}
-              whileHover={{ y: -10 }}
-              data-cursor={t("Lire", "Read")}
-              className="group rounded-3xl bg-white border-[3px] border-ink overflow-hidden shadow-[6px_6px_0_#0A0F0D] hover:shadow-[10px_10px_0_#1FCE8A] transition-shadow duration-300 flex flex-col"
-            >
-              <div className={`${p.bg} px-7 pt-7 pb-6 border-b-[3px] border-ink relative overflow-hidden`}>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="rounded-full bg-ink text-cream font-mono text-[10px] font-bold tracking-[0.2em] uppercase px-3.5 py-1.5">
-                    {p.tag}
-                  </span>
-                  <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/60">{p.date}</span>
+          {posts.map((p, i) => {
+            const bg = live ? CARD_BG[i % 3] : p.bg;
+            const deco = live ? CARD_DECO[i % 3] : p.deco;
+            const date = live ? fmtDate(p.date, lang) : p.date;
+            const desc = live ? p.excerpt : p.desc;
+            const inner = (
+              <>
+                <div className={`${bg} px-7 pt-7 pb-6 border-b-[3px] border-ink relative overflow-hidden`}>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="rounded-full bg-ink text-cream font-mono text-[10px] font-bold tracking-[0.2em] uppercase px-3.5 py-1.5">
+                      {p.tag || t("Article", "Article")}
+                    </span>
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/60">{date}</span>
+                  </div>
+                  {live && p.cover ? (
+                    <div className="h-16 flex items-center">
+                      <img src={p.cover} alt="" className="h-16 w-full object-cover rounded-lg border-2 border-ink" />
+                    </div>
+                  ) : (
+                    <Deco kind={deco} />
+                  )}
                 </div>
-                <Deco kind={p.deco} />
-              </div>
-              <div className="p-7 flex flex-col flex-1">
-                <h3 className="font-display font-extrabold text-xl leading-snug text-ink group-hover:text-mint-dark transition-colors">
-                  {p.title}
-                </h3>
-                <p className="mt-3 text-sm text-ink/70 font-medium leading-relaxed flex-1">{p.desc}</p>
-                <span className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.2em] uppercase text-ink">
-                  {t("Lire l'article", "Read the article")}
-                  <span className="inline-block w-6 h-[2.5px] bg-mint group-hover:w-10 transition-all duration-300" />
-                </span>
-              </div>
-            </motion.article>
-          ))}
+                <div className="p-7 flex flex-col flex-1">
+                  <h3 className="font-display font-extrabold text-xl leading-snug text-ink group-hover:text-mint-dark transition-colors">
+                    {p.title}
+                  </h3>
+                  <p className="mt-3 text-sm text-ink/70 font-medium leading-relaxed flex-1">{desc}</p>
+                  <span className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.2em] uppercase text-ink">
+                    {t("Lire l'article", "Read the article")}
+                    <span className="inline-block w-6 h-[2.5px] bg-mint group-hover:w-10 transition-all duration-300" />
+                  </span>
+                </div>
+              </>
+            );
+            const cls =
+              "group rounded-3xl bg-white border-[3px] border-ink overflow-hidden shadow-[6px_6px_0_#0A0F0D] hover:shadow-[10px_10px_0_#1FCE8A] transition-shadow duration-300 flex flex-col";
+            const anim = {
+              initial: { opacity: 0, y: 60 },
+              whileInView: { opacity: 1, y: 0 },
+              viewport: { once: true, margin: "-60px" },
+              transition: { delay: i * 0.1, type: "spring", stiffness: 110, damping: 17 },
+              whileHover: { y: -10 },
+            };
+            return live ? (
+              <MotionArticle key={p.slug} to={`/blog/${p.slug}`} data-cursor={t("Lire", "Read")} className={cls} {...anim}>
+                {inner}
+              </MotionArticle>
+            ) : (
+              <motion.article key={p.title} data-cursor={t("Lire", "Read")} className={cls} {...anim}>
+                {inner}
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>
