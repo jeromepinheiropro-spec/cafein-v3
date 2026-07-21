@@ -259,6 +259,7 @@ export default function SiteBuilder() {
             <Magnetic strength={0.25}>
               <Link
                 to="/#contact"
+                data-hiss
                 data-cursor={t("Go !", "Go!")}
                 className="group inline-flex items-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-lg px-7 py-3.5 border-[3px] border-ink shadow-[5px_5px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
               >

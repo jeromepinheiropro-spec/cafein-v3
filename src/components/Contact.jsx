@@ -216,6 +216,7 @@ export default function Contact() {
                 <Magnetic strength={0.2}>
                   <button
                     type="submit"
+                    data-hiss
                     data-cursor={t("Envoyer !", "Send it!")}
                     disabled={status === "sending"}
                     className="group inline-flex items-center gap-3 rounded-full bg-mint text-ink font-display font-bold text-lg px-8 py-4 border-[3px] border-ink shadow-[5px_5px_0_#F5EFE2] hover:shadow-[0_0_0_#F5EFE2] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200 disabled:opacity-70"

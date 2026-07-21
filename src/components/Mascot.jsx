@@ -122,6 +122,9 @@ export default function Mascot() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.4, y: 40 }}
           transition={{ type: "spring", stiffness: 220, damping: 16 }}
+          /* couche GPU dédiée : la mascotte ne force jamais le repaint du
+             marquee (ou inversement) quand ils se chevauchent au scroll */
+          style={{ willChange: "transform", backfaceVisibility: "hidden" }}
           className="fixed bottom-5 right-5 z-[9200] flex flex-col items-end gap-2 select-none"
         >
           {/* bulle de dialogue */}

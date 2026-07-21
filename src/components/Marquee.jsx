@@ -42,6 +42,7 @@ export default function Marquee({ tilt = -2, dark = false, words }) {
       <motion.div
         key={duration}
         className="flex w-max"
+        style={{ willChange: "transform", backfaceVisibility: "hidden" }}
         animate={{ x: ["0%", "-25%"] }}
         transition={{ repeat: Infinity, duration, ease: "linear" }}
       >

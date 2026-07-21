@@ -221,6 +221,7 @@ export default function Hero({ started }) {
               <Magnetic strength={0.25}>
                 <a
                   href="#contact"
+                  data-hiss
                   data-cursor={t("C'est parti", "Let's go")}
                   className="group inline-flex items-center gap-3 rounded-full bg-mint text-ink font-display font-bold text-base md:text-lg px-7 py-4 border-2 border-ink shadow-[5px_5px_0_#0A0F0D] hover:shadow-[0px_0px_0_#0A0F0D] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
                 >
