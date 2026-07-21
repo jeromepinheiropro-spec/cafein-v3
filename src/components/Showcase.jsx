@@ -5,6 +5,7 @@ import { SectionLabel, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
 import { HuntBean } from "./EasterEggs.jsx";
 import { getProjets } from "../lib/projets.jsx";
+import { AvatarFlo } from "../lib/avatars.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
 const MotionLink = motion.create(Link);
@@ -85,14 +86,6 @@ function BeforeAfter() {
     const p = Math.min(96, Math.max(4, ((clientX - r.left) / r.width) * 100));
     setPct(p);
   }
-
-  const benefits = [
-    { icon: "⚡", label: t("Plus rapide", "Faster") },
-    { icon: "✨", label: t("Plus esthétique", "More beautiful") },
-    { icon: "🔍", label: t("Mieux référencé", "Better ranked") },
-    { icon: "📱", label: t("Responsive", "Responsive") },
-    { icon: "🤖", label: t("Prêt pour le GEO", "GEO-ready") },
-  ];
 
   return (
     <motion.div
@@ -182,18 +175,33 @@ function BeforeAfter() {
         </div>
       </div>
 
-      {/* puces de valeur : projettent le bénéfice, même sans photo réelle */}
-      <div className="mt-6 flex flex-wrap gap-2.5">
-        {benefits.map((b) => (
-          <span
-            key={b.label}
-            className="inline-flex items-center gap-2 rounded-full bg-white border-2 border-ink px-4 py-2 font-semibold text-sm text-ink shadow-[2px_2px_0_#0A0F0D]"
-          >
-            <span aria-hidden>{b.icon}</span>
-            {b.label}
+      {/* Flo passe glisser un mot quand on arrive sur le bloc */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ delay: 0.35, type: "spring", stiffness: 200, damping: 16 }}
+        className="mt-7 flex items-end gap-3"
+      >
+        <motion.span
+          animate={{ y: [0, -4, 0] }}
+          transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut" }}
+          className="grid place-items-center w-14 h-14 rounded-full bg-white border-[3px] border-ink shrink-0 overflow-hidden shadow-[3px_3px_0_#0A0F0D]"
+        >
+          <AvatarFlo className="w-12 h-12" />
+        </motion.span>
+        <div className="relative rounded-2xl rounded-bl-md bg-white border-[2.5px] border-ink px-4 py-2.5 shadow-[3px_3px_0_#0A0F0D] max-w-md">
+          <span className="block font-mono text-[9px] tracking-[0.2em] uppercase text-mint-dark mb-0.5">
+            {t("Flo · créa", "Flo · design")}
           </span>
-        ))}
-      </div>
+          <p className="font-medium text-sm md:text-base text-ink leading-snug">
+            {t(
+              "Une refonte pensée pour vos clients et vos conversions.",
+              "A redesign built around your clients and your conversions.",
+            )}
+          </p>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
