@@ -18,6 +18,7 @@ const FILE = path.join(DATA_DIR, "comments.json");
 const CONTACT_FILE = path.join(DATA_DIR, "contacts.json");
 const POSTS_FILE = path.join(DATA_DIR, "posts.json");
 const AUDITS_FILE = path.join(DATA_DIR, "audits.json");
+const SEO_FILE = path.join(DATA_DIR, "seo.json");
 const ADMIN_KEY = process.env.ADMIN_KEY || "";
 const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
 const CONTACT_TO = process.env.CONTACT_TO || "hello@cafein.lu";
@@ -54,7 +55,13 @@ function rateLimited(ip) {
 }
 
 const app = express();
-app.use(express.json({ limit: "10kb" }));
+/* Le corps des requêtes publiques reste borné (10 ko) ; seule la restauration
+   d'une sauvegarde (admin) accepte un gros fichier JSON. */
+const jsonSmall = express.json({ limit: "10kb" });
+app.use((req, res, next) => {
+  if (req.path === "/api/admin/restore") return next();
+  return jsonSmall(req, res, next);
+});
 app.disable("x-powered-by");
 
 app.get("/api/comments", (_req, res) => {
@@ -621,6 +628,118 @@ app.get("/api/admin/analytics", async (req, res) => {
   } catch (e) {
     res.status(502).json({ configured: true, error: String(e.message || e).slice(0, 200) });
   }
+});
+
+/* ── Surcharge SEO des pages (meta title / description) ─────────
+   Le back-office peut forcer le title et la description de chaque page.
+   Stockage : seo.json (objet indexé par chemin neutre FR). Le site lit
+   /api/seo au chargement et applique la surcharge quand elle existe. */
+function loadSeo() {
+  try {
+    const o = JSON.parse(fs.readFileSync(SEO_FILE, "utf8"));
+    return o && typeof o === "object" && !Array.isArray(o) ? o : {};
+  } catch {
+    return {};
+  }
+}
+function saveSeo(obj) {
+  fs.writeFileSync(SEO_FILE, JSON.stringify(obj, null, 2));
+}
+/* Pages dont le SEO est surchargeable (chemins neutres, version FR). */
+const SEO_PATHS = [
+  "/",
+  "/creation-site-web",
+  "/seo-geo",
+  "/communication",
+  "/notre-expertise",
+  "/lexique",
+  "/equipe",
+  "/mentions-legales",
+  "/confidentialite",
+  "/politique-cookies",
+];
+
+/* Public : la carte des surcharges (texte de balises, déjà visible en HTML). */
+app.get("/api/seo", (_req, res) => res.json(loadSeo()));
+
+/* Admin : définir / effacer la surcharge d'une page. Un champ vide = retour
+   à la valeur par défaut ; tous les champs vides = plus aucune surcharge. */
+app.put("/api/admin/seo", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const b = req.body || {};
+  const p = String(b.path || "");
+  if (!SEO_PATHS.includes(p)) return res.status(400).json({ error: "Page inconnue." });
+  const clean = (v, max) => String(v == null ? "" : v).replace(/\s+/g, " ").trim().slice(0, max);
+  const entry = {};
+  const title = clean(b.title, 120);
+  const titleEn = clean(b.titleEn, 120);
+  const description = clean(b.description, 320);
+  const descriptionEn = clean(b.descriptionEn, 320);
+  if (title) entry.title = title;
+  if (titleEn) entry.titleEn = titleEn;
+  if (description) entry.description = description;
+  if (descriptionEn) entry.descriptionEn = descriptionEn;
+  const all = loadSeo();
+  if (Object.keys(entry).length) all[p] = entry;
+  else delete all[p];
+  saveSeo(all);
+  res.json(all);
+});
+
+/* ── Sauvegarde & restauration des données ─────────────────────
+   Exporte / réimporte toutes les données dynamiques du site (messages,
+   audits, blog, commentaires, surcharges SEO). Le code (versionné sur
+   GitHub) et les clés/variables Railway ne sont PAS concernés. */
+app.get("/api/admin/backup", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const payload = {
+    app: "cafein",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    data: {
+      comments,
+      contacts: loadContacts(),
+      posts: loadPosts(),
+      audits: loadAudits(),
+      seo: loadSeo(),
+    },
+  };
+  const stamp = new Date().toISOString().slice(0, 10);
+  res.setHeader("Content-Disposition", `attachment; filename="cafein-backup-${stamp}.json"`);
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.send(JSON.stringify(payload, null, 2));
+});
+
+app.post("/api/admin/restore", express.json({ limit: "16mb" }), (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const body = req.body || {};
+  const d = body && body.data && typeof body.data === "object" ? body.data : body;
+  if (!d || typeof d !== "object") return res.status(400).json({ error: "Fichier de sauvegarde invalide." });
+  const isArr = (x) => Array.isArray(x);
+  const restored = {};
+  if (isArr(d.comments)) {
+    comments = d.comments;
+    save(comments);
+    restored.comments = comments.length;
+  }
+  if (isArr(d.contacts)) {
+    fs.writeFileSync(CONTACT_FILE, JSON.stringify(d.contacts, null, 2));
+    restored.contacts = d.contacts.length;
+  }
+  if (isArr(d.posts)) {
+    savePosts(d.posts);
+    restored.posts = d.posts.length;
+  }
+  if (isArr(d.audits)) {
+    fs.writeFileSync(AUDITS_FILE, JSON.stringify(d.audits, null, 2));
+    restored.audits = d.audits.length;
+  }
+  if (d.seo && typeof d.seo === "object" && !isArr(d.seo)) {
+    saveSeo(d.seo);
+    restored.seo = Object.keys(d.seo).length;
+  }
+  if (!Object.keys(restored).length) return res.status(400).json({ error: "Aucune donnée reconnue dans le fichier." });
+  res.json({ ok: true, restored });
 });
 
 /* Site statique + fallback SPA */
