@@ -9,6 +9,7 @@ import SiteBuilder from "../components/SiteBuilder.jsx";
 import Stats from "../components/Stats.jsx";
 import Process from "../components/Process.jsx";
 import Showcase from "../components/Showcase.jsx";
+import BeforeAfter from "../components/BeforeAfter.jsx";
 import Why from "../components/Why.jsx";
 import Blog from "../components/Blog.jsx";
 import Faq, { FAQS } from "../components/Faq.jsx";
@@ -34,6 +35,7 @@ export default function Home({ started }) {
       <Process />
       <Marquee tilt={2} dark />
       <Showcase />
+      <BeforeAfter />
       <Why />
       <Blog />
       <Faq />
