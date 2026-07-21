@@ -173,9 +173,10 @@ export default function SiteBuilder() {
 
   return (
     <section className="relative bg-cream py-24 md:py-32 overflow-hidden">
-      {/* halo léger */}
+      {/* lueur très diffuse, cachée derrière la maquette : donne un peu de
+          couleur sans créer de bande qui découpe la section */}
       <div
-        className="absolute -top-24 -right-24 w-[30rem] h-[30rem] rounded-full blur-3xl pointer-events-none opacity-20"
+        className="absolute top-1/2 right-0 -translate-y-1/2 w-[24rem] h-[24rem] rounded-full blur-[130px] pointer-events-none opacity-[0.09]"
         style={{ backgroundColor: accent }}
       />
       <div className="relative mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -189,8 +190,8 @@ export default function SiteBuilder() {
           </h2>
           <p className="mt-5 text-lg text-ink/65 font-medium max-w-md leading-relaxed">
             {t(
-              "Tapez le nom de votre entreprise, choisissez une ambiance. On s'occupe du reste, sous vos yeux.",
-              "Type your business name, pick a vibe. We handle the rest, right in front of you.",
+              "Tapez le nom de votre entreprise, choisissez une ambiance : un aperçu prend vie en direct. Juste un avant-goût — votre vrai site ira bien plus loin.",
+              "Type your business name, pick a vibe: a preview comes to life instantly. Just a taste — your real site will go much further.",
             )}
           </p>
 
@@ -304,7 +305,7 @@ export default function SiteBuilder() {
             transition={{ delay: 0.5, type: "spring", stiffness: 220, damping: 12 }}
             className="absolute -top-4 -left-3 rounded-full bg-sun border-[3px] border-ink px-4 py-2 font-display font-extrabold text-ink text-sm shadow-[4px_4px_0_#0A0F0D]"
           >
-            {t("c'est le vôtre !", "that's yours!")}
+            {t("bientôt le vôtre", "yours soon")}
           </motion.div>
         </div>
       </div>

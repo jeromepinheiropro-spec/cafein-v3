@@ -2,63 +2,27 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEgg } from "./EasterEggs.jsx";
 import { useT } from "../lib/lang.jsx";
+import { MASCOTS } from "../lib/avatars.jsx";
 
 /*
-  Fève — la mascotte Cafein.
-  Un petit grain de café qui vit en bas à droite : il flotte, cligne des yeux,
-  réagit aux modes surcaféiné / décaféiné, lâche des répliques et fait coucou.
+  La mascotte Cafein.
+  À chaque visite, l'un des trois personnages de l'équipe (Stan, Pinoo, Flo)
+  est tiré au sort et vient vivre en bas à droite : il flotte, réagit aux modes
+  surcaféiné / décaféiné, se présente, lâche des répliques et fait coucou.
   100% transform/opacity (aucun blur, aucun layout) → zéro impact sur le scroll.
   Refermable (mémorisé dans localStorage).
 */
 
 const HIDE_KEY = "cafein-mascot-hidden";
 
-/* Le grain avec un visage. eyeY décale les yeux (regard), blink = clignement. */
-function BeanBuddy({ accent = "#F4A259", mood = "idle" }) {
-  const wide = mood === "over";
-  const sleepy = mood === "decaf";
-  return (
-    <svg viewBox="0 0 72 80" className="w-full h-full" aria-hidden="true">
-      {/* corps du grain */}
-      <ellipse cx="36" cy="44" rx="26" ry="32" fill={accent} stroke="#141A17" strokeWidth="3.5" />
-      {/* fente centrale ondulée */}
-      <path
-        d="M36 16 Q29 32 36 44 Q43 56 36 70"
-        stroke="#141A17"
-        strokeWidth="3.2"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* joues */}
-      <circle cx="19" cy="50" r="4" fill="#E8623E" opacity="0.5" />
-      <circle cx="53" cy="50" r="4" fill="#E8623E" opacity="0.5" />
-      {/* yeux (clignement via scaleY sur le groupe) */}
-      <motion.g
-        style={{ transformBox: "fill-box", transformOrigin: "center" }}
-        animate={sleepy ? { scaleY: 0.28 } : { scaleY: [1, 1, 0.1, 1] }}
-        transition={sleepy ? { duration: 0.6 } : { duration: 4.4, times: [0, 0.93, 0.965, 1], repeat: Infinity }}
-      >
-        <circle cx="26" cy={wide ? 39 : 41} r={wide ? 7 : 6} fill="#F5EFE2" stroke="#141A17" strokeWidth="2" />
-        <circle cx="46" cy={wide ? 39 : 41} r={wide ? 7 : 6} fill="#F5EFE2" stroke="#141A17" strokeWidth="2" />
-        <circle cx={wide ? 27 : 26} cy={wide ? 39 : 42} r="2.6" fill="#141A17" />
-        <circle cx={wide ? 47 : 46} cy={wide ? 39 : 42} r="2.6" fill="#141A17" />
-      </motion.g>
-      {/* bouche : sourire, ou petit o surpris (over), ou molle (decaf) */}
-      {wide ? (
-        <ellipse cx="36" cy="55" rx="4" ry="5" fill="#141A17" />
-      ) : sleepy ? (
-        <path d="M30 55 q6 -3 12 0" stroke="#141A17" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      ) : (
-        <path d="M29 54 q7 7 14 0" stroke="#141A17" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-      )}
-    </svg>
-  );
-}
-
 export default function Mascot() {
   const { overdrive, decaf } = useEgg();
   const t = useT();
   const mood = overdrive ? "over" : decaf ? "decaf" : "idle";
+
+  /* Un personnage de l'équipe tiré au sort, figé pour la durée de la visite. */
+  const [char] = useState(() => MASCOTS[Math.floor(Math.random() * MASCOTS.length)]);
+  const Avatar = char.Avatar;
 
   const [hidden, setHidden] = useState(() => {
     try {
@@ -74,11 +38,11 @@ export default function Mascot() {
   const timers = useRef([]);
 
   const lines = [
+    t(char.line[0], char.line[1]),
     t("Psst… tape « cafein » au clavier 👀", "Psst… type “cafein” on your keyboard 👀"),
     t("Un projet ? On répond le temps d'un café ☕", "Got a project? We reply in one coffee ☕"),
     t("Descends, y'a des surprises cachées 🫘", "Scroll down, there are hidden surprises 🫘"),
     t("hello@cafein.lu — je parie que tu vas cliquer", "hello@cafein.lu — bet you'll click"),
-    t("Moi c'est Fève. J'aime les sites rapides.", "I'm Bean. I like fast websites."),
   ];
 
   const say = useCallback((i) => {
@@ -192,13 +156,13 @@ export default function Mascot() {
               onClick={onClick}
               onMouseEnter={() => say(idx.current++)}
               data-cursor={t("Coucou !", "Hi!")}
-              aria-label={t("Fève, la mascotte Cafein", "Bean, the Cafein mascot")}
+              aria-label={t(`${char.name}, la mascotte Cafein`, `${char.name}, the Cafein mascot`)}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.9 }}
               className="group relative block w-16 h-16 md:w-[4.5rem] md:h-[4.5rem] bg-transparent border-0 p-0 cursor-pointer drop-shadow-[3px_3px_0_rgba(10,15,13,0.25)]"
             >
               <motion.div animate={bodyAnim} transition={bodyTr} className="w-full h-full">
-                <BeanBuddy accent="#F4A259" mood={mood} />
+                <Avatar className="w-full h-full" />
               </motion.div>
 
               {/* petit bras qui fait coucou au clic */}
