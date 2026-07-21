@@ -207,8 +207,8 @@ function Preview({ name, sector, accent, lang, theme = "light" }) {
    0-49 rouge, 50-89 orange, 90-100 vert. */
 const scoreColor = (s) => (s == null ? "#8A857C" : s >= 90 ? "#1FCE8A" : s >= 50 ? "#F4A259" : "#E5623E");
 
-/* Jauge circulaire animée pour un score /100 (fond sombre). */
-function Gauge({ score, size = 128, label }) {
+/* Jauge circulaire animée pour un score /100. `light` = posée sur fond clair. */
+function Gauge({ score, size = 128, label, light = false }) {
   const color = scoreColor(score);
   const r = size / 2 - 9;
   const C = 2 * Math.PI * r;
@@ -217,7 +217,7 @@ function Gauge({ score, size = 128, label }) {
     <div className="flex flex-col items-center gap-2.5">
       <div className="relative" style={{ width: size, height: size }}>
         <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full -rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.13)" strokeWidth="7" />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={light ? "rgba(10,15,13,0.10)" : "rgba(255,255,255,0.13)"} strokeWidth="7" />
           <motion.circle
             cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
             strokeDasharray={C}
@@ -227,13 +227,13 @@ function Gauge({ score, size = 128, label }) {
           />
         </svg>
         <span
-          className="absolute inset-0 grid place-items-center font-display font-extrabold text-cream"
+          className={`absolute inset-0 grid place-items-center font-display font-extrabold ${light ? "text-ink" : "text-cream"}`}
           style={{ fontSize: size * 0.3 }}
         >
           {score == null ? "—" : <CountUp to={score} />}
         </span>
       </div>
-      <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-cream/60 text-center leading-tight">{label}</span>
+      <span className={`font-mono text-[10px] tracking-[0.15em] uppercase text-center leading-tight ${light ? "text-ink/55" : "text-cream/60"}`}>{label}</span>
     </div>
   );
 }
@@ -447,30 +447,32 @@ function AuditForm({ lang, t, businessName }) {
                 exit={{ opacity: 0, y: -12 }}
               >
                 {leadStatus === "done" ? (
-                  <div className="rounded-2xl bg-espresso-2 border-2 border-mint/40 p-7 text-center">
-                    <span className="grid place-items-center w-12 h-12 mx-auto rounded-full bg-mint text-ink">
+                  <div className="rounded-2xl bg-cream border-[3px] border-ink p-7 text-center shadow-[6px_6px_0_#1FCE8A]">
+                    <span className="grid place-items-center w-12 h-12 mx-auto rounded-full bg-mint text-ink border-2 border-ink">
                       <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 13l5 5L20 7" />
                       </svg>
                     </span>
-                    <p className="mt-4 font-display font-extrabold text-xl text-cream">{t("C'est parti, merci !", "You're all set, thanks!")}</p>
-                    <p className="mt-2 text-cream/65 font-medium text-sm">
+                    <p className="mt-4 font-display font-extrabold text-xl text-ink">{t("C'est parti, merci !", "You're all set, thanks!")}</p>
+                    <p className="mt-2 text-ink/65 font-medium text-sm">
                       {t("On analyse votre site en détail et on revient vers vous sous 48h avec un plan concret.", "We'll dig into your site and come back within 48h with a concrete plan.")}
                     </p>
                   </div>
                 ) : (
-                  <div className="rounded-2xl bg-espresso-2 border-[3px] border-ink p-6 shadow-[6px_6px_0_#0A0F0D]">
-                    {/* Stan présente le verdict dans une bulle, comme un vrai retour d'équipe */}
-                    <div className="flex items-start gap-3">
+                  <div className="rounded-2xl bg-cream border-[3px] border-ink p-6 pt-8 shadow-[6px_6px_0_#1FCE8A]">
+                    {/* Stan en grand, avec une bulle relevée dont la queue pointe vers lui : c'est lui qui parle */}
+                    <div className="flex items-end gap-3">
                       <motion.span
-                        initial={{ scale: 0, rotate: -18 }}
-                        animate={{ scale: 1, rotate: 0 }}
+                        initial={{ scale: 0, rotate: -18, y: 10 }}
+                        animate={{ scale: 1, rotate: 0, y: 0 }}
                         transition={{ type: "spring", stiffness: 240, damping: 13 }}
-                        className="w-14 h-14 md:w-16 md:h-16 shrink-0 drop-shadow-[2px_3px_0_rgba(10,15,13,0.4)]"
+                        className="w-24 h-24 md:w-28 md:h-28 shrink-0 -mb-1 drop-shadow-[2px_3px_0_rgba(10,15,13,0.25)]"
                       >
                         <AvatarStan className="w-full h-full" />
                       </motion.span>
-                      <div className="flex-1 rounded-2xl rounded-bl-md bg-white border-[2.5px] border-ink px-4 py-3 shadow-[3px_3px_0_#0A0F0D]">
+                      <div className="relative flex-1 -translate-y-3 rounded-2xl bg-white border-[2.5px] border-ink px-4 py-3 shadow-[3px_3px_0_#0A0F0D]">
+                        {/* queue de la bulle, pointe vers Stan (bas-gauche) */}
+                        <span className="absolute -left-[9px] bottom-4 w-4 h-4 bg-white border-l-[2.5px] border-b-[2.5px] border-ink rotate-45" />
                         <span className="block font-mono text-[8px] tracking-[0.2em] uppercase text-mint-dark mb-1">{t("Stan · l'audit", "Stan · the audit")}</span>
                         <p className="font-display font-extrabold text-sm text-ink leading-snug">{verdict.title}</p>
                         <p className="mt-1 text-ink/60 font-medium text-xs leading-snug">{verdict.sub}</p>
@@ -478,9 +480,9 @@ function AuditForm({ lang, t, businessName }) {
                     </div>
 
                     {/* les scores : perf en grand + 3 secondaires */}
-                    <div className="mt-6 flex items-center gap-4">
-                      <Gauge score={perf} size={104} label={t("Performance", "Performance")} />
-                      <div className="flex-1 grid grid-cols-3 gap-2 border-l-2 border-cream/10 pl-4">
+                    <div className="mt-5 flex items-center gap-4">
+                      <Gauge score={perf} size={104} label={t("Performance", "Performance")} light />
+                      <div className="flex-1 grid grid-cols-3 gap-2 border-l-2 border-ink/10 pl-4">
                         {[
                           { s: scores.seo, l: "SEO" },
                           { s: scores.accessibility, l: t("Accessib.", "Accessib.") },
@@ -490,15 +492,15 @@ function AuditForm({ lang, t, businessName }) {
                             <span className="font-display font-extrabold text-2xl" style={{ color: scoreColor(g.s) }}>
                               {g.s == null ? "—" : g.s}
                             </span>
-                            <span className="font-mono text-[9px] tracking-wider uppercase text-cream/50 text-center leading-tight">{g.l}</span>
+                            <span className="font-mono text-[9px] tracking-wider uppercase text-ink/45 text-center leading-tight">{g.l}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {/* pitch + capture email */}
-                    <div className="mt-5 rounded-xl bg-mint/10 border border-mint/25 p-4">
-                      <p className="font-display font-bold text-mint text-sm">
+                    {/* pitch + capture email, dans une pastille colorée */}
+                    <div className="mt-5 rounded-xl bg-mint border-[2.5px] border-ink p-4 shadow-[3px_3px_0_#0A0F0D]">
+                      <p className="font-display font-extrabold text-ink text-sm">
                         {t("On peut vous emmener plus haut.", "We can take you higher.")}
                       </p>
                       <form onSubmit={submitLead} className="mt-3 flex flex-col sm:flex-row gap-2">
@@ -507,23 +509,23 @@ function AuditForm({ lang, t, businessName }) {
                           value={email}
                           onChange={(e) => setEmail(e.target.value.slice(0, 120))}
                           placeholder={t("vous@entreprise.lu", "you@company.lu")}
-                          className="flex-1 rounded-lg bg-espresso border-2 border-cream/20 px-3.5 py-2.5 text-sm font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
+                          className="flex-1 rounded-lg bg-white border-2 border-ink px-3.5 py-2.5 text-sm font-medium text-ink placeholder-ink/35 focus:outline-none focus:shadow-[2px_2px_0_#0A0F0D] transition-shadow"
                         />
                         <button
                           type="submit"
                           disabled={leadStatus === "sending"}
-                          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-mint text-ink font-display font-bold text-sm px-4 py-2.5 border-2 border-ink hover:-translate-y-0.5 transition-transform disabled:opacity-60"
+                          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-ink text-cream font-display font-bold text-sm px-4 py-2.5 border-2 border-ink hover:-translate-y-0.5 transition-transform disabled:opacity-60"
                         >
                           {leadStatus === "sending" ? t("Envoi…", "Sending…") : t("Recevoir le plan", "Get the plan")}
                         </button>
                       </form>
-                      {leadErr && <p className="mt-2 font-medium text-xs text-caramel">{leadErr}</p>}
-                      <p className="mt-2 font-medium text-[11px] text-cream/40">
+                      {leadErr && <p className="mt-2 font-medium text-xs text-[#B23A2E]">{leadErr}</p>}
+                      <p className="mt-2 font-medium text-[11px] text-ink/55">
                         {t("Audit détaillé + recommandations. Gratuit, réponse sous 48h.", "Detailed audit + recommendations. Free, reply within 48h.")}
                       </p>
                     </div>
 
-                    <button onClick={reset} className="mt-3 w-full font-mono text-[11px] tracking-wide uppercase text-cream/45 hover:text-mint transition-colors">
+                    <button onClick={reset} className="mt-3 w-full font-mono text-[11px] tracking-wide uppercase text-ink/45 hover:text-mint-dark transition-colors">
                       {t("↻ Analyser un autre site", "↻ Analyse another site")}
                     </button>
                   </div>
