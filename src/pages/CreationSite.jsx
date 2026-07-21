@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Steps, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import SiteBuilder from "../components/SiteBuilder.jsx";
 import { Spark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
@@ -350,6 +351,9 @@ export default function CreationSite() {
           </motion.p>
         </div>
       </section>
+
+      {/* Imaginez votre site — démo interactive */}
+      <SiteBuilder />
 
       {/* WordPress vs Sur mesure */}
       <section className="bg-espresso py-20 md:py-28">
