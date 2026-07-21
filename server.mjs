@@ -253,7 +253,9 @@ async function callGemini(messages, system) {
     body: JSON.stringify({
       system_instruction: { parts: [{ text: system }] },
       contents,
-      generationConfig: { maxOutputTokens: 300, temperature: 0.6 },
+      /* thinkingBudget:0 → coupe le raisonnement interne des modèles 2.5
+         (sinon il consomme tout le budget de tokens et la réponse est vide) */
+      generationConfig: { maxOutputTokens: 700, temperature: 0.6, thinkingConfig: { thinkingBudget: 0 } },
     }),
   });
   if (!r.ok) throw new Error(`gemini-${r.status}:${(await r.text().catch(() => "")).slice(0, 150)}`);
