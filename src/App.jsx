@@ -10,6 +10,7 @@ import { EggProvider } from "./components/EasterEggs.jsx";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
 import Footer from "./components/Footer.jsx";
+import Mascot from "./components/Mascot.jsx";
 
 import Home from "./pages/Home.jsx";
 import CreationSite from "./pages/CreationSite.jsx";
@@ -114,6 +115,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <Mascot />
     </div>
     </EggProvider>
     </LangProvider>
