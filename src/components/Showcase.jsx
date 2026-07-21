@@ -75,6 +75,48 @@ function ProjectCard({ p, rot }) {
   );
 }
 
+/* ── Jauge de score PageSpeed (le chiffre que Google donne à chaque site) ── */
+function PerfGauge({ score, tone, t }) {
+  const good = tone === "good";
+  const color = good ? "#1FCE8A" : "#E5623E";
+  const track = good ? "rgba(255,255,255,0.16)" : "rgba(10,15,13,0.12)";
+  const numColor = good ? "#F5EFE2" : "#0A0F0D";
+  const r = 20;
+  const C = 2 * Math.PI * r;
+  const off = C * (1 - score / 100);
+  return (
+    <div className="flex items-center gap-2.5">
+      <div className="relative w-14 h-14 shrink-0">
+        <svg viewBox="0 0 48 48" className="w-full h-full -rotate-90">
+          <circle cx="24" cy="24" r={r} fill="none" stroke={track} strokeWidth="5" />
+          <motion.circle
+            cx="24" cy="24" r={r} fill="none" stroke={color} strokeWidth="5" strokeLinecap="round"
+            strokeDasharray={C}
+            initial={{ strokeDashoffset: C }}
+            whileInView={{ strokeDashoffset: off }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.25, ease: "easeOut" }}
+          />
+        </svg>
+        <span
+          className="absolute inset-0 grid place-items-center font-display font-extrabold text-lg"
+          style={{ color: numColor }}
+        >
+          <CountUp to={score} />
+        </span>
+      </div>
+      <div className="leading-tight text-left">
+        <span className="block font-mono text-[8px] tracking-[0.15em] uppercase" style={{ color }}>
+          {t("Perf. Google", "Google perf.")}
+        </span>
+        <span className="block font-mono text-[8px] tracking-[0.15em] uppercase opacity-55" style={{ color: numColor }}>
+          PageSpeed /100
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ── Slider avant / après (draggable) ─────────────────────────── */
 function BeforeAfter() {
   const containerRef = useRef(null);
@@ -133,9 +175,12 @@ function BeforeAfter() {
               {t("Nous contacter", "Get in touch")}
             </span>
           </div>
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-mint">
-            {t("Refonte optimisée : UX mobile + structure SEO", "Optimised rebuild: mobile UX + SEO structure")}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-mint max-w-[11rem] md:max-w-none">
+              {t("Refonte optimisée : UX mobile + structure SEO", "Optimised rebuild: mobile UX + SEO structure")}
+            </p>
+            <PerfGauge score={98} tone="good" t={t} />
+          </div>
         </div>
 
         {/* AVANT (clippé) : pas de vrai H1, un contenu générique et daté */}
@@ -160,9 +205,12 @@ function BeforeAfter() {
               )}
             </p>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
-            {t("lent · sans titre H1 · invisible sur Google", "slow · no H1 · invisible on Google")}
-          </p>
+          <div className="flex items-center gap-3">
+            <PerfGauge score={48} tone="bad" t={t} />
+            <p className="font-mono text-[10px] uppercase tracking-widest text-ink/40 max-w-[10rem] md:max-w-none">
+              {t("lent · sans titre H1 · invisible sur Google", "slow · no H1 · invisible on Google")}
+            </p>
+          </div>
         </div>
 
         {/* Poignée : barre + rond toujours solidaires (centrés sur pct) */}

@@ -201,6 +201,136 @@ function Preview({ name, sector, accent, lang, theme = "light" }) {
   );
 }
 
+/* ── Lead-capture honnête : on audite le VRAI site du visiteur ─────
+   Pas de maquette auto envoyée par email (ça sonnerait faux). On offre
+   un vrai regard d'expert sur le site existant, et on capture l'email
+   au moment où l'intention est la plus forte. Passe par /api/contact. */
+function AuditForm({ lang, t, businessName }) {
+  const [url, setUrl] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | sending | done | error
+  const [err, setErr] = useState("");
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (status === "sending") return;
+    const mail = email.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) {
+      setErr(t("Un email valide, s'il vous plaît.", "A valid email, please."));
+      return;
+    }
+    setErr("");
+    setStatus("sending");
+    const site = url.trim() || t("(non précisé)", "(not provided)");
+    const who = businessName.trim() || t("Visiteur du site", "Site visitor");
+    const message =
+      (lang === "en"
+        ? `Free audit request from the SiteBuilder.\nCurrent website: ${site}\nBusiness: ${who}`
+        : `Demande d'audit gratuit depuis le SiteBuilder.\nSite actuel : ${site}\nEntreprise : ${who}`);
+    try {
+      const r = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nom: `${who} — ${t("Audit", "Audit")}`, email: mail, message, lang }),
+      });
+      if (!r.ok) throw new Error("bad");
+      setStatus("done");
+    } catch {
+      setStatus("error");
+      setErr(t("Oups, l'envoi a échoué. Écrivez-nous à hello@cafein.lu.", "Oops, sending failed. Reach us at hello@cafein.lu."));
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ type: "spring", stiffness: 90, damping: 16 }}
+      className="mt-16 rounded-[1.6rem] border-[3px] border-ink bg-espresso text-cream shadow-[10px_10px_0_#0A0F0D] overflow-hidden"
+    >
+      <div className="grid md:grid-cols-2 gap-8 md:gap-10 p-8 md:p-12 items-center">
+        <div>
+          <span className="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-mint">
+            {t("Vous avez déjà un site ?", "Already have a site?")}
+          </span>
+          <h3 className="mt-3 font-display font-extrabold text-2xl md:text-4xl leading-[1.02] tracking-tight">
+            {t("On l'audite. Gratuitement,", "We'll audit it. Free,")}
+            <br />
+            <span className="text-mint">{t("et franchement.", "and honestly.")}</span>
+          </h3>
+          <p className="mt-4 text-cream/70 font-medium leading-relaxed max-w-md">
+            {t(
+              "On regarde la vitesse, le référencement et la version mobile, et on vous dit sans détour ce qui mérite d'être gardé, corrigé ou refait. Un vrai retour d'humain, pas un rapport automatique.",
+              "We look at speed, search ranking and the mobile version, then tell you straight what's worth keeping, fixing or rebuilding. A real human take, not an automated report.",
+            )}
+          </p>
+        </div>
+
+        {status === "done" ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-2xl bg-espresso-2 border-2 border-mint/40 p-7 text-center"
+          >
+            <span className="grid place-items-center w-12 h-12 mx-auto rounded-full bg-mint text-ink">
+              <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 13l5 5L20 7" />
+              </svg>
+            </span>
+            <p className="mt-4 font-display font-extrabold text-xl text-cream">
+              {t("C'est noté, merci !", "Got it, thanks!")}
+            </p>
+            <p className="mt-2 text-cream/65 font-medium text-sm">
+              {t("On regarde votre site et on revient vers vous sous 48h avec un retour franc.", "We'll look at your site and get back to you within 48h with honest feedback.")}
+            </p>
+          </motion.div>
+        ) : (
+          <form onSubmit={submit} className="space-y-3.5">
+            <div>
+              <label htmlFor="au-url" className="block font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-cream/50 mb-2">
+                {t("Adresse de votre site", "Your site's address")}
+              </label>
+              <input
+                id="au-url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value.slice(0, 120))}
+                placeholder={t("votre-site.lu", "your-site.lu")}
+                className="w-full rounded-xl bg-espresso-2 border-2 border-cream/20 px-4 py-3 font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="au-email" className="block font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-cream/50 mb-2">
+                {t("Votre email", "Your email")}
+              </label>
+              <input
+                id="au-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value.slice(0, 120))}
+                placeholder={t("vous@entreprise.lu", "you@company.lu")}
+                className="w-full rounded-xl bg-espresso-2 border-2 border-cream/20 px-4 py-3 font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
+              />
+            </div>
+            {err && <p className="font-medium text-sm text-caramel">{err}</p>}
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="group w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-base px-6 py-3.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-200 disabled:opacity-60"
+            >
+              {status === "sending" ? t("Envoi…", "Sending…") : t("Recevoir mon audit", "Get my audit")}
+              <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
+            </button>
+            <p className="font-medium text-xs text-cream/45 text-center">
+              {t("Gratuit, sans engagement. Réponse sous 48h.", "Free, no strings. Reply within 48h.")}
+            </p>
+          </form>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function SiteBuilder() {
   const t = useT();
   const { lang } = useLang();
@@ -387,6 +517,11 @@ export default function SiteBuilder() {
             {t("bientôt le vôtre", "yours soon")}
           </motion.div>
         </div>
+      </div>
+
+      {/* Lead-capture : on audite le vrai site du visiteur */}
+      <div className="relative mx-auto max-w-7xl px-6 md:px-10">
+        <AuditForm lang={lang} t={t} businessName={name} />
       </div>
     </section>
   );
