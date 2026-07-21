@@ -315,7 +315,19 @@ function AuditForm({ lang, t, businessName }) {
       const r = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nom: `${host} — ${t("Audit", "Audit")}`, email: mail, message, lang }),
+        body: JSON.stringify({
+          nom: `${host} — ${t("Audit", "Audit")}`,
+          email: mail,
+          message,
+          lang,
+          source: "audit",
+          scores: {
+            performance: scores.performance,
+            seo: scores.seo,
+            accessibility: scores.accessibility,
+            bestPractices: scores.bestPractices,
+          },
+        }),
       });
       if (!r.ok) throw new Error("bad");
       setLeadStatus("done");

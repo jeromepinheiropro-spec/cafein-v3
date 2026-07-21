@@ -98,7 +98,24 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-cream/10 flex flex-wrap items-center justify-between gap-3">
+        {/* liens légaux */}
+        <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2">
+          {[
+            { to: "/mentions-legales", fr: "Mentions légales", en: "Legal notice" },
+            { to: "/confidentialite", fr: "Confidentialité", en: "Privacy" },
+            { to: "/politique-cookies", fr: "Cookies", en: "Cookies" },
+          ].map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/40 hover:text-mint transition-colors"
+            >
+              {lang === "en" ? l.en : l.fr}
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-cream/10 flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-cream/40">
             © 2026 · Luxembourg
           </p>
