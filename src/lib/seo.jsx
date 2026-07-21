@@ -61,7 +61,7 @@ function setHreflang(frUrl, enUrl) {
   }
 }
 
-export default function Seo({ title, titleEn, description, descriptionEn, path = "/", jsonLd = [] }) {
+export default function Seo({ title, titleEn, description, descriptionEn, path = "/", jsonLd = [], noindex = false }) {
   const { lang } = useLang();
   const t = lang === "en" && titleEn ? titleEn : title;
   const d = lang === "en" && descriptionEn ? descriptionEn : description;
@@ -72,6 +72,9 @@ export default function Seo({ title, titleEn, description, descriptionEn, path =
     const canonical = lang === "en" ? enUrl : frUrl;
 
     document.title = t;
+    /* index par défaut ; noindex pour les pages en duplicate content
+       (ex. réalisations reprises de Nooki) — on suit tout de même les liens. */
+    upsertMeta("name", "robots", noindex ? "noindex, follow" : "index, follow");
     upsertMeta("name", "description", d);
     upsertLink("canonical", canonical);
     upsertMeta("property", "og:title", t);
@@ -96,7 +99,7 @@ export default function Seo({ title, titleEn, description, descriptionEn, path =
     s.textContent = JSON.stringify(blocks.length === 1 ? blocks[0] : blocks);
     document.head.appendChild(s);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, d, path, lang, JSON.stringify(jsonLd)]);
+  }, [t, d, path, lang, noindex, JSON.stringify(jsonLd)]);
   return null;
 }
 
