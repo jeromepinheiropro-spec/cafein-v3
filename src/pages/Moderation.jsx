@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /*
@@ -79,8 +79,10 @@ const NAV = [
   { id: "messages", label: "Messages", icon: "M4 5h16v12H7l-3 3V5z" },
   { id: "audits", label: "URLs testées", icon: "M11 4a7 7 0 105.29 11.71l3.5 3.5 1.42-1.42-3.5-3.5A7 7 0 0011 4z" },
   { id: "blog", label: "Blog", icon: "M5 4h9l5 5v11H5V4zm9 1.5V9h3.5" },
+  { id: "seo", label: "SEO / Pages", icon: "M4 7h16M4 12h16M4 17h10" },
   { id: "comments", label: "Commentaires", icon: "M4 4h16v11H8l-4 4V4z" },
   { id: "analytics", label: "Analytics", icon: "M4 20V10m6 10V4m6 16v-7m4 7V8" },
+  { id: "backup", label: "Sauvegardes", icon: "M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3" },
 ];
 
 export default function Moderation() {
@@ -93,6 +95,7 @@ export default function Moderation() {
   const [comments, setComments] = useState([]);
   const [posts, setPosts] = useState([]);
   const [audits, setAudits] = useState([]);
+  const [seo, setSeo] = useState({});
 
   useEffect(() => {
     document.title = "Back-office · Cafein";
@@ -107,13 +110,14 @@ export default function Moderation() {
   }, []);
 
   async function refresh(k = key) {
-    const [c, cm, p, a] = await Promise.all([
+    const [c, cm, p, a, s] = await Promise.all([
       api("/api/contact", k).then((r) => (r.ok ? r.json() : [])),
       fetch("/api/comments").then((r) => (r.ok ? r.json() : [])),
       api("/api/admin/posts", k).then((r) => (r.ok ? r.json() : [])),
       api("/api/admin/audits", k).then((r) => (r.ok ? r.json() : [])),
+      fetch("/api/seo").then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
     ]);
-    setContacts(c); setComments(cm); setPosts(p); setAudits(a);
+    setContacts(c); setComments(cm); setPosts(p); setAudits(a); setSeo(s || {});
   }
 
   async function login(e) {
@@ -139,7 +143,7 @@ export default function Moderation() {
     sessionStorage.removeItem("cafein-admin-key");
     setAuthed(false);
     setKey("");
-    setContacts([]); setComments([]); setPosts([]); setAudits([]);
+    setContacts([]); setComments([]); setPosts([]); setAudits([]); setSeo({});
   }
 
   /* ── Stats globales ─────────────────────────────────────── */
@@ -240,8 +244,10 @@ export default function Moderation() {
             {view === "messages" && <Messages contacts={contacts} setContacts={setContacts} k={key} setMsg={setMsg} />}
             {view === "audits" && <Audits audits={audits} />}
             {view === "blog" && <Blog posts={posts} setPosts={setPosts} k={key} setMsg={setMsg} />}
+            {view === "seo" && <SeoPages seo={seo} setSeo={setSeo} k={key} setMsg={setMsg} />}
             {view === "comments" && <Comments comments={comments} setComments={setComments} k={key} setMsg={setMsg} />}
             {view === "analytics" && <Analytics k={key} />}
+            {view === "backup" && <Backups k={key} setMsg={setMsg} onRestored={refresh} />}
           </motion.div>
         </AnimatePresence>
         {msg && <p className="mt-6 text-sm font-medium text-caramel">{msg}</p>}
@@ -529,6 +535,298 @@ function Field({ label, children }) {
       <span className="block font-mono text-[10px] font-bold tracking-[0.2em] uppercase text-ink/45 mb-1.5">{label}</span>
       {children}
     </label>
+  );
+}
+
+/* ══════════════ SEO / Pages ══════════════
+   Force le meta title et la meta description de chaque page. Les valeurs
+   par défaut ci-dessous reflètent celles codées dans le site : elles servent
+   d'aperçu / de repère. Un champ laissé vide = valeur par défaut conservée. */
+const SEO_PAGES = [
+  { path: "/", name: "Accueil",
+    title: "Cafein | Agence web & communication digitale au Luxembourg",
+    titleEn: "Cafein | Web & Digital Marketing Agency in Luxembourg",
+    description: "Cafein, agence de marketing web au Luxembourg : création de sites internet sur mesure, référencement SEO & GEO, réseaux sociaux et communication digitale. Devis gratuit, conseils francs.",
+    descriptionEn: "Cafein, a web marketing agency in Luxembourg: custom website design, SEO & GEO, social media and digital communication. Free quote, straight-talking advice." },
+  { path: "/creation-site-web", name: "Création de site",
+    title: "Création de site internet au Luxembourg : vitrine, e-commerce, sur mesure | Cafein",
+    titleEn: "Website Design in Luxembourg: Showcase, E-commerce, Custom | Cafein",
+    description: "Cafein crée votre site internet au Luxembourg : site vitrine, boutique e-commerce ou plateforme sur mesure. Design soigné, SEO intégré dès le départ, RGPD, un mois de support inclus.",
+    descriptionEn: "Cafein builds your website in Luxembourg: showcase sites, e-commerce stores or custom platforms. Polished design, SEO built in from day one, GDPR-ready, one month of support included." },
+  { path: "/seo-geo", name: "SEO & GEO",
+    title: "Agence SEO & GEO au Luxembourg : référencement Google et IA | Cafein",
+    titleEn: "SEO & GEO Agency in Luxembourg: Google and AI Ranking | Cafein",
+    description: "Référencement naturel (SEO) et visibilité dans les IA (GEO) au Luxembourg : audit, optimisation technique, contenus et suivi des positions. Être trouvé sur Google comme dans ChatGPT.",
+    descriptionEn: "Search engine optimization (SEO) and visibility in AI engines (GEO) in Luxembourg: audit, technical optimization, content and rank tracking. Get found on Google and in ChatGPT." },
+  { path: "/communication", name: "Communication",
+    title: "Communication digitale & réseaux sociaux au Luxembourg | Cafein",
+    titleEn: "Digital Communication & Social Media in Luxembourg | Cafein",
+    description: "Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook, sans jargon.",
+    descriptionEn: "Strategy, social media, content and ad campaigns in Luxembourg: Cafein handles your digital communication from A to Z. LinkedIn, Instagram, Facebook, no jargon." },
+  { path: "/notre-expertise", name: "Notre expertise",
+    title: "Nos 12 expertises web & digital au Luxembourg | Cafein",
+    titleEn: "Our 12 Web & Digital Areas of Expertise in Luxembourg | Cafein",
+    description: "Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg, un seul interlocuteur du premier appel au suivi.",
+    descriptionEn: "Showcase sites, e-commerce, SEO, GEO, social media, branding, data… The 12 areas of expertise of Cafein, a digital agency in Luxembourg, one contact from first call to follow-up." },
+  { path: "/lexique", name: "Lexique",
+    title: "Lexique du web : SEO, GEO, sites & social media expliqués simplement | Cafein",
+    titleEn: "Web Glossary: SEO, GEO, Websites & Social Media Made Simple | Cafein",
+    description: "69 termes du web enfin clairs : SEO, GEO, backlink, CMS, Core Web Vitals, taux de conversion… Le jargon du digital traduit en français simple par Cafein, agence web au Luxembourg.",
+    descriptionEn: "69 web terms finally made clear: SEO, GEO, backlink, CMS, Core Web Vitals, conversion rate… Digital jargon translated into plain English by Cafein, a web agency in Luxembourg." },
+  { path: "/equipe", name: "Équipe",
+    title: "L'équipe Cafein : trois cofondateurs, un percolateur | Agence web Luxembourg",
+    titleEn: "The Cafein Team: Three Cofounders, One Coffee Machine | Web Agency Luxembourg",
+    description: "Stan, Pinoo et Flo : les trois cofondateurs de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO et communication, une équipe resserrée qui s'occupe de tout.",
+    descriptionEn: "Stan, Pinoo and Flo: the three cofounders of Cafein, a web agency in Luxembourg. Strategy, website design, SEO and communication, a tight-knit team that handles everything." },
+  { path: "/mentions-legales", name: "Mentions légales",
+    title: "Mentions légales | Cafein", titleEn: "",
+    description: "Mentions légales du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+  { path: "/confidentialite", name: "Confidentialité",
+    title: "Politique de confidentialité | Cafein", titleEn: "",
+    description: "Politique de confidentialité du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+  { path: "/politique-cookies", name: "Politique de cookies",
+    title: "Politique de cookies | Cafein", titleEn: "",
+    description: "Politique de cookies du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+];
+
+function CharCount({ value, rec }) {
+  const n = (value || "").length;
+  return <span className={`font-mono text-[10px] ${n > rec ? "text-caramel" : "text-ink/35"}`}>{n}/{rec}</span>;
+}
+
+/* Aperçu façon résultat Google, pour visualiser le rendu final. */
+function SerpPreview({ title, description, path }) {
+  return (
+    <div className="rounded-xl bg-cream-2 border-2 border-ink/10 p-4">
+      <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/40 mb-2">Aperçu Google</p>
+      <p className="text-[13px] text-ink/50 truncate">www.cafein.lu{path === "/" ? "" : path}</p>
+      <p className="text-[#1a0dab] text-lg leading-tight truncate">{title}</p>
+      <p className="text-[13px] text-ink/70 leading-snug mt-0.5 line-clamp-2">{description}</p>
+    </div>
+  );
+}
+
+function SeoPages({ seo, setSeo, k, setMsg }) {
+  const [editing, setEditing] = useState(null); // path en cours d'édition
+  const [form, setForm] = useState({ title: "", titleEn: "", description: "", descriptionEn: "" });
+  const [saving, setSaving] = useState(false);
+
+  const pg = SEO_PAGES.find((p) => p.path === editing);
+
+  function open(p) {
+    const ov = seo[p.path] || {};
+    setForm({ title: ov.title || "", titleEn: ov.titleEn || "", description: ov.description || "", descriptionEn: ov.descriptionEn || "" });
+    setEditing(p.path);
+  }
+  async function send(payload, close = true) {
+    setSaving(true);
+    try {
+      const r = await api("/api/admin/seo", k, { method: "PUT", body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error();
+      setSeo(await r.json());
+      if (close) setEditing(null);
+    } catch { setMsg("Enregistrement impossible."); }
+    finally { setSaving(false); }
+  }
+
+  /* ── Éditeur d'une page ── */
+  if (pg) {
+    const set = (patch) => setForm((f) => ({ ...f, ...patch }));
+    const effTitle = form.title || pg.title;
+    const effDesc = form.description || pg.description;
+    return (
+      <div className="max-w-2xl">
+        <button onClick={() => setEditing(null)} className="font-mono text-[11px] tracking-wide uppercase text-mint-dark hover:underline">← Retour aux pages</button>
+        <h1 className="mt-3 font-display font-extrabold text-3xl text-ink tracking-tight">{pg.name}</h1>
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-wide text-ink/40">www.cafein.lu{pg.path === "/" ? "" : pg.path}</p>
+
+        <div className="mt-6"><SerpPreview title={effTitle} description={effDesc} path={pg.path} /></div>
+
+        <div className="mt-6 space-y-4">
+          <Field label={<span className="flex items-center justify-between">Meta title (FR) <CharCount value={form.title} rec={60} /></span>}>
+            <input value={form.title} onChange={(e) => set({ title: e.target.value })} placeholder={pg.title} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" />
+          </Field>
+          <Field label={<span className="flex items-center justify-between">Meta description (FR) <CharCount value={form.description} rec={160} /></span>}>
+            <textarea value={form.description} onChange={(e) => set({ description: e.target.value })} rows={3} placeholder={pg.description} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark resize-y" />
+          </Field>
+          <div className="pt-2 border-t-2 border-ink/10">
+            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/40 mb-3">Version anglaise (/en) — optionnel</p>
+            <div className="space-y-4">
+              <Field label={<span className="flex items-center justify-between">Meta title (EN) <CharCount value={form.titleEn} rec={60} /></span>}>
+                <input value={form.titleEn} onChange={(e) => set({ titleEn: e.target.value })} placeholder={pg.titleEn || pg.title} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" />
+              </Field>
+              <Field label={<span className="flex items-center justify-between">Meta description (EN) <CharCount value={form.descriptionEn} rec={160} /></span>}>
+                <textarea value={form.descriptionEn} onChange={(e) => set({ descriptionEn: e.target.value })} rows={3} placeholder={pg.descriptionEn || pg.description} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark resize-y" />
+              </Field>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <button onClick={() => send({ path: pg.path, ...form })} disabled={saving} className="rounded-full bg-mint text-ink font-display font-bold px-6 py-2.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all disabled:opacity-60">{saving ? "Enregistrement…" : "Enregistrer"}</button>
+            <button onClick={() => send({ path: pg.path })} disabled={saving} className="rounded-full bg-white text-ink font-display font-bold px-6 py-2.5 border-2 border-ink hover:bg-cream-2 transition-colors">Réinitialiser</button>
+            <button onClick={() => setEditing(null)} className="rounded-full bg-white text-ink font-display font-bold px-6 py-2.5 border-2 border-ink">Annuler</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Liste des pages ── */
+  return (
+    <div>
+      <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">SEO / Pages</h1>
+      <p className="mt-1 font-medium text-ink/50">Forcez le titre et la description de chaque page dans Google. Vide = valeur par défaut du site.</p>
+      <ul className="mt-6 space-y-3">
+        {SEO_PAGES.map((p) => {
+          const ov = seo[p.path];
+          const custom = ov && Object.keys(ov).length > 0;
+          return (
+            <li key={p.path} className="flex flex-wrap items-center gap-3 rounded-2xl bg-white border-[3px] border-ink p-4 shadow-[3px_3px_0_#0A0F0D]">
+              <span className={`rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase ${custom ? "bg-sun" : "bg-cream-2"} text-ink`}>{custom ? "Personnalisé" : "Par défaut"}</span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display font-bold text-ink truncate">{p.name}</p>
+                <p className="font-mono text-[10px] uppercase text-ink/40 truncate">{(ov?.title) || p.title}</p>
+              </div>
+              <button onClick={() => open(p)} className="rounded-full bg-mint text-ink font-display font-bold text-xs px-4 py-2 border-2 border-ink">Modifier</button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/* ══════════════ Sauvegardes ══════════════
+   Exporte toutes les données dynamiques (messages, audits, blog, commentaires,
+   SEO) en un fichier, et permet de restaurer le site depuis un tel fichier. */
+function Backups({ k, setMsg, onRestored }) {
+  const [busy, setBusy] = useState(false);
+  const [pending, setPending] = useState(null); // { obj, counts, name } en attente de confirmation
+  const [result, setResult] = useState(null);
+  const fileRef = useRef();
+
+  async function download() {
+    setBusy(true);
+    try {
+      const r = await api("/api/admin/backup", k);
+      if (!r.ok) throw new Error();
+      const blob = await r.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `cafein-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch { setMsg("Téléchargement impossible."); }
+    finally { setBusy(false); }
+  }
+
+  function pickFile(e) {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    setResult(null);
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const obj = JSON.parse(String(reader.result));
+        const d = obj && obj.data ? obj.data : obj;
+        const n = (x) => (Array.isArray(x) ? x.length : null);
+        const counts = {
+          Messages: n(d.contacts),
+          "URLs testées": n(d.audits),
+          Articles: n(d.posts),
+          Commentaires: n(d.comments),
+          "Pages SEO": d.seo && typeof d.seo === "object" && !Array.isArray(d.seo) ? Object.keys(d.seo).length : null,
+        };
+        if (Object.values(counts).every((v) => v == null)) return setMsg("Ce fichier ne contient aucune donnée reconnue.");
+        setPending({ obj, counts, name: f.name, exportedAt: obj.exportedAt || null });
+      } catch { setMsg("Fichier illisible (JSON invalide)."); }
+    };
+    reader.readAsText(f);
+  }
+
+  async function doRestore() {
+    setBusy(true);
+    try {
+      const r = await api("/api/admin/restore", k, { method: "POST", body: JSON.stringify(pending.obj) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "échec");
+      setResult(d.restored);
+      setPending(null);
+      onRestored && onRestored();
+    } catch (e) { setMsg("Restauration impossible : " + (e.message || "")); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <div className="max-w-2xl">
+      <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Sauvegardes</h1>
+      <p className="mt-1 font-medium text-ink/50">Exportez toutes les données du site, ou restaurez-les depuis une sauvegarde.</p>
+
+      {/* Télécharger */}
+      <div className="mt-6 rounded-3xl bg-white border-[3px] border-ink p-6 shadow-[6px_6px_0_#0A0F0D]">
+        <h2 className="font-display font-extrabold text-xl text-ink">Télécharger une sauvegarde</h2>
+        <p className="mt-2 text-ink/70 font-medium text-sm leading-relaxed">
+          Un fichier <code className="bg-cream-2 px-1.5 py-0.5 rounded text-xs">.json</code> contenant les messages, les URLs testées,
+          les articles de blog, les commentaires et les réglages SEO. À garder au chaud.
+        </p>
+        <button onClick={download} disabled={busy} className="mt-4 rounded-full bg-mint text-ink font-display font-bold px-6 py-2.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all disabled:opacity-60">
+          ↓ Télécharger la sauvegarde
+        </button>
+        <p className="mt-3 text-ink/40 font-medium text-xs">Le code du site (versionné sur GitHub) et les clés/variables (Railway) ne sont pas concernés.</p>
+      </div>
+
+      {/* Restaurer */}
+      <div className="mt-5 rounded-3xl bg-white border-[3px] border-ink p-6 shadow-[6px_6px_0_#0A0F0D]">
+        <h2 className="font-display font-extrabold text-xl text-ink">Restaurer une sauvegarde</h2>
+        <p className="mt-2 text-ink/70 font-medium text-sm leading-relaxed">
+          Importez un fichier de sauvegarde pour remplacer les données actuelles.
+          <span className="text-caramel font-semibold"> Les données présentes seront écrasées.</span>
+        </p>
+
+        {!pending && (
+          <>
+            <input ref={fileRef} type="file" accept="application/json,.json" onChange={pickFile} className="hidden" />
+            <button onClick={() => fileRef.current?.click()} disabled={busy} className="mt-4 rounded-full bg-white text-ink font-display font-bold px-6 py-2.5 border-2 border-ink hover:bg-cream-2 transition-colors disabled:opacity-60">
+              Choisir un fichier…
+            </button>
+          </>
+        )}
+
+        {pending && (
+          <div className="mt-4 rounded-2xl border-2 border-ink bg-cream p-4">
+            <p className="font-display font-bold text-ink text-sm break-all">{pending.name}</p>
+            {pending.exportedAt && <p className="font-mono text-[10px] uppercase text-ink/40 mt-0.5">Exporté le {new Date(pending.exportedAt).toLocaleString("fr-FR")}</p>}
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {Object.entries(pending.counts).filter(([, v]) => v != null).map(([label, v]) => (
+                <li key={label} className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-white px-2.5 py-1 font-mono text-[11px] font-bold">
+                  <span className="text-ink/50 uppercase tracking-wider">{label}</span>
+                  <span className="text-ink">{v}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-caramel font-semibold text-sm">Confirmer le remplacement des données actuelles par ce fichier ?</p>
+            <div className="mt-3 flex gap-3">
+              <button onClick={doRestore} disabled={busy} className="rounded-full bg-espresso text-cream font-display font-bold px-6 py-2.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all disabled:opacity-60">{busy ? "Restauration…" : "Oui, restaurer"}</button>
+              <button onClick={() => setPending(null)} disabled={busy} className="rounded-full bg-white text-ink font-display font-bold px-6 py-2.5 border-2 border-ink">Annuler</button>
+            </div>
+          </div>
+        )}
+
+        {result && (
+          <div className="mt-4 rounded-2xl border-2 border-ink bg-mint/25 p-4">
+            <p className="font-display font-bold text-ink text-sm">Restauration terminée ✓</p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {Object.entries(result).map(([label, v]) => (
+                <li key={label} className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-white px-2.5 py-1 font-mono text-[11px] font-bold">
+                  <span className="text-ink/50 uppercase tracking-wider">{label}</span>
+                  <span className="text-ink">{v}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
