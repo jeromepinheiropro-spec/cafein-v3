@@ -163,7 +163,8 @@ function Confidentialite() {
 
       <Section title="Cookies">
         <p>
-          Le site n'utilise pas de cookies publicitaires ni de traceurs tiers. Pour plus de détails, consultez notre{" "}
+          Le site utilise Google Analytics pour la mesure d'audience, uniquement avec votre consentement, et aucun cookie
+          publicitaire. Pour tout le détail, consultez notre{" "}
           <Link to="/politique-cookies" className="text-mint-dark font-semibold hover:underline">politique de cookies</Link>.
         </p>
       </Section>
@@ -172,24 +173,39 @@ function Confidentialite() {
 }
 
 function Cookies() {
+  const reopen = () => window.dispatchEvent(new Event("cafein-open-consent"));
   return (
     <>
       <Section title="En résumé">
         <p>
-          Bonne nouvelle : www.cafein.lu ne vous piste pas. Le site n'utilise <strong>aucun cookie publicitaire,
-          aucun traceur tiers, ni aucun outil de mesure d'audience</strong> (pas de Google Analytics, pas de pixel).
+          www.cafein.lu utilise un seul outil de mesure d'audience, <strong>Google Analytics</strong>, et uniquement
+          <strong> si vous y consentez</strong> via le bandeau affiché à votre première visite. Aucun cookie publicitaire
+          ni aucun autre traceur tiers n'est utilisé.
         </p>
       </Section>
 
-      <Section title="Ce que nous utilisons">
+      <Section title="Cookies de mesure d'audience (soumis à consentement)">
+        <p>
+          Avec votre accord, nous utilisons <strong>Google Analytics 4</strong> pour comprendre comment le site est
+          utilisé (pages visitées, provenance, appareil) et l'améliorer. Ces cookies ne sont déposés qu'après votre
+          consentement, et l'adresse IP est anonymisée. Sans consentement, aucun de ces cookies n'est déposé et Google
+          Analytics n'est pas chargé.
+        </p>
+        <p>
+          Vous pouvez modifier votre choix à tout moment :{" "}
+          <button onClick={reopen} className="text-mint-dark font-semibold hover:underline">rouvrir les préférences de cookies</button>.
+        </p>
+      </Section>
+
+      <Section title="Cookies strictement nécessaires">
         <ul className="list-disc pl-5 space-y-1.5">
           <li>
-            <strong>Stockage strictement nécessaire</strong> : un espace de stockage local (sessionStorage) est utilisé
-            uniquement dans l'espace réservé à l'équipe pour maintenir la session de connexion. Il n'est pas utilisé
-            pour vous suivre et disparaît à la fermeture de l'onglet.
+            Un <strong>stockage local</strong> mémorise votre choix concernant les cookies, pour ne pas vous redemander à
+            chaque visite.
           </li>
           <li>
-            <strong>Aucun cookie de suivi</strong> n'est déposé lors de la navigation classique sur le site.
+            Dans l'espace réservé à l'équipe, un stockage de session maintient la connexion. Il n'est pas utilisé pour
+            vous suivre et disparaît à la fermeture de l'onglet.
           </li>
         </ul>
       </Section>
@@ -203,9 +219,8 @@ function Cookies() {
 
       <Section title="Gérer les cookies">
         <p>
-          Vous pouvez à tout moment configurer votre navigateur pour bloquer ou supprimer le stockage local. Si nous
-          venions à ajouter un outil de mesure d'audience à l'avenir, un bandeau de consentement serait mis en place
-          au préalable, conformément à la réglementation.
+          Vous pouvez à tout moment refuser ou retirer votre consentement via le lien ci-dessus, ou configurer votre
+          navigateur pour bloquer et supprimer les cookies.
         </p>
       </Section>
     </>

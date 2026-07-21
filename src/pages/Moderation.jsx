@@ -241,7 +241,7 @@ export default function Moderation() {
             {view === "audits" && <Audits audits={audits} />}
             {view === "blog" && <Blog posts={posts} setPosts={setPosts} k={key} setMsg={setMsg} />}
             {view === "comments" && <Comments comments={comments} setComments={setComments} k={key} setMsg={setMsg} />}
-            {view === "analytics" && <Analytics />}
+            {view === "analytics" && <Analytics k={key} />}
           </motion.div>
         </AnimatePresence>
         {msg && <p className="mt-6 text-sm font-medium text-caramel">{msg}</p>}
@@ -560,23 +560,104 @@ function Comments({ comments, setComments, k, setMsg }) {
   );
 }
 
-/* ══════════════ Analytics (à connecter) ══════════════ */
-function Analytics() {
+/* ══════════════ Analytics (Google Analytics 4) ══════════════ */
+function Analytics({ k }) {
+  const [data, setData] = useState(undefined);
+  useEffect(() => {
+    api("/api/admin/analytics", k)
+      .then((r) => r.json())
+      .then(setData)
+      .catch(() => setData({ configured: true, error: "Connexion impossible." }));
+  }, [k]);
+
+  if (data === undefined) {
+    return (
+      <div>
+        <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
+        <p className="mt-6 font-medium text-ink/50">Chargement des statistiques…</p>
+      </div>
+    );
+  }
+
+  if (!data.configured) {
+    return (
+      <div className="max-w-2xl">
+        <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
+        <p className="mt-1 font-medium text-ink/50">Google Analytics est installé sur le site — reste à le brancher ici.</p>
+        <div className="mt-6 rounded-3xl bg-white border-[3px] border-ink p-8 shadow-[6px_6px_0_#0A0F0D]">
+          <span className="inline-block rounded-full bg-sun border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest">À connecter</span>
+          <p className="mt-4 text-ink/75 font-medium leading-relaxed">
+            Les données sont déjà collectées (propriété <strong>546253445</strong>). Pour les afficher ici, il faut un accès API :
+          </p>
+          <ol className="mt-4 space-y-2 text-ink/75 font-medium list-decimal pl-5">
+            <li>Activer l'<strong>API Google Analytics Data</strong> sur le projet Google Cloud.</li>
+            <li>Créer un <strong>compte de service</strong> + sa clé (JSON).</li>
+            <li>Ajouter l'email du compte de service en <strong>Lecteur</strong> sur la propriété GA.</li>
+            <li>Coller sur Railway : <code className="bg-cream-2 px-1.5 py-0.5 rounded text-sm">GA_PROPERTY_ID</code> et <code className="bg-cream-2 px-1.5 py-0.5 rounded text-sm">GA_SA_JSON</code>.</li>
+          </ol>
+        </div>
+      </div>
+    );
+  }
+
+  if (data.error) {
+    return (
+      <div className="max-w-2xl">
+        <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
+        <div className="mt-6 rounded-2xl bg-white border-[3px] border-ink p-6 shadow-[4px_4px_0_#0A0F0D]">
+          <p className="font-display font-bold text-ink">Connexion GA en erreur</p>
+          <p className="mt-2 text-ink/65 font-medium text-sm break-words">{data.error}</p>
+          <p className="mt-2 text-ink/50 font-medium text-sm">Vérifie que le compte de service a bien accès à la propriété et que la clé est correcte.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const days = (data.byDay || []).map((d) => ({ label: d.date.slice(6), v: d.v }));
+  const maxP = Math.max(1, ...(data.pages || []).map((p) => p.v));
   return (
-    <div className="max-w-2xl">
+    <div>
       <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
-      <p className="mt-1 font-medium text-ink/50">Statistiques de fréquentation du site.</p>
-      <div className="mt-6 rounded-3xl bg-white border-[3px] border-ink p-8 shadow-[6px_6px_0_#0A0F0D]">
-        <span className="inline-block rounded-full bg-sun border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest">Connexion Google Analytics en préparation</span>
-        <p className="mt-4 text-ink/75 font-medium leading-relaxed">
-          Pour afficher ici tes statistiques Google Analytics (visites, pages populaires, sources), il faut trois choses côté configuration :
-        </p>
-        <ol className="mt-4 space-y-2 text-ink/75 font-medium list-decimal pl-5">
-          <li>Une propriété <strong>Google Analytics 4</strong> pour cafein.lu.</li>
-          <li>Ajouter la <strong>balise de mesure</strong> au site (cela ajoute des cookies : on mettra à jour la politique cookies + un bandeau de consentement).</li>
-          <li>Un accès <strong>API</strong> (compte de service GA4) pour lire les données dans ce back-office.</li>
-        </ol>
-        <p className="mt-4 text-ink/60 font-medium text-sm">Dis-le à l'équipe technique quand tu veux qu'on la branche — le reste du CRM fonctionne déjà sans.</p>
+      <p className="mt-1 font-medium text-ink/50">Google Analytics · 28 derniers jours.</p>
+
+      <div className="mt-6 grid grid-cols-3 gap-3">
+        <StatCard label="Utilisateurs" value={Number(data.users).toLocaleString("fr-FR")} />
+        <StatCard label="Sessions" value={Number(data.sessions).toLocaleString("fr-FR")} accent="#E08A2B" />
+        <StatCard label="Pages vues" value={Number(data.pageviews).toLocaleString("fr-FR")} accent="#0A0F0D" />
+      </div>
+
+      <div className="mt-4">
+        <MiniBars data={days} label="Utilisateurs par jour (14 derniers jours)" />
+      </div>
+
+      <div className="mt-6 grid md:grid-cols-2 gap-4">
+        <div className="rounded-2xl bg-white border-[3px] border-ink p-5 shadow-[4px_4px_0_#0A0F0D]">
+          <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/50 mb-3">Pages les plus vues</p>
+          <ul className="space-y-2.5">
+            {(data.pages || []).map((p, i) => (
+              <li key={i}>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium text-ink truncate">{p.label}</span>
+                  <span className="font-display font-bold text-ink shrink-0">{p.v}</span>
+                </div>
+                <div className="mt-1 h-1.5 rounded-full bg-cream-2 overflow-hidden">
+                  <div className="h-full bg-mint rounded-full" style={{ width: `${(p.v / maxP) * 100}%` }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-2xl bg-white border-[3px] border-ink p-5 shadow-[4px_4px_0_#0A0F0D]">
+          <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/50 mb-3">Pays</p>
+          <ul className="space-y-2">
+            {(data.countries || []).map((c, i) => (
+              <li key={i} className="flex items-center justify-between">
+                <span className="text-sm font-medium text-ink">{c.label}</span>
+                <span className="font-display font-bold text-ink">{c.v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
