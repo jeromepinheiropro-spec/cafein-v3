@@ -154,54 +154,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.cafein.lu/realisations/kinteraction</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/kinteraction"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/kinteraction"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/kinteraction"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/realisations/le-101</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/le-101"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/le-101"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/le-101"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/realisations/efluenz</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/efluenz"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/efluenz"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/efluenz"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/realisations/xucom</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/xucom"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/xucom"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/xucom"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/realisations/7-plis</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/7-plis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/7-plis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/7-plis"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/realisations/agria</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/agria"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/agria"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/agria"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.cafein.lu/en</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en"/>
@@ -352,53 +304,5 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/notre-expertise/data-reporting"/>
     <lastmod>2026-07-20</lastmod>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/kinteraction</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/kinteraction"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/kinteraction"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/kinteraction"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/le-101</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/le-101"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/le-101"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/le-101"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/efluenz</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/efluenz"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/efluenz"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/efluenz"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/xucom</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/xucom"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/xucom"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/xucom"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/7-plis</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/7-plis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/7-plis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/7-plis"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.cafein.lu/en/realisations/agria</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/agria"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/agria"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/agria"/>
-    <lastmod>2026-07-20</lastmod>
-    <priority>0.7</priority>
   </url>
 </urlset>
