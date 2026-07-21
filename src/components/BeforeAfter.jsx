@@ -2,98 +2,63 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "../lib/ui.jsx";
 import { Link } from "../lib/link.jsx";
-import { useT, useLang } from "../lib/lang.jsx";
+import { useT } from "../lib/lang.jsx";
 
 /*
-  Slider avant/après : on tire la poignée pour révéler l'ancien site vs le
-  nouveau (projet réel). Preuve de valeur très concrète, et ça se partage bien.
-
-  IMAGES : dès que les captures réelles sont dispo, renseigner BEFORE_IMG /
-  AFTER_IMG (ex. "/reveal/xucom-avant.jpg"). Tant qu'elles sont vides, deux
-  maquettes stylisées servent de démonstration.
+  Avant / après CONCEPTUEL : pas de photo, mais deux wireframes qui parlent
+  d'eux-mêmes — un « avant » daté (lent, invisible) vs un « après » Cafein
+  (rapide, esthétique, optimisé). On tire la poignée pour comparer, et des
+  puces de valeur projettent le bénéfice. Dès qu'on a de vraies captures d'un
+  projet Nooki, renseigner BEFORE_IMG / AFTER_IMG et elles remplacent les
+  wireframes.
 */
 const BEFORE_IMG = "";
 const AFTER_IMG = "";
-const PROJECT = "Xucom"; // projet mis en avant
 
-/* ── Maquettes de secours (avant clés en main) ─────────────────── */
-function MockBefore() {
+/* ── Wireframe « avant » : site daté, terne ────────────────────── */
+function MockBefore({ t }) {
   return (
-    <div className="absolute inset-0 bg-[#dfe0d8] text-[#3a3a34] select-none overflow-hidden">
-      <div className="h-7 md:h-9 bg-[#b9bdae] border-b border-[#8a8f7e] flex items-center px-3 gap-2">
-        <span className="font-serif text-[10px] md:text-xs font-bold tracking-tight">{PROJECT}™</span>
-        <span className="ml-auto font-serif text-[8px] md:text-[10px] underline">Accueil · Produits · Contact</span>
+    <div className="absolute inset-0 bg-[#EDE5D3] text-ink select-none overflow-hidden p-6 md:p-9 flex flex-col">
+      <span className="self-start rounded-lg bg-ink text-cream font-mono text-[10px] md:text-xs font-bold tracking-widest uppercase px-3 py-1.5">
+        {t("Avant : site existant", "Before: existing site")}
+      </span>
+      <div className="mt-7 space-y-3 max-w-[62%]">
+        <div className="h-4 w-2/3 rounded bg-ink/25" />
+        <div className="h-2.5 w-full rounded bg-ink/12" />
+        <div className="h-2.5 w-full rounded bg-ink/12" />
+        <div className="h-2.5 w-4/5 rounded bg-ink/12" />
+        <div className="h-8 w-28 rounded bg-ink/15 mt-3" />
       </div>
-      <div className="p-4 md:p-6">
-        <p className="font-serif text-sm md:text-lg font-bold underline decoration-2">Bienvenue sur notre site&nbsp;!</p>
-        <p className="mt-2 font-serif text-[10px] md:text-xs leading-snug max-w-md">
-          Nous sommes une entreprise sérieuse. Cliquez ici pour découvrir nos produits et services de qualité depuis 2004.
-        </p>
-        <div className="mt-3 inline-block bg-[#c9ccbe] border border-[#8a8f7e] px-3 py-1 font-serif text-[10px] md:text-xs">
-          » En savoir plus «
-        </div>
-        <div className="mt-4 flex gap-2 flex-wrap">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="w-16 h-12 md:w-24 md:h-16 bg-[#cfd2c4] border border-[#9a9f8e]" />
-          ))}
-        </div>
-        <p className="mt-4 font-mono text-[8px] md:text-[10px] text-[#6b6f60]">Visiteurs : 0000481 · Best viewed in 1024×768</p>
-      </div>
+      <span className="mt-auto font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-ink/35">
+        {t("Lent · Daté · Invisible sur Google", "Slow · Dated · Invisible on Google")}
+      </span>
     </div>
   );
 }
 
-function MockAfter({ accent = "#1FCE8A" }) {
+/* ── Wireframe « après » : refonte Cafein, nette et moderne ─────── */
+function MockAfter({ t }) {
   return (
-    <div className="absolute inset-0 bg-white text-ink select-none overflow-hidden">
-      <div className="h-7 md:h-9 flex items-center px-3 md:px-4 gap-2 border-b border-ink/10">
-        <span className="grid place-items-center w-4 h-4 md:w-5 md:h-5 rounded-md text-white font-display font-extrabold text-[9px] md:text-[11px]" style={{ backgroundColor: accent }}>
-          {PROJECT[0]}
-        </span>
-        <span className="font-display font-extrabold text-[11px] md:text-sm">{PROJECT}</span>
-        <span className="ml-auto flex items-center gap-2 text-[9px] md:text-[11px] font-medium text-ink/55">
-          <span className="hidden sm:inline">Solutions</span>
-          <span className="rounded-full px-2.5 py-1 text-white font-semibold text-[9px] md:text-[11px]" style={{ backgroundColor: accent }}>
-            Contact
-          </span>
-        </span>
+    <div className="absolute inset-0 bg-espresso text-cream select-none overflow-hidden p-6 md:p-9 flex flex-col items-end text-right">
+      <span className="rounded-lg bg-mint text-ink font-mono text-[10px] md:text-xs font-extrabold tracking-widest uppercase px-3 py-1.5">
+        {t("Après Cafein", "After Cafein")}
+      </span>
+      <div className="mt-7 w-full max-w-[64%] flex flex-col items-end space-y-3">
+        <div className="h-9 w-3/4 rounded-xl bg-white" />
+        <div className="h-2.5 w-full rounded bg-white/25" />
+        <div className="h-2.5 w-5/6 rounded bg-white/15" />
+        <div className="h-9 w-40 rounded-full bg-mint mt-3 shadow-[3px_3px_0_#0A0F0D]" />
       </div>
-      <div className="p-4 md:p-7">
-        <span className="inline-block rounded-full px-2.5 py-1 font-mono text-[8px] md:text-[9px] tracking-widest uppercase mb-2 md:mb-3" style={{ backgroundColor: accent + "22", color: accent }}>
-          B2B · Tech
-        </span>
-        <h3 className="font-display font-extrabold text-lg md:text-3xl leading-[1.02] tracking-tight max-w-md">
-          La technologie qui<span style={{ color: accent }}> travaille pour vous.</span>
-        </h3>
-        <p className="mt-2 text-ink/55 font-medium text-[10px] md:text-sm max-w-sm">
-          Des solutions sur mesure, une expérience limpide, des résultats mesurables.
-        </p>
-        <div className="mt-3 md:mt-4 flex items-center gap-2">
-          <span className="rounded-full px-3 md:px-4 py-1.5 md:py-2 text-white font-display font-bold text-[10px] md:text-sm shadow-sm" style={{ backgroundColor: accent }}>
-            Demander une démo
-          </span>
-          <span className="rounded-full px-3 md:px-4 py-1.5 md:py-2 border border-ink/15 font-semibold text-[10px] md:text-sm text-ink/60">
-            Nos services
-          </span>
-        </div>
-        <div className="mt-4 md:mt-6 grid grid-cols-3 gap-2 md:gap-2.5">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="rounded-lg md:rounded-xl border border-ink/10 p-2 md:p-2.5">
-              <div className="w-4 h-4 md:w-6 md:h-6 rounded-md mb-1.5 md:mb-2" style={{ backgroundColor: accent, opacity: 0.85 - i * 0.22 }} />
-              <div className="h-1 md:h-1.5 rounded bg-ink/15 mb-1 md:mb-1.5" />
-              <div className="h-1 md:h-1.5 w-2/3 rounded bg-ink/10" />
-            </div>
-          ))}
-        </div>
-      </div>
+      <span className="mt-auto font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-mint">
+        {t("Refonte optimisée : UX mobile + structure SEO", "Optimised rebuild: mobile UX + SEO structure")}
+      </span>
     </div>
   );
 }
 
 export default function BeforeAfter() {
   const t = useT();
-  const { lang } = useLang();
-  const [pos, setPos] = useState(52);
+  const [pos, setPos] = useState(50);
   const boxRef = useRef(null);
   const dragging = useRef(false);
 
@@ -102,7 +67,7 @@ export default function BeforeAfter() {
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const p = ((clientX - rect.left) / rect.width) * 100;
-    setPos(Math.max(2, Math.min(98, p)));
+    setPos(Math.max(3, Math.min(97, p)));
   }, []);
 
   useEffect(() => {
@@ -130,22 +95,26 @@ export default function BeforeAfter() {
     setFromClientX(x);
   };
 
+  const benefits = [
+    { icon: "⚡", label: t("Plus rapide", "Faster") },
+    { icon: "✨", label: t("Plus esthétique", "More beautiful") },
+    { icon: "🔍", label: t("Mieux référencé", "Better ranked") },
+    { icon: "📱", label: t("100% responsive", "Fully responsive") },
+    { icon: "🤖", label: t("Prêt pour l'IA (GEO)", "AI-ready (GEO)") },
+    { icon: "🚀", label: t("Pensé pour convertir", "Built to convert") },
+  ];
+
   return (
-    <section className="relative bg-espresso text-cream py-24 md:py-32 overflow-hidden">
+    <section className="relative bg-cream py-24 md:py-32 overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
-          <SectionLabel dark>{t("( Avant / après )", "( Before / after )")}</SectionLabel>
-          <h2 className="mt-4 font-display font-extrabold text-[clamp(2.2rem,5vw,4rem)] leading-[0.95] tracking-tight">
-            {t("Tirez pour voir", "Drag to see")}
-            <br />
-            <span className="text-mint">{t("la différence.", "the difference.")}</span>
+        <SectionLabel>{t("( Avant / après )", "( Before / after )")}</SectionLabel>
+        <div className="mt-4 flex items-end justify-between gap-6 flex-wrap">
+          <h2 className="font-display font-extrabold text-[clamp(2rem,4.6vw,3.6rem)] leading-[0.95] text-ink tracking-tight max-w-2xl">
+            {t("Un site repensé de A à Z", "A site rethought from A to Z")}
           </h2>
-          <p className="mt-5 text-lg text-cream/70 font-medium max-w-lg leading-relaxed">
-            {t(
-              "Le même projet, avant et après notre passage. On glisse la poignée — le reste parle tout seul.",
-              "The same project, before and after our work. Slide the handle — the rest speaks for itself.",
-            )}
-          </p>
+          <span className="font-mono text-xs md:text-sm tracking-[0.22em] uppercase text-ink/40 pb-2">
+            {t("← Glissez le curseur →", "← Drag the slider →")}
+          </span>
         </div>
 
         {/* comparateur */}
@@ -154,19 +123,19 @@ export default function BeforeAfter() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ type: "spring", stiffness: 90, damping: 16 }}
-          className="mt-10 md:mt-14"
+          className="mt-9"
         >
           <div
             ref={boxRef}
             onMouseDown={startDrag}
             onTouchStart={startDrag}
-            className="relative w-full aspect-[16/10] md:aspect-[16/9] rounded-[1.4rem] overflow-hidden border-[3px] border-ink bg-white shadow-[12px_12px_0_#000] cursor-ew-resize select-none"
+            className="relative w-full aspect-[16/11] sm:aspect-[16/8] lg:aspect-[16/6] rounded-[1.4rem] overflow-hidden border-[3px] border-ink bg-cream shadow-[10px_10px_0_#0A0F0D] cursor-ew-resize select-none"
           >
             {/* APRÈS (dessous, plein) */}
             {AFTER_IMG ? (
-              <img src={AFTER_IMG} alt={t("Après — site Cafein", "After — Cafein site")} className="absolute inset-0 w-full h-full object-cover object-top" draggable={false} />
+              <img src={AFTER_IMG} alt={t("Après — Cafein", "After — Cafein")} className="absolute inset-0 w-full h-full object-cover object-top" draggable={false} />
             ) : (
-              <MockAfter />
+              <MockAfter t={t} />
             )}
 
             {/* AVANT (dessus, rogné à gauche) */}
@@ -175,23 +144,15 @@ export default function BeforeAfter() {
                 {BEFORE_IMG ? (
                   <img src={BEFORE_IMG} alt={t("Avant", "Before")} className="absolute inset-0 w-full h-full object-cover object-top" draggable={false} />
                 ) : (
-                  <MockBefore />
+                  <MockBefore t={t} />
                 )}
               </div>
             </div>
 
-            {/* étiquettes */}
-            <span className="absolute top-3 left-3 rounded-full bg-ink/80 text-cream font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 pointer-events-none">
-              {t("Avant", "Before")}
-            </span>
-            <span className="absolute top-3 right-3 rounded-full bg-mint text-ink font-mono text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 pointer-events-none">
-              {t("Après", "After")}
-            </span>
-
-            {/* poignée */}
-            <div className="absolute inset-y-0 pointer-events-none" style={{ left: `${pos}%`, transform: "translateX(-50%)" }}>
-              <div className="w-1 h-full bg-mint shadow-[0_0_0_1px_rgba(0,0,0,0.4)]" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center w-11 h-11 rounded-full bg-mint border-[3px] border-ink shadow-[3px_3px_0_#000]">
+            {/* poignée : barre + rond toujours solidaires, centrés sur pos */}
+            <div className="absolute inset-y-0 z-10 pointer-events-none" style={{ left: `${pos}%` }}>
+              <div className="absolute inset-y-0 -translate-x-1/2 w-1 bg-mint shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" />
+              <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center w-11 h-11 rounded-full bg-mint border-[3px] border-ink shadow-[3px_3px_0_#0A0F0D]">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 6 4 12l5 6M15 6l5 6-5 6" />
                 </svg>
@@ -199,18 +160,24 @@ export default function BeforeAfter() {
             </div>
           </div>
 
-          {!AFTER_IMG && (
-            <p className="mt-3 font-mono text-[11px] tracking-wide text-cream/40">
-              {t("Maquette de démonstration — bientôt un vrai projet.", "Demo mockup — a real project coming soon.")}
-            </p>
-          )}
+          {/* puces de valeur : projettent le bénéfice, même sans photo */}
+          <div className="mt-7 flex flex-wrap gap-2.5">
+            {benefits.map((b) => (
+              <span
+                key={b.label}
+                className="inline-flex items-center gap-2 rounded-full bg-white border-2 border-ink px-4 py-2 font-semibold text-sm text-ink shadow-[2px_2px_0_#0A0F0D]"
+              >
+                <span aria-hidden>{b.icon}</span>
+                {b.label}
+              </span>
+            ))}
+          </div>
 
-          <div className="mt-8">
+          <div className="mt-9">
             <Link
               to="/#contact"
-              data-hiss
               data-cursor={t("Go !", "Go!")}
-              className="group inline-flex items-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-lg px-7 py-3.5 border-[3px] border-ink shadow-[5px_5px_0_#000] hover:shadow-[0_0_0_#000] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
+              className="group inline-flex items-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-lg px-7 py-3.5 border-[3px] border-ink shadow-[5px_5px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-200"
             >
               {t("On refait le vôtre ?", "Shall we redo yours?")}
               <span className="group-hover:translate-x-1 transition-transform">→</span>
