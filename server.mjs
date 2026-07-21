@@ -550,6 +550,79 @@ app.delete("/api/admin/posts/:id", (req, res) => {
   res.json({ ok: true });
 });
 
+/* ── Google Analytics (GA4 Data API) ──────────────────────────
+   Affiche les stats GA dans le back-office. Nécessite :
+   - GA_PROPERTY_ID  (ex. 546253445)
+   - GA_SA_JSON      (le JSON complet d'un compte de service ayant accès
+                      « Lecteur » à la propriété GA)
+   L'authentification se fait par JWT signé (RS256), sans dépendance externe. */
+const GA_PROPERTY_ID = process.env.GA_PROPERTY_ID || "";
+const GA_SA_JSON = process.env.GA_SA_JSON || "";
+let gaTok = { token: null, exp: 0 };
+
+async function gaAccessToken() {
+  const sa = JSON.parse(GA_SA_JSON);
+  const now = Math.floor(Date.now() / 1000);
+  const seg = (o) => Buffer.from(JSON.stringify(o)).toString("base64url");
+  const input = `${seg({ alg: "RS256", typ: "JWT" })}.${seg({
+    iss: sa.client_email,
+    scope: "https://www.googleapis.com/auth/analytics.readonly",
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now,
+  })}`;
+  const sig = crypto.createSign("RSA-SHA256").update(input).sign(sa.private_key).toString("base64url");
+  const r = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion: `${input}.${sig}` }),
+  });
+  const d = await r.json();
+  if (!d.access_token) throw new Error(d.error_description || "auth GA échouée");
+  return d.access_token;
+}
+async function gaReport(token, body) {
+  const r = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${GA_PROPERTY_ID}:runReport`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message || "GA report");
+  return d;
+}
+const DR = [{ startDate: "28daysAgo", endDate: "today" }];
+
+app.get("/api/admin/analytics", async (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  if (!GA_PROPERTY_ID || !GA_SA_JSON) return res.json({ configured: false });
+  try {
+    if (!gaTok.token || Date.now() > gaTok.exp) {
+      gaTok.token = await gaAccessToken();
+      gaTok.exp = Date.now() + 3300_000;
+    }
+    const t = gaTok.token;
+    const [totals, byDay, pages, countries] = await Promise.all([
+      gaReport(t, { dateRanges: DR, metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "screenPageViews" }] }),
+      gaReport(t, { dateRanges: [{ startDate: "13daysAgo", endDate: "today" }], dimensions: [{ name: "date" }], metrics: [{ name: "activeUsers" }], orderBys: [{ dimension: { dimensionName: "date" } }] }),
+      gaReport(t, { dateRanges: DR, dimensions: [{ name: "pageTitle" }], metrics: [{ name: "screenPageViews" }], orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }], limit: 8 }),
+      gaReport(t, { dateRanges: DR, dimensions: [{ name: "country" }], metrics: [{ name: "activeUsers" }], orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }], limit: 6 }),
+    ]);
+    const mv = (rep, i = 0) => Number(rep.rows?.[0]?.metricValues?.[i]?.value || 0);
+    res.json({
+      configured: true,
+      users: mv(totals, 0),
+      sessions: mv(totals, 1),
+      pageviews: mv(totals, 2),
+      byDay: (byDay.rows || []).map((r) => ({ date: r.dimensionValues[0].value, v: Number(r.metricValues[0].value) })),
+      pages: (pages.rows || []).map((r) => ({ label: r.dimensionValues[0].value, v: Number(r.metricValues[0].value) })),
+      countries: (countries.rows || []).map((r) => ({ label: r.dimensionValues[0].value, v: Number(r.metricValues[0].value) })),
+    });
+  } catch (e) {
+    res.status(502).json({ configured: true, error: String(e.message || e).slice(0, 200) });
+  }
+});
+
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
