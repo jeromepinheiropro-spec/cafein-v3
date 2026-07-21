@@ -16,6 +16,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = process.env.DATA_DIR || (fs.existsSync("/data") ? "/data" : path.join(__dirname, "data"));
 const FILE = path.join(DATA_DIR, "comments.json");
 const CONTACT_FILE = path.join(DATA_DIR, "contacts.json");
+const POSTS_FILE = path.join(DATA_DIR, "posts.json");
+const AUDITS_FILE = path.join(DATA_DIR, "audits.json");
 const ADMIN_KEY = process.env.ADMIN_KEY || "";
 const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
 const CONTACT_TO = process.env.CONTACT_TO || "hello@cafein.lu";
@@ -386,7 +388,9 @@ app.post("/api/audit", async (req, res) => {
 
   if (AUDIT_MOCK) {
     await new Promise((r) => setTimeout(r, 1600));
-    return res.json({ ok: true, url, mock: true, ...mockScores(url) });
+    const s = mockScores(url);
+    logAudit({ url, ...s, ip });
+    return res.json({ ok: true, url, mock: true, ...s });
   }
 
   const cats = ["performance", "seo", "accessibility", "best-practices"];
@@ -410,14 +414,15 @@ app.post("/api/audit", async (req, res) => {
     }
     const c = data.lighthouseResult?.categories || {};
     const pct = (x) => (x?.score == null ? null : Math.round(x.score * 100));
-    return res.json({
-      ok: true,
-      url: data.lighthouseResult?.finalDisplayedUrl || url,
+    const finalUrl = data.lighthouseResult?.finalDisplayedUrl || url;
+    const s = {
       performance: pct(c.performance),
       seo: pct(c.seo),
       accessibility: pct(c.accessibility),
       bestPractices: pct(c["best-practices"]),
-    });
+    };
+    logAudit({ url: finalUrl, ...s, ip });
+    return res.json({ ok: true, url: finalUrl, ...s });
   } catch (e) {
     const aborted = e?.name === "AbortError";
     return res.status(aborted ? 504 : 502).json({
@@ -427,6 +432,122 @@ app.post("/api/audit", async (req, res) => {
   } finally {
     clearTimeout(timer);
   }
+});
+
+/* ── Helpers admin ─────────────────────────────────────────────── */
+function isAdmin(req) {
+  return ADMIN_KEY && req.headers["x-admin-key"] === ADMIN_KEY;
+}
+function blogSlug(s) {
+  return (
+    String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+      .slice(0, 70) || "article"
+  );
+}
+
+/* ── Journal des audits : chaque URL testée dans l'outil ───────── */
+function loadAudits() {
+  try {
+    return JSON.parse(fs.readFileSync(AUDITS_FILE, "utf8"));
+  } catch {
+    return [];
+  }
+}
+function logAudit({ url, performance, seo, accessibility, bestPractices, ip }) {
+  let list = loadAudits();
+  list.push({ id: crypto.randomUUID(), url, performance, seo, accessibility, bestPractices, date: new Date().toISOString(), ip });
+  if (list.length > 3000) list = list.slice(-3000);
+  fs.writeFileSync(AUDITS_FILE, JSON.stringify(list, null, 2));
+}
+app.get("/api/admin/audits", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  res.json(loadAudits());
+});
+
+/* ── Blog : CMS piloté depuis le back-office ───────────────────── */
+function loadPosts() {
+  try {
+    return JSON.parse(fs.readFileSync(POSTS_FILE, "utf8"));
+  } catch {
+    return [];
+  }
+}
+function savePosts(list) {
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(list, null, 2));
+}
+
+/* Public : la liste ne renvoie que les articles publiés, sans le corps. */
+app.get("/api/posts", (_req, res) => {
+  const posts = loadPosts()
+    .filter((p) => p.published)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .map(({ body, ...rest }) => rest);
+  res.json(posts);
+});
+app.get("/api/posts/:slug", (req, res) => {
+  const p = loadPosts().find((x) => x.slug === req.params.slug && x.published);
+  if (!p) return res.status(404).json({ error: "Introuvable." });
+  res.json(p);
+});
+
+/* Admin : gestion complète (liste, création, édition, suppression). */
+app.get("/api/admin/posts", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  res.json(loadPosts().sort((a, b) => new Date(b.date) - new Date(a.date)));
+});
+app.post("/api/admin/posts", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const b = req.body || {};
+  const posts = loadPosts();
+  const title = String(b.title || "").trim().slice(0, 160) || "Sans titre";
+  const base = blogSlug(b.slug || title);
+  let slug = base,
+    n = 2;
+  while (posts.some((p) => p.slug === slug)) slug = `${base}-${n++}`;
+  const post = {
+    id: crypto.randomUUID(),
+    slug,
+    title,
+    tag: String(b.tag || "").trim().slice(0, 40),
+    excerpt: String(b.excerpt || "").trim().slice(0, 400),
+    body: String(b.body || "").slice(0, 40000),
+    cover: String(b.cover || "").trim().slice(0, 500),
+    lang: b.lang === "en" ? "en" : "fr",
+    published: !!b.published,
+    date: b.date || new Date().toISOString(),
+    updated: new Date().toISOString(),
+  };
+  posts.push(post);
+  savePosts(posts);
+  res.status(201).json(post);
+});
+app.put("/api/admin/posts/:id", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const posts = loadPosts();
+  const p = posts.find((x) => x.id === req.params.id);
+  if (!p) return res.status(404).json({ error: "Introuvable." });
+  const b = req.body || {};
+  if (b.title != null) p.title = String(b.title).trim().slice(0, 160) || "Sans titre";
+  if (b.tag != null) p.tag = String(b.tag).trim().slice(0, 40);
+  if (b.excerpt != null) p.excerpt = String(b.excerpt).trim().slice(0, 400);
+  if (b.body != null) p.body = String(b.body).slice(0, 40000);
+  if (b.cover != null) p.cover = String(b.cover).trim().slice(0, 500);
+  if (b.lang != null) p.lang = b.lang === "en" ? "en" : "fr";
+  if (b.published != null) p.published = !!b.published;
+  if (b.date != null) p.date = b.date;
+  p.updated = new Date().toISOString();
+  savePosts(posts);
+  res.json(p);
+});
+app.delete("/api/admin/posts/:id", (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  savePosts(loadPosts().filter((x) => x.id !== req.params.id));
+  res.json({ ok: true });
 });
 
 /* Site statique + fallback SPA */
