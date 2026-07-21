@@ -5,9 +5,10 @@ import { Link } from "../lib/link.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
 /*
-  « Votre site en direct » — le visiteur tape le nom de sa boîte, choisit un
-  secteur et une couleur : un aperçu de SON site apparaît dans un navigateur,
-  en temps réel. La preuve, avant même le premier échange.
+  « Imaginez votre site en direct » — le visiteur tape le nom de sa boîte,
+  choisit un secteur, une couleur et une ambiance (clair / sombre) : un aperçu
+  de SON site apparaît dans un navigateur, en temps réel. La preuve, avant même
+  le premier échange.
 */
 
 const SECTORS = [
@@ -51,6 +52,38 @@ const SECTORS = [
     subFr: "Un site clair qui inspire confiance et prend des RDV.", subEn: "A clear site that builds trust and books meetings.",
     ctaFr: "Prendre rendez-vous", ctaEn: "Book a meeting",
   },
+  {
+    id: "immo",
+    fr: "Immobilier", en: "Real estate",
+    navFr: ["Accueil", "Biens", "Estimer"], navEn: ["Home", "Listings", "Estimate"],
+    tagFr: "Trouvez le bon toit.", tagEn: "Find the right roof.",
+    subFr: "Vos biens mis en valeur, contacts qualifiés en ligne.", subEn: "Your listings showcased, qualified leads online.",
+    ctaFr: "Voir les biens", ctaEn: "See listings",
+  },
+  {
+    id: "beaute",
+    fr: "Beauté & soins", en: "Beauty & care",
+    navFr: ["Accueil", "Prestations", "Réserver"], navEn: ["Home", "Services", "Book"],
+    tagFr: "Prenez soin de vous.", tagEn: "Take care of yourself.",
+    subFr: "Prise de rendez-vous en ligne, en un instant.", subEn: "Online booking, in an instant.",
+    ctaFr: "Prendre RDV", ctaEn: "Book now",
+  },
+  {
+    id: "event",
+    fr: "Événementiel", en: "Events",
+    navFr: ["Accueil", "Événements", "Contact"], navEn: ["Home", "Events", "Contact"],
+    tagFr: "Des moments inoubliables.", tagEn: "Unforgettable moments.",
+    subFr: "Vos événements mis en scène, billetterie intégrée.", subEn: "Your events staged, ticketing built in.",
+    ctaFr: "Voir l'agenda", ctaEn: "See the agenda",
+  },
+  {
+    id: "tech",
+    fr: "Startup tech", en: "Tech startup",
+    navFr: ["Accueil", "Produit", "Démo"], navEn: ["Home", "Product", "Demo"],
+    tagFr: "L'avenir, maintenant.", tagEn: "The future, now.",
+    subFr: "Un produit clair, une promesse qui convertit.", subEn: "A clear product, a promise that converts.",
+    ctaFr: "Demander une démo", ctaEn: "Request a demo",
+  },
 ];
 
 const COLORS = [
@@ -60,6 +93,9 @@ const COLORS = [
   { id: "blue", hex: "#4F8DF7" },
   { id: "pink", hex: "#F26D9E" },
   { id: "violet", hex: "#8B7CF6" },
+  { id: "red", hex: "#F2545B" },
+  { id: "teal", hex: "#17BEBB" },
+  { id: "lime", hex: "#8CC63F" },
 ];
 
 const EXAMPLES = ["Le Comptoir", "Studio Nova", "Fleur & Co", "Atelier Prieur", "Nordik", "Maison Belva"];
@@ -73,18 +109,32 @@ function slugify(s) {
     .slice(0, 22) || "votre-marque";
 }
 
-/* Le mini-site rendu dans le navigateur, avec la couleur d'accent choisie */
-function Preview({ name, sector, accent, lang }) {
+/* Le mini-site rendu dans le navigateur, avec la couleur d'accent et
+   l'ambiance (claire ou sombre) choisies. */
+function Preview({ name, sector, accent, lang, theme = "light" }) {
+  const dark = theme === "dark";
   const nav = lang === "en" ? sector.navEn : sector.navFr;
   const tag = lang === "en" ? sector.tagEn : sector.tagFr;
   const sub = lang === "en" ? sector.subEn : sector.subFr;
   const cta = lang === "en" ? sector.ctaEn : sector.ctaFr;
   const initial = (name.trim()[0] || "•").toUpperCase();
 
+  const bg = dark ? "bg-[#12100E]" : "bg-white";
+  const title = dark ? "text-cream" : "text-ink";
+  const muted = dark ? "text-cream/55" : "text-ink/55";
+  const line = dark ? "border-white/12" : "border-ink/10";
+  const ghost = dark ? "text-cream/70 border-white/20" : "text-ink/60 border-ink/15";
+
   return (
-    <div className="bg-white text-ink">
+    <motion.div
+      key={theme}
+      initial={{ opacity: 0.4 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.35 }}
+      className={`${bg} ${title}`}
+    >
       {/* barre de nav du site aperçu */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-ink/10">
+      <div className={`flex items-center justify-between px-4 py-3 border-b ${line}`}>
         <div className="flex items-center gap-2 min-w-0">
           <span
             className="grid place-items-center w-6 h-6 rounded-lg text-white font-display font-extrabold text-xs shrink-0"
@@ -94,7 +144,7 @@ function Preview({ name, sector, accent, lang }) {
           </span>
           <span className="font-display font-extrabold text-sm truncate">{name}</span>
         </div>
-        <div className="hidden sm:flex items-center gap-3 font-medium text-[11px] text-ink/55">
+        <div className={`hidden sm:flex items-center gap-3 font-medium text-[11px] ${muted}`}>
           {nav.slice(0, 2).map((n) => (
             <span key={n}>{n}</span>
           ))}
@@ -117,9 +167,9 @@ function Preview({ name, sector, accent, lang }) {
         </span>
         <h3 className="font-display font-extrabold text-xl md:text-3xl leading-[1.05] tracking-tight">
           {name}
-          <span style={{ color: accent }}> — {tag}</span>
+          <span className="block" style={{ color: accent }}>{tag}</span>
         </h3>
-        <p className="mt-2.5 text-ink/55 font-medium text-xs md:text-sm max-w-sm">{sub}</p>
+        <p className={`mt-2.5 font-medium text-xs md:text-sm max-w-sm ${muted}`}>{sub}</p>
         <div className="mt-4 flex items-center gap-2.5">
           <motion.span
             key={accent + cta}
@@ -131,7 +181,7 @@ function Preview({ name, sector, accent, lang }) {
             {cta}
             <ArrowUpRight className="w-3.5 h-3.5" />
           </motion.span>
-          <span className="rounded-full px-4 py-2 border border-ink/15 font-semibold text-xs text-ink/60">
+          <span className={`rounded-full px-4 py-2 border font-semibold text-xs ${ghost}`}>
             {lang === "en" ? "Learn more" : "En savoir plus"}
           </span>
         </div>
@@ -139,15 +189,15 @@ function Preview({ name, sector, accent, lang }) {
         {/* 3 cartes déco */}
         <div className="mt-6 grid grid-cols-3 gap-2.5">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="rounded-xl border border-ink/10 p-2.5">
+            <div key={i} className={`rounded-xl border p-2.5 ${line}`}>
               <div className="w-6 h-6 rounded-md mb-2" style={{ backgroundColor: accent, opacity: 0.85 - i * 0.22 }} />
-              <div className="h-1.5 rounded bg-ink/15 mb-1.5" />
-              <div className="h-1.5 w-2/3 rounded bg-ink/10" />
+              <div className={`h-1.5 rounded mb-1.5 ${dark ? "bg-white/20" : "bg-ink/15"}`} />
+              <div className={`h-1.5 w-2/3 rounded ${dark ? "bg-white/12" : "bg-ink/10"}`} />
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -157,6 +207,7 @@ export default function SiteBuilder() {
   const [name, setName] = useState("");
   const [sectorId, setSectorId] = useState("resto");
   const [accent, setAccent] = useState("#1FCE8A");
+  const [theme, setTheme] = useState("light");
   const [exIdx, setExIdx] = useState(0);
 
   const sector = useMemo(() => SECTORS.find((s) => s.id === sectorId) || SECTORS[0], [sectorId]);
@@ -184,14 +235,14 @@ export default function SiteBuilder() {
         <div>
           <SectionLabel>{t("( Votre site, en direct )", "( Your site, live )")}</SectionLabel>
           <h2 className="mt-4 font-display font-extrabold text-[clamp(2.2rem,5vw,4rem)] leading-[0.95] text-ink tracking-tight">
-            {t("Voyez votre site", "See your site")}
+            {t("Imaginez votre site", "Imagine your site")}
             <br />
             <span className="squiggle">{t("en 10 secondes", "in 10 seconds")}</span>
           </h2>
           <p className="mt-5 text-lg text-ink/65 font-medium max-w-md leading-relaxed">
             {t(
-              "Tapez le nom de votre entreprise, choisissez une ambiance : un aperçu prend vie en direct. Juste un avant-goût — votre vrai site ira bien plus loin.",
-              "Type your business name, pick a vibe: a preview comes to life instantly. Just a taste — your real site will go much further.",
+              "Tapez le nom de votre entreprise, choisissez une ambiance : un aperçu prend vie en direct. Juste un avant-goût. Votre vrai site ira bien plus loin.",
+              "Type your business name, pick a vibe: a preview comes to life instantly. Just a taste. Your real site will go much further.",
             )}
           </p>
 
@@ -232,26 +283,53 @@ export default function SiteBuilder() {
             </div>
           </div>
 
-          {/* couleur */}
-          <div className="mt-6">
-            <p className="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-ink/45 mb-2.5">
-              {t("Votre couleur", "Your colour")}
-            </p>
-            <div className="flex flex-wrap gap-2.5">
-              {COLORS.map((c) => {
-                const on = c.hex === accent;
-                return (
-                  <button
-                    key={c.id}
-                    onClick={() => setAccent(c.hex)}
-                    aria-label={c.id}
-                    className={`w-9 h-9 rounded-full border-[3px] border-ink transition-transform ${on ? "scale-110 shadow-[3px_3px_0_#0A0F0D]" : "hover:scale-105"}`}
-                    style={{ backgroundColor: c.hex }}
-                  >
-                    {on && <Spark className="w-4 h-4 text-white mx-auto" />}
-                  </button>
-                );
-              })}
+          {/* couleur + ambiance */}
+          <div className="mt-6 flex flex-wrap gap-x-10 gap-y-6">
+            <div>
+              <p className="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-ink/45 mb-2.5">
+                {t("Votre couleur", "Your colour")}
+              </p>
+              <div className="flex flex-wrap gap-2.5 max-w-[16rem]">
+                {COLORS.map((c) => {
+                  const on = c.hex === accent;
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => setAccent(c.hex)}
+                      aria-label={c.id}
+                      className={`w-9 h-9 rounded-full border-[3px] border-ink transition-transform ${on ? "scale-110 shadow-[3px_3px_0_#0A0F0D]" : "hover:scale-105"}`}
+                      style={{ backgroundColor: c.hex }}
+                    >
+                      {on && <Spark className="w-4 h-4 text-white mx-auto" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <p className="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-ink/45 mb-2.5">
+                {t("Ambiance", "Vibe")}
+              </p>
+              <div className="inline-flex rounded-full border-2 border-ink overflow-hidden shadow-[3px_3px_0_#0A0F0D]">
+                {[
+                  { id: "light", fr: "Clair", en: "Light" },
+                  { id: "dark", fr: "Sombre", en: "Dark" },
+                ].map((th) => {
+                  const on = theme === th.id;
+                  return (
+                    <button
+                      key={th.id}
+                      onClick={() => setTheme(th.id)}
+                      className={`px-4 py-2 font-semibold text-sm transition-colors ${
+                        on ? "bg-ink text-cream" : "bg-white text-ink hover:bg-cream-2"
+                      }`}
+                    >
+                      {lang === "en" ? th.en : th.fr}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -268,7 +346,7 @@ export default function SiteBuilder() {
               </Link>
             </Magnetic>
             <p className="mt-3 font-medium text-sm text-ink/45">
-              {t("Aperçu indicatif — le vôtre sera sur mesure.", "Indicative preview — yours will be bespoke.")}
+              {t("Aperçu indicatif. Le vôtre sera sur mesure.", "Indicative preview. Yours will be bespoke.")}
             </p>
           </div>
         </div>
@@ -295,10 +373,10 @@ export default function SiteBuilder() {
               </div>
             </div>
             {/* l'aperçu */}
-            <Preview name={shown} sector={sector} accent={accent} lang={lang} />
+            <Preview name={shown} sector={sector} accent={accent} lang={lang} theme={theme} />
           </motion.div>
 
-          {/* tampon "c'est vous !" */}
+          {/* tampon "bientôt le vôtre" */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5, rotate: -14 }}
             whileInView={{ opacity: 1, scale: 1, rotate: -8 }}

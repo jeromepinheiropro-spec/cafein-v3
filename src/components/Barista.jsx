@@ -122,14 +122,19 @@ export default function Barista() {
             whileHover={{ scale: 1.06, rotate: -3 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 220, damping: 16 }}
-            className="fixed bottom-5 left-5 z-[9150] flex items-center gap-2.5 rounded-full bg-espresso text-cream border-[3px] border-ink pl-3 pr-4 py-2.5 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="fixed bottom-5 left-5 z-[9150] flex items-center rounded-full bg-espresso text-cream border-[3px] border-ink pl-[4.9rem] pr-5 py-3 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
-            <span className="grid place-items-center w-9 h-9 rounded-full bg-cream border-2 border-ink shrink-0 overflow-hidden">
-              <AvatarBarista className="w-8 h-8" />
-            </span>
-            <span className="font-display font-bold text-sm leading-none">
+            {/* mascotte qui dépasse en haut à gauche */}
+            <motion.span
+              animate={{ y: [0, -3.5, 0] }}
+              transition={{ repeat: Infinity, duration: 3.2, ease: "easeInOut" }}
+              className="absolute left-0 -top-7 w-[4.7rem] h-[4.7rem] pointer-events-none drop-shadow-[2px_3px_0_rgba(10,15,13,0.3)]"
+            >
+              <AvatarBarista className="w-full h-full" />
+            </motion.span>
+            <span className="font-display font-bold text-sm leading-none text-left">
               {t("Un café ?", "A coffee?")}
-              <span className="block font-mono text-[9px] tracking-widest uppercase text-mint/90 mt-0.5">
+              <span className="block font-mono text-[9px] tracking-widest uppercase text-mint/90 mt-1">
                 {t("Barista IA", "AI barista")}
               </span>
             </span>
