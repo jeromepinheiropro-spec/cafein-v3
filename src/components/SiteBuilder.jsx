@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel, Magnetic, ArrowUpRight, Spark } from "../lib/ui.jsx";
+import { CountUp } from "./Stats.jsx";
 import { Link } from "../lib/link.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
@@ -201,45 +202,143 @@ function Preview({ name, sector, accent, lang, theme = "light" }) {
   );
 }
 
-/* ── Lead-capture honnête : on audite le VRAI site du visiteur ─────
-   Pas de maquette auto envoyée par email (ça sonnerait faux). On offre
-   un vrai regard d'expert sur le site existant, et on capture l'email
-   au moment où l'intention est la plus forte. Passe par /api/contact. */
+/* Couleur d'un score PageSpeed selon les seuils officiels de Google :
+   0-49 rouge, 50-89 orange, 90-100 vert. */
+const scoreColor = (s) => (s == null ? "#8A857C" : s >= 90 ? "#1FCE8A" : s >= 50 ? "#F4A259" : "#E5623E");
+
+/* Jauge circulaire animée pour un score /100 (fond sombre). */
+function Gauge({ score, size = 128, label }) {
+  const color = scoreColor(score);
+  const r = size / 2 - 9;
+  const C = 2 * Math.PI * r;
+  const off = score == null ? C : C * (1 - score / 100);
+  return (
+    <div className="flex flex-col items-center gap-2.5">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full -rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.13)" strokeWidth="7" />
+          <motion.circle
+            cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
+            strokeDasharray={C}
+            initial={{ strokeDashoffset: C }}
+            animate={{ strokeDashoffset: off }}
+            transition={{ duration: 1.3, delay: 0.15, ease: "easeOut" }}
+          />
+        </svg>
+        <span
+          className="absolute inset-0 grid place-items-center font-display font-extrabold text-cream"
+          style={{ fontSize: size * 0.3 }}
+        >
+          {score == null ? "—" : <CountUp to={score} />}
+        </span>
+      </div>
+      <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-cream/60 text-center leading-tight">{label}</span>
+    </div>
+  );
+}
+
+/* ── Audit instantané : le visiteur tape son URL, on affiche son VRAI
+   score PageSpeed (Google), puis on capture le lead avec ses chiffres.
+   La meilleure démo possible pour une agence web/SEO. */
 function AuditForm({ lang, t, businessName }) {
   const [url, setUrl] = useState("");
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | sending | done | error
+  const [phase, setPhase] = useState("idle"); // idle | scanning | result | error
+  const [scores, setScores] = useState(null);
   const [err, setErr] = useState("");
+  const [email, setEmail] = useState("");
+  const [leadStatus, setLeadStatus] = useState("idle"); // idle | sending | done
+  const [leadErr, setLeadErr] = useState("");
+  const [tick, setTick] = useState(0);
 
-  const submit = async (e) => {
+  const scanMsgs = [
+    t("On mesure la vitesse de chargement…", "Measuring load speed…"),
+    t("On inspecte la structure SEO…", "Inspecting SEO structure…"),
+    t("On teste la version mobile…", "Testing the mobile version…"),
+    t("On compile votre score…", "Compiling your score…"),
+  ];
+
+  useEffect(() => {
+    if (phase !== "scanning") return;
+    const id = setInterval(() => setTick((n) => n + 1), 2800);
+    return () => clearInterval(id);
+  }, [phase]);
+
+  const analyze = async (e) => {
     e.preventDefault();
-    if (status === "sending") return;
-    const mail = email.trim();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) {
-      setErr(t("Un email valide, s'il vous plaît.", "A valid email, please."));
+    if (phase === "scanning") return;
+    if (!url.trim()) {
+      setErr(t("Entrez l'adresse de votre site.", "Enter your site's address."));
       return;
     }
     setErr("");
-    setStatus("sending");
-    const site = url.trim() || t("(non précisé)", "(not provided)");
-    const who = businessName.trim() || t("Visiteur du site", "Site visitor");
+    setTick(0);
+    setPhase("scanning");
+    try {
+      const r = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || !data.ok) {
+        setErr(data.detail || t("Analyse impossible pour le moment.", "Analysis unavailable right now."));
+        setPhase("error");
+        return;
+      }
+      setScores(data);
+      setPhase("result");
+    } catch {
+      setErr(t("Connexion perdue. Réessayez.", "Connection lost. Try again."));
+      setPhase("error");
+    }
+  };
+
+  const submitLead = async (e) => {
+    e.preventDefault();
+    if (leadStatus === "sending") return;
+    const mail = email.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) {
+      setLeadErr(t("Un email valide, s'il vous plaît.", "A valid email, please."));
+      return;
+    }
+    setLeadErr("");
+    setLeadStatus("sending");
+    let host = scores.url;
+    try { host = new URL(scores.url).hostname; } catch { /* garde l'URL brute */ }
+    const who = businessName.trim() || host;
     const message =
       (lang === "en"
-        ? `Free audit request from the SiteBuilder.\nCurrent website: ${site}\nBusiness: ${who}`
-        : `Demande d'audit gratuit depuis le SiteBuilder.\nSite actuel : ${site}\nEntreprise : ${who}`);
+        ? `Detailed audit request from the live audit.\nSite: ${scores.url}\nMeasured scores (mobile) — Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibility ${scores.accessibility}/100, Best practices ${scores.bestPractices}/100.\nBusiness: ${who}`
+        : `Demande d'audit détaillé depuis l'audit instantané.\nSite : ${scores.url}\nScores mesurés (mobile) — Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibilité ${scores.accessibility}/100, Bonnes pratiques ${scores.bestPractices}/100.\nEntreprise : ${who}`);
     try {
       const r = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nom: `${who} — ${t("Audit", "Audit")}`, email: mail, message, lang }),
+        body: JSON.stringify({ nom: `${host} — ${t("Audit", "Audit")}`, email: mail, message, lang }),
       });
       if (!r.ok) throw new Error("bad");
-      setStatus("done");
+      setLeadStatus("done");
     } catch {
-      setStatus("error");
-      setErr(t("Oups, l'envoi a échoué. Écrivez-nous à hello@cafein.lu.", "Oops, sending failed. Reach us at hello@cafein.lu."));
+      setLeadErr(t("Envoi échoué. Écrivez-nous à hello@cafein.lu.", "Sending failed. Reach us at hello@cafein.lu."));
+      setLeadStatus("idle");
     }
   };
+
+  const reset = () => {
+    setPhase("idle");
+    setScores(null);
+    setErr("");
+  };
+
+  const perf = scores?.performance;
+  const verdict =
+    perf == null
+      ? { title: "", sub: "" }
+      : perf < 50
+        ? { title: t("Il y a du potentiel inexploité.", "There's untapped potential."), sub: t("Un site lent fait fuir les visiteurs et Google. Bonne nouvelle : c'est exactement ce qu'on redresse.", "A slow site loses visitors and Google. Good news: that's exactly what we fix.") }
+        : perf < 90
+          ? { title: t("Pas mal, mais on peut viser plus haut.", "Not bad, but we can aim higher."), sub: t("Quelques optimisations et vous passez dans le vert.", "A few optimisations and you're in the green.") }
+          : { title: t("Déjà solide, bravo !", "Already solid, well done!"), sub: t("On peaufine les derniers détails et on sécurise le SEO.", "We polish the last details and lock in the SEO.") };
 
   return (
     <motion.div
@@ -250,82 +349,191 @@ function AuditForm({ lang, t, businessName }) {
       className="mt-16 rounded-[1.6rem] border-[3px] border-ink bg-espresso text-cream shadow-[10px_10px_0_#0A0F0D] overflow-hidden"
     >
       <div className="grid md:grid-cols-2 gap-8 md:gap-10 p-8 md:p-12 items-center">
+        {/* colonne gauche : pitch */}
         <div>
           <span className="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-mint">
-            {t("Vous avez déjà un site ?", "Already have a site?")}
+            {t("Audit gratuit, en direct", "Free audit, live")}
           </span>
           <h3 className="mt-3 font-display font-extrabold text-2xl md:text-4xl leading-[1.02] tracking-tight">
-            {t("On l'audite. Gratuitement,", "We'll audit it. Free,")}
+            {t("Votre site vaut", "How does your site")}
             <br />
-            <span className="text-mint">{t("et franchement.", "and honestly.")}</span>
+            <span className="text-mint">{t("combien sur Google ?", "score on Google?")}</span>
           </h3>
           <p className="mt-4 text-cream/70 font-medium leading-relaxed max-w-md">
             {t(
-              "On regarde la vitesse, le référencement et la version mobile, et on vous dit sans détour ce qui mérite d'être gardé, corrigé ou refait. Un vrai retour d'humain, pas un rapport automatique.",
-              "We look at speed, search ranking and the mobile version, then tell you straight what's worth keeping, fixing or rebuilding. A real human take, not an automated report.",
+              "Tapez votre adresse : on interroge Google en direct et on affiche votre vrai score de performance et de référencement. Sans détour, sans rapport automatique bidon.",
+              "Type your address: we query Google live and show your real performance and SEO score. No spin, no fake automated report.",
             )}
+          </p>
+          <p className="mt-4 font-mono text-[10px] tracking-[0.2em] uppercase text-cream/40">
+            {t("Mesuré par Google PageSpeed Insights", "Measured by Google PageSpeed Insights")}
           </p>
         </div>
 
-        {status === "done" ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl bg-espresso-2 border-2 border-mint/40 p-7 text-center"
-          >
-            <span className="grid place-items-center w-12 h-12 mx-auto rounded-full bg-mint text-ink">
-              <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 13l5 5L20 7" />
-              </svg>
-            </span>
-            <p className="mt-4 font-display font-extrabold text-xl text-cream">
-              {t("C'est noté, merci !", "Got it, thanks!")}
-            </p>
-            <p className="mt-2 text-cream/65 font-medium text-sm">
-              {t("On regarde votre site et on revient vers vous sous 48h avec un retour franc.", "We'll look at your site and get back to you within 48h with honest feedback.")}
-            </p>
-          </motion.div>
-        ) : (
-          <form onSubmit={submit} className="space-y-3.5">
-            <div>
-              <label htmlFor="au-url" className="block font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-cream/50 mb-2">
-                {t("Adresse de votre site", "Your site's address")}
-              </label>
-              <input
-                id="au-url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value.slice(0, 120))}
-                placeholder={t("votre-site.lu", "your-site.lu")}
-                className="w-full rounded-xl bg-espresso-2 border-2 border-cream/20 px-4 py-3 font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
-              />
-            </div>
-            <div>
-              <label htmlFor="au-email" className="block font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-cream/50 mb-2">
-                {t("Votre email", "Your email")}
-              </label>
-              <input
-                id="au-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value.slice(0, 120))}
-                placeholder={t("vous@entreprise.lu", "you@company.lu")}
-                className="w-full rounded-xl bg-espresso-2 border-2 border-cream/20 px-4 py-3 font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
-              />
-            </div>
-            {err && <p className="font-medium text-sm text-caramel">{err}</p>}
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="group w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-base px-6 py-3.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-200 disabled:opacity-60"
-            >
-              {status === "sending" ? t("Envoi…", "Sending…") : t("Recevoir mon audit", "Get my audit")}
-              <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
-            </button>
-            <p className="font-medium text-xs text-cream/45 text-center">
-              {t("Gratuit, sans engagement. Réponse sous 48h.", "Free, no strings. Reply within 48h.")}
-            </p>
-          </form>
-        )}
+        {/* colonne droite : panneau interactif */}
+        <div>
+          <AnimatePresence mode="wait">
+            {/* ÉTAT 1 : saisie de l'URL */}
+            {phase === "idle" && (
+              <motion.form
+                key="idle"
+                onSubmit={analyze}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="space-y-3.5"
+              >
+                <label htmlFor="au-url" className="block font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-cream/50 mb-2">
+                  {t("Adresse de votre site", "Your site's address")}
+                </label>
+                <input
+                  id="au-url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value.slice(0, 120))}
+                  placeholder={t("votre-site.lu", "your-site.lu")}
+                  className="w-full rounded-xl bg-espresso-2 border-2 border-cream/20 px-4 py-3.5 font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
+                />
+                {err && <p className="font-medium text-sm text-caramel">{err}</p>}
+                <button
+                  type="submit"
+                  className="group w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-mint text-ink font-display font-bold text-base px-6 py-3.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-200"
+                >
+                  {t("Analyser mon site", "Analyse my site")}
+                  <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
+                </button>
+                <p className="font-medium text-xs text-cream/45 text-center">
+                  {t("Gratuit et instantané. L'analyse prend ~30 s.", "Free and instant. The scan takes ~30 s.")}
+                </p>
+              </motion.form>
+            )}
+
+            {/* ÉTAT 2 : analyse en cours */}
+            {phase === "scanning" && (
+              <motion.div
+                key="scanning"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="rounded-2xl bg-espresso-2 border-2 border-cream/15 p-8 text-center"
+              >
+                <div className="relative w-16 h-16 mx-auto">
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1.1, ease: "linear" }}
+                    className="absolute inset-0 rounded-full border-[3px] border-cream/15 border-t-mint"
+                  />
+                  <span className="absolute inset-0 grid place-items-center text-mint">☕</span>
+                </div>
+                <p className="mt-5 font-display font-bold text-lg text-cream">
+                  {scanMsgs[tick % scanMsgs.length]}
+                </p>
+                <p className="mt-1.5 font-mono text-[11px] tracking-wide text-cream/45 break-all">{url.trim()}</p>
+              </motion.div>
+            )}
+
+            {/* ÉTAT 3 : résultat + capture */}
+            {phase === "result" && scores && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+              >
+                {leadStatus === "done" ? (
+                  <div className="rounded-2xl bg-espresso-2 border-2 border-mint/40 p-7 text-center">
+                    <span className="grid place-items-center w-12 h-12 mx-auto rounded-full bg-mint text-ink">
+                      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 13l5 5L20 7" />
+                      </svg>
+                    </span>
+                    <p className="mt-4 font-display font-extrabold text-xl text-cream">{t("C'est parti, merci !", "You're all set, thanks!")}</p>
+                    <p className="mt-2 text-cream/65 font-medium text-sm">
+                      {t("On analyse votre site en détail et on revient vers vous sous 48h avec un plan concret.", "We'll dig into your site and come back within 48h with a concrete plan.")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl bg-espresso-2 border-2 border-cream/15 p-6">
+                    {/* score principal + secondaires */}
+                    <div className="flex items-center gap-5">
+                      <Gauge score={perf} size={116} label={t("Performance", "Performance")} />
+                      <div className="flex-1">
+                        <p className="font-display font-extrabold text-lg leading-tight text-cream">{verdict.title}</p>
+                        <p className="mt-1.5 text-cream/65 font-medium text-sm leading-snug">{verdict.sub}</p>
+                      </div>
+                    </div>
+                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-5">
+                      {[
+                        { s: scores.seo, l: "SEO" },
+                        { s: scores.accessibility, l: t("Accessib.", "Accessib.") },
+                        { s: scores.bestPractices, l: t("Bonnes prat.", "Best pract.") },
+                      ].map((g) => (
+                        <div key={g.l} className="flex flex-col items-center gap-1">
+                          <span className="font-display font-extrabold text-2xl" style={{ color: scoreColor(g.s) }}>
+                            {g.s == null ? "—" : g.s}
+                          </span>
+                          <span className="font-mono text-[9px] tracking-wider uppercase text-cream/50">{g.l}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* pitch + capture email */}
+                    <div className="mt-5 rounded-xl bg-mint/10 border border-mint/25 p-4">
+                      <p className="font-display font-bold text-mint text-sm">
+                        {t("On peut vous emmener à 95+.", "We can take you to 95+.")}
+                      </p>
+                      <form onSubmit={submitLead} className="mt-3 flex flex-col sm:flex-row gap-2">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value.slice(0, 120))}
+                          placeholder={t("vous@entreprise.lu", "you@company.lu")}
+                          className="flex-1 rounded-lg bg-espresso border-2 border-cream/20 px-3.5 py-2.5 text-sm font-medium text-cream placeholder-cream/30 focus:outline-none focus:border-mint transition-colors"
+                        />
+                        <button
+                          type="submit"
+                          disabled={leadStatus === "sending"}
+                          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-mint text-ink font-display font-bold text-sm px-4 py-2.5 border-2 border-ink hover:-translate-y-0.5 transition-transform disabled:opacity-60"
+                        >
+                          {leadStatus === "sending" ? t("Envoi…", "Sending…") : t("Recevoir le plan", "Get the plan")}
+                        </button>
+                      </form>
+                      {leadErr && <p className="mt-2 font-medium text-xs text-caramel">{leadErr}</p>}
+                      <p className="mt-2 font-medium text-[11px] text-cream/40">
+                        {t("Audit détaillé + recommandations. Gratuit, réponse sous 48h.", "Detailed audit + recommendations. Free, reply within 48h.")}
+                      </p>
+                    </div>
+
+                    <button onClick={reset} className="mt-3 w-full font-mono text-[11px] tracking-wide uppercase text-cream/45 hover:text-mint transition-colors">
+                      {t("↻ Analyser un autre site", "↻ Analyse another site")}
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* ÉTAT 4 : erreur */}
+            {phase === "error" && (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="rounded-2xl bg-espresso-2 border-2 border-caramel/40 p-7 text-center"
+              >
+                <p className="font-display font-bold text-lg text-cream">{t("Analyse impossible", "Analysis failed")}</p>
+                <p className="mt-2 text-cream/65 font-medium text-sm">{err}</p>
+                <div className="mt-5 flex flex-col gap-2">
+                  <button onClick={reset} className="rounded-full bg-mint text-ink font-display font-bold text-sm px-5 py-2.5 border-2 border-ink hover:-translate-y-0.5 transition-transform">
+                    {t("Réessayer", "Try again")}
+                  </button>
+                  <a href={lang === "en" ? "/en/#contact" : "/#contact"} className="font-mono text-[11px] tracking-wide uppercase text-cream/50 hover:text-mint transition-colors">
+                    {t("ou écrivez-nous directement", "or reach us directly")}
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.div>
   );
