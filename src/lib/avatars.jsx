@@ -72,31 +72,33 @@ export function AvatarFlo({ className = "w-full h-auto" }) {
 }
 
 /* ── Fève, le barista : mascotte dédiée au chat IA ───────────────
-   Même style illustré que l'équipe : une tasse à espresso coiffée d'un
-   béret de barista, moustache et petit sourire. */
+   Un mélange des trois de l'équipe, en tasse : les lunettes rondes de
+   Stan, le clin d'œil de Pinoo et le casque audio de Flo. */
 export function AvatarBarista({ className = "w-full h-auto" }) {
   return (
     <svg viewBox="0 0 200 200" className={className} aria-hidden>
       {/* soucoupe */}
       <ellipse cx="100" cy="172" rx="60" ry="12" fill="#141A17" opacity="0.12" />
-      {/* tasse */}
-      <path d="M50 84 h100 v42 a50 32 0 0 1 -100 0 z" fill="#F4A259" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
+      {/* tasse (couleur caramel façon gobelet de Pinoo) */}
+      <path d="M50 82 h100 v44 a50 33 0 0 1 -100 0 z" fill="#F4A259" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
       {/* anse */}
       <path d="M150 92 h14 a16 16 0 0 1 0 32 h-16" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
-      {/* béret de barista + pompon */}
-      <path d="M52 82 Q100 40 148 82 Z" fill="#1FCE8A" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
-      <path d="M48 82 h104" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
-      <circle cx="100" cy="44" r="6" fill="#1FCE8A" stroke="#141A17" strokeWidth="4" />
+      {/* casque audio de Flo : arceau + oreillettes */}
+      <path d="M56 92 Q100 42 144 92" fill="none" stroke="#141A17" strokeWidth="7" strokeLinecap="round" />
+      <rect x="49" y="92" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
+      <rect x="136" y="92" width="15" height="26" rx="7" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
       {/* joues */}
-      <circle cx="70" cy="116" r="5" fill="#E8623E" opacity="0.4" />
-      <circle cx="130" cy="116" r="5" fill="#E8623E" opacity="0.4" />
-      {/* yeux */}
-      <circle cx="84" cy="104" r="4.2" fill="#141A17" />
-      <circle cx="116" cy="104" r="4.2" fill="#141A17" />
-      {/* moustache */}
-      <path d="M82 120 q9 9 18 2 q9 7 18 -2" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-      {/* petit sourire */}
-      <path d="M92 132 q8 6 16 0" fill="none" stroke="#141A17" strokeWidth="4.5" strokeLinecap="round" />
+      <circle cx="73" cy="124" r="4.5" fill="#E8623E" opacity="0.4" />
+      <circle cx="127" cy="124" r="4.5" fill="#E8623E" opacity="0.4" />
+      {/* lunettes rondes de Stan */}
+      <circle cx="81" cy="110" r="12" fill="#fff" stroke="#141A17" strokeWidth="5" />
+      <circle cx="119" cy="110" r="12" fill="#fff" stroke="#141A17" strokeWidth="5" />
+      <line x1="93" y1="110" x2="107" y2="110" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
+      {/* œil gauche ouvert, œil droit qui fait le clin d'œil de Pinoo */}
+      <circle cx="81" cy="110" r="3.6" fill="#141A17" />
+      <path d="M113 110 q6 4 12 0" fill="none" stroke="#141A17" strokeWidth="4.5" strokeLinecap="round" />
+      {/* sourire */}
+      <path d="M86 132 q14 10 28 0" fill="none" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
     </svg>
   );
 }
