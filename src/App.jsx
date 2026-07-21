@@ -11,6 +11,7 @@ import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
 import Footer from "./components/Footer.jsx";
 import Barista from "./components/Barista.jsx";
+import CookieConsent from "./components/CookieConsent.jsx";
 
 import Home from "./pages/Home.jsx";
 import CreationSite from "./pages/CreationSite.jsx";
@@ -137,6 +138,7 @@ export default function App() {
       </main>
       <Footer />
       <Barista />
+      <CookieConsent />
     </div>
     </EggProvider>
     </LangProvider>
