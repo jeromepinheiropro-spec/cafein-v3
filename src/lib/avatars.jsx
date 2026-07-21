@@ -71,6 +71,36 @@ export function AvatarFlo({ className = "w-full h-auto" }) {
   );
 }
 
+/* ── Fève, le barista : mascotte dédiée au chat IA ───────────────
+   Même style illustré que l'équipe : une tasse à espresso coiffée d'un
+   béret de barista, moustache et petit sourire. */
+export function AvatarBarista({ className = "w-full h-auto" }) {
+  return (
+    <svg viewBox="0 0 200 200" className={className} aria-hidden>
+      {/* soucoupe */}
+      <ellipse cx="100" cy="172" rx="60" ry="12" fill="#141A17" opacity="0.12" />
+      {/* tasse */}
+      <path d="M50 84 h100 v42 a50 32 0 0 1 -100 0 z" fill="#F4A259" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
+      {/* anse */}
+      <path d="M150 92 h14 a16 16 0 0 1 0 32 h-16" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
+      {/* béret de barista + pompon */}
+      <path d="M52 82 Q100 40 148 82 Z" fill="#1FCE8A" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
+      <path d="M48 82 h104" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
+      <circle cx="100" cy="44" r="6" fill="#1FCE8A" stroke="#141A17" strokeWidth="4" />
+      {/* joues */}
+      <circle cx="70" cy="116" r="5" fill="#E8623E" opacity="0.4" />
+      <circle cx="130" cy="116" r="5" fill="#E8623E" opacity="0.4" />
+      {/* yeux */}
+      <circle cx="84" cy="104" r="4.2" fill="#141A17" />
+      <circle cx="116" cy="104" r="4.2" fill="#141A17" />
+      {/* moustache */}
+      <path d="M82 120 q9 9 18 2 q9 7 18 -2" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      {/* petit sourire */}
+      <path d="M92 132 q8 6 16 0" fill="none" stroke="#141A17" strokeWidth="4.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /* ── Méta mascotte : identité + réplique perso de chacun ──────────
    Utilisé par la mascotte flottante pour se présenter selon le
    personnage tiré au sort. `line` = [FR, EN]. */
