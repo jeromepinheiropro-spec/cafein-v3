@@ -5,6 +5,7 @@ import Hero from "../components/Hero.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Manifesto from "../components/Manifesto.jsx";
 import Services from "../components/Services.jsx";
+import SiteBuilder from "../components/SiteBuilder.jsx";
 import Stats from "../components/Stats.jsx";
 import Process from "../components/Process.jsx";
 import Showcase from "../components/Showcase.jsx";
@@ -28,6 +29,7 @@ export default function Home({ started }) {
       <Marquee />
       <Manifesto />
       <Services />
+      <SiteBuilder />
       <Stats />
       <Process />
       <Marquee tilt={2} dark />
