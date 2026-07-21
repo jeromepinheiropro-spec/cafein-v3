@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel, Magnetic, ArrowUpRight, Spark } from "../lib/ui.jsx";
 import { CountUp } from "./Stats.jsx";
+import { AvatarStan } from "../lib/avatars.jsx";
 import { Link } from "../lib/link.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
@@ -346,7 +347,7 @@ function AuditForm({ lang, t, businessName }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 90, damping: 16 }}
-      className="mt-16 rounded-[1.6rem] border-[3px] border-ink bg-espresso text-cream shadow-[10px_10px_0_#0A0F0D] overflow-hidden"
+      className="mb-16 rounded-[1.6rem] border-[3px] border-ink bg-espresso text-cream shadow-[10px_10px_0_#0A0F0D] overflow-hidden"
     >
       <div className="grid md:grid-cols-2 gap-8 md:gap-10 p-8 md:p-12 items-center">
         {/* colonne gauche : pitch */}
@@ -422,7 +423,13 @@ function AuditForm({ lang, t, businessName }) {
                     transition={{ repeat: Infinity, duration: 1.1, ease: "linear" }}
                     className="absolute inset-0 rounded-full border-[3px] border-cream/15 border-t-mint"
                   />
-                  <span className="absolute inset-0 grid place-items-center text-mint">☕</span>
+                  <motion.span
+                    animate={{ y: [0, -2, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                    className="absolute inset-0 grid place-items-center"
+                  >
+                    <AvatarStan className="w-9 h-9" />
+                  </motion.span>
                 </div>
                 <p className="mt-5 font-display font-bold text-lg text-cream">
                   {scanMsgs[tick % scanMsgs.length]}
@@ -452,34 +459,47 @@ function AuditForm({ lang, t, businessName }) {
                     </p>
                   </div>
                 ) : (
-                  <div className="rounded-2xl bg-espresso-2 border-2 border-cream/15 p-6">
-                    {/* score principal + secondaires */}
-                    <div className="flex items-center gap-5">
-                      <Gauge score={perf} size={116} label={t("Performance", "Performance")} />
-                      <div className="flex-1">
-                        <p className="font-display font-extrabold text-lg leading-tight text-cream">{verdict.title}</p>
-                        <p className="mt-1.5 text-cream/65 font-medium text-sm leading-snug">{verdict.sub}</p>
+                  <div className="rounded-2xl bg-espresso-2 border-[3px] border-ink p-6 shadow-[6px_6px_0_#0A0F0D]">
+                    {/* Stan présente le verdict dans une bulle, comme un vrai retour d'équipe */}
+                    <div className="flex items-start gap-3">
+                      <motion.span
+                        initial={{ scale: 0, rotate: -18 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 240, damping: 13 }}
+                        className="w-14 h-14 md:w-16 md:h-16 shrink-0 drop-shadow-[2px_3px_0_rgba(10,15,13,0.4)]"
+                      >
+                        <AvatarStan className="w-full h-full" />
+                      </motion.span>
+                      <div className="flex-1 rounded-2xl rounded-bl-md bg-white border-[2.5px] border-ink px-4 py-3 shadow-[3px_3px_0_#0A0F0D]">
+                        <span className="block font-mono text-[8px] tracking-[0.2em] uppercase text-mint-dark mb-1">{t("Stan · l'audit", "Stan · the audit")}</span>
+                        <p className="font-display font-extrabold text-sm text-ink leading-snug">{verdict.title}</p>
+                        <p className="mt-1 text-ink/60 font-medium text-xs leading-snug">{verdict.sub}</p>
                       </div>
                     </div>
-                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-5">
-                      {[
-                        { s: scores.seo, l: "SEO" },
-                        { s: scores.accessibility, l: t("Accessib.", "Accessib.") },
-                        { s: scores.bestPractices, l: t("Bonnes prat.", "Best pract.") },
-                      ].map((g) => (
-                        <div key={g.l} className="flex flex-col items-center gap-1">
-                          <span className="font-display font-extrabold text-2xl" style={{ color: scoreColor(g.s) }}>
-                            {g.s == null ? "—" : g.s}
-                          </span>
-                          <span className="font-mono text-[9px] tracking-wider uppercase text-cream/50">{g.l}</span>
-                        </div>
-                      ))}
+
+                    {/* les scores : perf en grand + 3 secondaires */}
+                    <div className="mt-6 flex items-center gap-4">
+                      <Gauge score={perf} size={104} label={t("Performance", "Performance")} />
+                      <div className="flex-1 grid grid-cols-3 gap-2 border-l-2 border-cream/10 pl-4">
+                        {[
+                          { s: scores.seo, l: "SEO" },
+                          { s: scores.accessibility, l: t("Accessib.", "Accessib.") },
+                          { s: scores.bestPractices, l: t("Bonnes prat.", "Best pract.") },
+                        ].map((g) => (
+                          <div key={g.l} className="flex flex-col items-center gap-1">
+                            <span className="font-display font-extrabold text-2xl" style={{ color: scoreColor(g.s) }}>
+                              {g.s == null ? "—" : g.s}
+                            </span>
+                            <span className="font-mono text-[9px] tracking-wider uppercase text-cream/50 text-center leading-tight">{g.l}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* pitch + capture email */}
                     <div className="mt-5 rounded-xl bg-mint/10 border border-mint/25 p-4">
                       <p className="font-display font-bold text-mint text-sm">
-                        {t("On peut vous emmener à 95+.", "We can take you to 95+.")}
+                        {t("On peut vous emmener plus haut.", "We can take you higher.")}
                       </p>
                       <form onSubmit={submitLead} className="mt-3 flex flex-col sm:flex-row gap-2">
                         <input
@@ -568,6 +588,12 @@ export default function SiteBuilder() {
         className="absolute top-1/2 right-0 -translate-y-1/2 w-[24rem] h-[24rem] rounded-full blur-[130px] pointer-events-none opacity-[0.09]"
         style={{ backgroundColor: accent }}
       />
+
+      {/* Audit instantané : on diagnostique le vrai site du visiteur, en premier */}
+      <div className="relative mx-auto max-w-7xl px-6 md:px-10">
+        <AuditForm lang={lang} t={t} businessName={name} />
+      </div>
+
       <div className="relative mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         {/* colonne gauche : le pitch + les contrôles */}
         <div>
@@ -725,11 +751,6 @@ export default function SiteBuilder() {
             {t("bientôt le vôtre", "yours soon")}
           </motion.div>
         </div>
-      </div>
-
-      {/* Lead-capture : on audite le vrai site du visiteur */}
-      <div className="relative mx-auto max-w-7xl px-6 md:px-10">
-        <AuditForm lang={lang} t={t} businessName={name} />
       </div>
     </section>
   );
