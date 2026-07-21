@@ -161,6 +161,13 @@ export default function Contact() {
             >
               hello@cafein.lu
             </a>
+            <a
+              href="tel:+352616254467"
+              data-cursor="+352 6 16 25 44 67"
+              className="rounded-full border border-cream/20 px-4 py-2 hover:border-mint hover:text-mint transition-colors"
+            >
+              +352 6 16 25 44 67
+            </a>
             <span className="rounded-full border border-cream/20 px-4 py-2">{t("Réponse rapide", "Quick reply")}</span>
           </motion.div>
         </div>
