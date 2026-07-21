@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT, useLang } from "../lib/lang.jsx";
-import { Cup } from "../lib/ui.jsx";
+import { AvatarBarista } from "../lib/avatars.jsx";
 
 /*
   Barista IA — un petit chat façon barista qui répond aux questions simples
@@ -124,8 +124,8 @@ export default function Barista() {
             transition={{ type: "spring", stiffness: 220, damping: 16 }}
             className="fixed bottom-5 left-5 z-[9150] flex items-center gap-2.5 rounded-full bg-espresso text-cream border-[3px] border-ink pl-3 pr-4 py-2.5 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
-            <span className="grid place-items-center w-8 h-8 rounded-full bg-mint shrink-0">
-              <Cup className="w-5 h-5" stroke="#0A0F0D" />
+            <span className="grid place-items-center w-9 h-9 rounded-full bg-cream border-2 border-ink shrink-0 overflow-hidden">
+              <AvatarBarista className="w-8 h-8" />
             </span>
             <span className="font-display font-bold text-sm leading-none">
               {t("Un café ?", "A coffee?")}
@@ -149,8 +149,8 @@ export default function Barista() {
           >
             {/* en-tête */}
             <div className="flex items-center gap-3 px-4 py-3 bg-espresso text-cream shrink-0">
-              <span className="grid place-items-center w-9 h-9 rounded-full bg-mint shrink-0">
-                <Cup className="w-5 h-5" stroke="#0A0F0D" />
+              <span className="grid place-items-center w-9 h-9 rounded-full bg-cream border-2 border-ink shrink-0 overflow-hidden">
+                <AvatarBarista className="w-8 h-8" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display font-extrabold text-sm leading-tight">
@@ -175,8 +175,8 @@ export default function Barista() {
               {messages.map((m, i) =>
                 m.role === "assistant" ? (
                   <div key={i} className="flex items-end gap-2 max-w-[88%]">
-                    <span className="grid place-items-center w-6 h-6 rounded-full bg-caramel border-2 border-ink shrink-0 mb-0.5">
-                      <Cup className="w-3.5 h-3.5" stroke="#0A0F0D" />
+                    <span className="grid place-items-center w-7 h-7 rounded-full bg-cream border-2 border-ink shrink-0 mb-0.5 overflow-hidden">
+                      <AvatarBarista className="w-6 h-6" />
                     </span>
                     <div className="rounded-2xl rounded-bl-md bg-white border-2 border-ink px-3.5 py-2.5 text-ink text-sm leading-snug font-medium shadow-[2px_2px_0_#0A0F0D]">
                       {m.content}
@@ -193,8 +193,8 @@ export default function Barista() {
 
               {pending && (
                 <div className="flex items-end gap-2">
-                  <span className="grid place-items-center w-6 h-6 rounded-full bg-caramel border-2 border-ink shrink-0">
-                    <Cup className="w-3.5 h-3.5" stroke="#0A0F0D" />
+                  <span className="grid place-items-center w-7 h-7 rounded-full bg-cream border-2 border-ink shrink-0 overflow-hidden">
+                    <AvatarBarista className="w-6 h-6" />
                   </span>
                   <div className="rounded-2xl rounded-bl-md bg-white border-2 border-ink px-4 py-3 shadow-[2px_2px_0_#0A0F0D]">
                     <span className="flex gap-1">
