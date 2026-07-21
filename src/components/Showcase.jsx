@@ -86,6 +86,14 @@ function BeforeAfter() {
     setPct(p);
   }
 
+  const benefits = [
+    { icon: "⚡", label: t("Plus rapide", "Faster") },
+    { icon: "✨", label: t("Plus esthétique", "More beautiful") },
+    { icon: "🔍", label: t("Mieux référencé", "Better ranked") },
+    { icon: "📱", label: t("Responsive", "Responsive") },
+    { icon: "🤖", label: t("Prêt pour le GEO", "GEO-ready") },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 60 }}
@@ -105,66 +113,86 @@ function BeforeAfter() {
 
       <div
         ref={containerRef}
-        className="relative h-72 md:h-96 rounded-3xl border-[3px] border-ink overflow-hidden select-none touch-pan-y"
+        className="relative h-80 md:h-96 rounded-3xl border-[3px] border-ink overflow-hidden select-none touch-pan-y cursor-ew-resize"
         onPointerMove={(e) => e.buttons === 1 && updateFromClientX(e.clientX)}
         onPointerDown={(e) => updateFromClientX(e.clientX)}
       >
-        {/* APRÈS (fond), contenu aligné à droite pour rester visible */}
+        {/* APRÈS (fond) : un vrai titre H1 optimisé, du contenu qui parle à Google */}
         <div className="absolute inset-0 bg-espresso p-6 md:p-10 flex flex-col justify-between items-end text-right">
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end max-w-[80%]">
             <span className="inline-block rounded-full bg-mint text-ink font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
               {t("Après Cafein", "After Cafein")}
             </span>
-            <div className="mt-6 space-y-3 w-56 md:w-80 flex flex-col items-end">
-              <div className="h-8 md:h-10 w-4/5 rounded-lg bg-cream" />
-              <div className="h-3 w-full rounded bg-cream/30" />
-              <div className="h-3 w-2/3 rounded bg-cream/30" />
-              <div className="h-10 w-40 rounded-full bg-mint border-2 border-cream/20 mt-4" />
-            </div>
+            <span className="mt-5 font-mono text-[9px] md:text-[10px] tracking-[0.25em] uppercase text-mint/80">
+              {t("Titre H1", "H1 heading")}
+            </span>
+            <p className="mt-1 font-display font-extrabold text-xl md:text-[1.8rem] text-cream leading-[1.05]">
+              {t("Création de site web à Luxembourg", "Web design agency in Luxembourg")}
+            </p>
+            <p className="mt-2 text-cream/55 font-medium text-xs md:text-sm max-w-xs">
+              {t("Design sur mesure, structuré pour Google.", "Custom design, structured for Google.")}
+            </p>
+            <span className="mt-3 font-mono text-[10px] md:text-[11px] tracking-wide text-mint">
+              {t("✓ Un titre H1 qui plaît à Google", "✓ An H1 heading Google loves")}
+            </span>
+            <span className="mt-4 inline-flex items-center rounded-full bg-mint text-ink font-display font-bold text-xs md:text-sm px-5 py-2.5">
+              {t("Nous contacter", "Get in touch")}
+            </span>
           </div>
           <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-mint">
             {t("Refonte optimisée : UX mobile + structure SEO", "Optimised rebuild: mobile UX + SEO structure")}
           </p>
         </div>
 
-        {/* AVANT (par-dessus, clippé) */}
+        {/* AVANT (clippé) : pas de vrai H1, un contenu générique et daté */}
         <div
-          className="absolute inset-0 bg-cream-2 p-6 md:p-10"
+          className="absolute inset-0 bg-cream-2 p-6 md:p-10 flex flex-col justify-between"
           style={{ clipPath: `inset(0 ${100 - pct}% 0 0)` }}
         >
-          <span className="inline-block rounded-full bg-ink/80 text-cream font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
-            {t("Avant : site existant", "Before: existing site")}
-          </span>
-          <div className="mt-6 space-y-3 max-w-md opacity-60">
-            <div className="h-6 w-1/2 rounded bg-ink/40" />
-            <div className="h-2.5 w-full rounded bg-ink/20" />
-            <div className="h-2.5 w-full rounded bg-ink/20" />
-            <div className="h-2.5 w-5/6 rounded bg-ink/20" />
-            <div className="h-8 w-28 rounded bg-ink/30 mt-4" />
-            <p className="font-mono text-[10px] uppercase tracking-widest text-ink/40 pt-3">
-              {t("lent · daté · invisible sur Google", "slow · dated · invisible on Google")}
+          <div className="max-w-md">
+            <span className="inline-block rounded-full bg-ink/80 text-cream font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5">
+              {t("Avant : site existant", "Before: existing site")}
+            </span>
+            <p className="mt-6 font-serif text-lg md:text-2xl font-bold text-ink/70">
+              {t("Bienvenue !", "Welcome!")}
+            </p>
+            <span className="mt-1 inline-block font-mono text-[10px] md:text-[11px] tracking-wide text-[#D64545]">
+              {t("✗ Aucun titre H1", "✗ No H1 heading")}
+            </span>
+            <p className="mt-3 font-serif text-xs md:text-sm text-ink/55 max-w-sm leading-snug">
+              {t(
+                "Nous vendons des produits de qualité depuis 2004. Cliquez ici pour nous contacter.",
+                "We've been selling quality products since 2004. Click here to contact us.",
+              )}
             </p>
           </div>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+            {t("lent · sans titre H1 · invisible sur Google", "slow · no H1 · invisible on Google")}
+          </p>
         </div>
 
-        {/* Poignée */}
-        <div className="absolute inset-y-0" style={{ left: `${pct}%` }}>
+        {/* Poignée : barre + rond toujours solidaires (centrés sur pct) */}
+        <div className="absolute inset-y-0 z-10 pointer-events-none" style={{ left: `${pct}%` }}>
           <div className="absolute inset-y-0 -translate-x-1/2 w-1.5 bg-mint" />
-          <motion.div
-            drag="x"
-            dragConstraints={containerRef}
-            dragElastic={0}
-            dragMomentum={false}
-            onDrag={(e, info) => updateFromClientX(info.point.x)}
-            whileHover={{ scale: 1.15 }}
-            whileDrag={{ scale: 1.2 }}
-            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center w-12 h-12 rounded-full bg-mint border-[3px] border-ink cursor-grab active:cursor-grabbing shadow-[4px_4px_0_#0A0F0D]"
-          >
+          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center w-12 h-12 rounded-full bg-mint border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D]">
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="#0A0F0D" strokeWidth="2.5" strokeLinecap="round">
               <path d="M8 7 4 12l4 5M16 7l4 5-4 5" />
             </svg>
-          </motion.div>
+          </div>
         </div>
+      </div>
+
+      {/* puces de valeur : projettent le bénéfice, même sans photo réelle */}
+      <div className="mt-6 flex flex-wrap gap-2.5">
+        {benefits.map((b) => (
+          <span
+            key={b.label}
+            className="inline-flex items-center gap-2 rounded-full bg-white border-2 border-ink px-4 py-2 font-semibold text-sm text-ink shadow-[2px_2px_0_#0A0F0D]"
+          >
+            <span aria-hidden>{b.icon}</span>
+            {b.label}
+          </span>
+        ))}
       </div>
     </motion.div>
   );
