@@ -114,7 +114,7 @@ export default function Seo({ title, titleEn, description, descriptionEn, path =
 
     document.title = t;
     /* index par défaut ; noindex pour les pages en duplicate content
-       (ex. réalisations reprises de Nooki) — on suit tout de même les liens. */
+       (ex. réalisations reprises de Nooki), on suit tout de même les liens. */
     upsertMeta("name", "robots", noindex ? "noindex, follow" : "index, follow");
     upsertMeta("name", "description", d);
     upsertLink("canonical", canonical);

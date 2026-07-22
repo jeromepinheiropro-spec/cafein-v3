@@ -18,7 +18,7 @@ export function LeafMark({ className = "h-5 w-auto", leaf1 = "#1FCE8A", leaf2 = 
 }
 
 /* ── Wordmark : « Cafein » lu « cafe.in » ─────────────────────────
-   Jeu de mots — « Cafein » n'est pas un mot anglais : on le rend façon
+   Jeu de mots, « Cafein » n'est pas un mot anglais : on le rend façon
    adresse web « cafe.in », avec le point en vert (clin d'œil agence web). */
 export function Wordmark({ className = "text-2xl", dark = false }) {
   return (

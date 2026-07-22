@@ -165,7 +165,7 @@ export const MASCOTS = [
     id: "pinoo",
     name: "Pinoo",
     Avatar: AvatarPinoo,
-    line: ["Moi c'est Pinoo — toujours entre deux idées et trois écrans.", "I'm Pinoo — always between two ideas and three screens."],
+    line: ["Moi c'est Pinoo, toujours entre deux idées et trois écrans.", "I'm Pinoo, always between two ideas and three screens."],
   },
   {
     id: "flo",
@@ -177,6 +177,6 @@ export const MASCOTS = [
     id: "maelie",
     name: "Maélie",
     Avatar: AvatarMaelie,
-    line: ["Moi c'est Maélie — la team thé, et les idées qui infusent.", "I'm Maélie — team tea, and the ideas that brew."],
+    line: ["Moi c'est Maélie, la team thé, et les idées qui infusent.", "I'm Maélie, team tea, and the ideas that brew."],
   },
 ];
