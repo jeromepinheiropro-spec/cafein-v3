@@ -7,7 +7,7 @@ import { Spark, Bean, ArrowUpRight } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 import Seo, { SITE, breadcrumbLd } from "../lib/seo.jsx";
-import { AvatarStan, AvatarPinoo, AvatarFlo } from "../lib/avatars.jsx";
+import { AvatarStan, AvatarPinoo, AvatarFlo, AvatarMaelie } from "../lib/avatars.jsx";
 
 /* ── Les trois cofondateurs ───────────────────────────────────── */
 const TEAM = [
@@ -59,6 +59,22 @@ const TEAM = [
     fun: "Latte art, évidemment. Le beau, jusque dans la tasse.",
     funEn: "Latte art, of course. Beauty, right down to the cup.",
   },
+  {
+    id: "maelie",
+    name: "Maélie",
+    aka: "Maé",
+    role: "Créative & branding",
+    roleEn: "Creative & branding",
+    Avatar: AvatarMaelie,
+    bg: "bg-[#F0876B]",
+    shadow: "#F0876B",
+    bio: "Le cerveau à idées de l'équipe : c'est elle qui déniche le concept qui fait mouche et façonne des marques new-school qu'on n'oublie pas. Direction artistique, identité, ton de voix — elle donne une personnalité à ce qui n'en avait pas.",
+    bioEn: "The idea machine of the team: she's the one who finds the concept that lands and shapes new-school brands you won't forget. Art direction, identity, tone of voice — she gives personality to what had none.",
+    skills: ["Direction créative", "Branding & identité", "Idéation & concepts", "Social media"],
+    skillsEn: ["Creative direction", "Branding & identity", "Ideation & concepts", "Social media"],
+    fun: "La seule au thé chez les caféinés. Et elle infuse les meilleures idées.",
+    funEn: "The only tea drinker among the caffeinated. And she brews the best ideas.",
+  },
 ];
 
 /* ── Carte membre avec tilt 3D ────────────────────────────────── */
@@ -95,8 +111,9 @@ function TeamCard({ m, i }) {
       className="group relative rounded-3xl bg-white border-[3px] border-ink p-6 pb-7 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
       whileHover={{ boxShadow: `12px 12px 0 ${m.shadow}` }}
     >
-      {/* avatar */}
-      <div className={`relative rounded-2xl ${m.bg}/25 border-[3px] border-ink overflow-hidden`}>
+      {/* avatar — fond teinté à la couleur du membre (style inline : évite la
+          purge Tailwind des classes dynamiques bg-…/25) */}
+      <div className="relative rounded-2xl border-[3px] border-ink overflow-hidden" style={{ backgroundColor: `${m.shadow}40` }}>
         <motion.div
           whileHover={{ rotate: [0, -3, 3, 0], transition: { duration: 0.5 } }}
           className="px-10 pt-6 pb-2"
@@ -170,10 +187,10 @@ export default function Equipe() {
   return (
     <>
       <Seo
-        title="L'équipe Cafein : trois cofondateurs, un percolateur | Agence web Luxembourg"
-        titleEn="The Cafein Team: Three Cofounders, One Coffee Machine | Web Agency Luxembourg"
-        description="Stan, Pinoo et Flo : les trois cofondateurs de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO et communication, une équipe resserrée qui s'occupe de tout."
-        descriptionEn="Stan, Pinoo and Flo: the three cofounders of Cafein, a web agency in Luxembourg. Strategy, website design, SEO and communication, a tight-knit team that handles everything."
+        title="L'équipe Cafein : Stan, Pinoo, Flo & Maélie | Agence web Luxembourg"
+        titleEn="The Cafein Team: Stan, Pinoo, Flo & Maélie | Web Agency Luxembourg"
+        description="Stan, Pinoo, Flo et Maélie : l'équipe de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO, communication et direction créative — une équipe resserrée qui s'occupe de tout."
+        descriptionEn="Stan, Pinoo, Flo and Maélie: the Cafein team, a web agency in Luxembourg. Strategy, website design, SEO, communication and creative direction — a tight-knit team that handles everything."
         path="/equipe"
         jsonLd={[
           {
@@ -188,7 +205,7 @@ export default function Equipe() {
             "@type": "Person",
             name: m.name,
             alternateName: m.aka,
-            jobTitle: "Cofondateur",
+            jobTitle: m.role,
             worksFor: { "@id": SITE + "/#cafein" },
           })),
           breadcrumbLd([
@@ -201,16 +218,16 @@ export default function Equipe() {
         n="☕"
         tag={t("L'équipe", "The team")}
         title={lang === "en"
-          ? (<>Three co-founders, <span className="text-mint-dark">one coffee machine</span></>)
-          : (<>Trois cofondateurs, <span className="text-mint-dark">un seul percolateur</span></>)}
+          ? (<>Three co-founders, one creative, <span className="text-mint-dark">one coffee machine</span></>)
+          : (<>Trois cofondateurs, une créative, <span className="text-mint-dark">un seul percolateur</span></>)}
         subtitle={t(
-          "Stan, Pinoo et Flo : trois profils complémentaires qui partagent la même machine à café et la même obsession, des projets web qui rapportent vraiment à leurs clients.",
-          "Stan, Pinoo and Flo: three complementary profiles who share the same coffee machine and the same obsession, web projects that truly pay off for their clients."
+          "Stan, Pinoo, Flo… et Maélie, la seule au thé : des profils complémentaires qui partagent la même obsession, des projets web qui rapportent vraiment à leurs clients.",
+          "Stan, Pinoo, Flo… and Maélie, the only tea drinker: complementary profiles who share the same obsession, web projects that truly pay off for their clients."
         )}
       >
         {/* pile d'avatars façon photomaton */}
         <div className="relative select-none" aria-hidden>
-          <div className="grid grid-cols-3 gap-3 items-end">
+          <div className="grid grid-cols-2 gap-3 items-end">
             {TEAM.map((m, i) => (
               <motion.div
                 key={m.id}
@@ -218,7 +235,8 @@ export default function Equipe() {
                 animate={{ opacity: 1, y: 0, rotate: i === 1 ? -2 : i % 2 ? 3 : 2 }}
                 transition={{ delay: 0.3 + i * 0.15, type: "spring", stiffness: 140, damping: 13 }}
                 whileHover={{ y: -10, rotate: 0 }}
-                className={`rounded-2xl ${m.bg}/30 border-[3px] border-ink p-3 bg-white shadow-[5px_5px_0_#0A0F0D]`}
+                style={{ backgroundColor: `${m.shadow}40` }}
+                className="rounded-2xl border-[3px] border-ink p-3 shadow-[5px_5px_0_#0A0F0D]"
               >
                 <m.Avatar />
                 <p className="mt-2 text-center font-display font-extrabold text-sm text-ink">{m.aka}</p>
@@ -235,7 +253,7 @@ export default function Equipe() {
         </div>
       </PageHero>
 
-      <Marquee words={["Stan", "Pinoo", "Flo", "Cofondateurs", "Luxembourg"]} />
+      <Marquee words={["Stan", "Pinoo", "Flo", "Maélie", "Cofondateurs", "Luxembourg"]} />
 
       {/* Les cartes membres */}
       <section className="bg-cream py-20 md:py-28">
