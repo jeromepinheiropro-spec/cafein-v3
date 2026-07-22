@@ -71,6 +71,52 @@ export function AvatarFlo({ className = "w-full h-auto" }) {
   );
 }
 
+/* ── Maélie : la team thé. Tasse à thé (infusion rosée) + étiquette
+   de sachet qui pend, béret créa, boucles d'oreilles, étincelle « idées ».
+   La seule au thé dans une agence de café. */
+export function AvatarMaelie({ className = "w-full h-auto" }) {
+  return (
+    <svg viewBox="0 0 200 200" className={className} aria-hidden>
+      <ellipse cx="100" cy="170" rx="60" ry="11" fill="#141A17" opacity="0.12" />
+      {/* étincelle « idée » */}
+      <path d="M44 46 c1.3 5 3.4 7.2 8.4 8.5 c-5 1.3 -7.1 3.5 -8.4 8.5 c-1.3 -5 -3.4 -7.2 -8.4 -8.5 c5 -1.3 7.1 -3.5 8.4 -8.5 z" fill="#FFD166" stroke="#141A17" strokeWidth="3" strokeLinejoin="round" />
+      {/* ficelle + étiquette du sachet de thé */}
+      <path d="M122 82 q12 -20 27 -25" fill="none" stroke="#141A17" strokeWidth="2.6" />
+      <g transform="rotate(-14 152 50)">
+        <rect x="143" y="42" width="19" height="16" rx="2.5" fill="#F5EFE2" stroke="#141A17" strokeWidth="3" />
+        <path d="M152.5 46.5 q-3 -3 -5.5 0 q-2 2.2 5.5 7.5 q7.5 -5.3 5.5 -7.5 q-2.5 -3 -5.5 0 z" fill="#F0876B" />
+      </g>
+      {/* tasse à thé */}
+      <path d="M52 82 h96 v40 a48 32 0 0 1 -96 0 z" fill="#F0876B" stroke="#141A17" strokeWidth="6" strokeLinejoin="round" />
+      {/* anse */}
+      <path d="M148 92 h13 a15 15 0 0 1 0 30 h-15" fill="none" stroke="#141A17" strokeWidth="6" strokeLinecap="round" />
+      {/* surface du thé */}
+      <ellipse cx="100" cy="82" rx="48" ry="8.5" fill="#E86A4E" stroke="#141A17" strokeWidth="6" />
+      {/* béret créatif incliné */}
+      <g transform="rotate(-12 92 70)">
+        <ellipse cx="92" cy="72" rx="40" ry="14" fill="#1FCE8A" stroke="#141A17" strokeWidth="6" />
+        <path d="M60 74 q32 9 64 0" fill="none" stroke="#141A17" strokeWidth="3.5" opacity="0.45" />
+        <circle cx="112" cy="58" r="5.5" fill="#1FCE8A" stroke="#141A17" strokeWidth="5" />
+      </g>
+      {/* boucles d'oreilles */}
+      <circle cx="50" cy="108" r="6" fill="none" stroke="#141A17" strokeWidth="4" />
+      <circle cx="150" cy="108" r="6" fill="none" stroke="#141A17" strokeWidth="4" />
+      {/* joues */}
+      <circle cx="74" cy="110" r="5" fill="#E8623E" opacity="0.35" />
+      <circle cx="126" cy="110" r="5" fill="#E8623E" opacity="0.35" />
+      {/* yeux doux + cils au coin externe */}
+      <circle cx="84" cy="106" r="4" fill="#141A17" />
+      <circle cx="116" cy="106" r="4" fill="#141A17" />
+      <path d="M79 103.5 l-5 -2.5" stroke="#141A17" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M79 106.5 l-5 0.5" stroke="#141A17" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M121 103.5 l5 -2.5" stroke="#141A17" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M121 106.5 l5 0.5" stroke="#141A17" strokeWidth="2.6" strokeLinecap="round" />
+      {/* sourire */}
+      <path d="M88 120 q12 10 24 0" fill="none" stroke="#141A17" strokeWidth="5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /* ── Fève, le barista : mascotte dédiée au chat IA ───────────────
    Un mélange des trois de l'équipe, en tasse : les lunettes rondes de
    Stan, le clin d'œil de Pinoo et le casque audio de Flo. */
@@ -126,5 +172,11 @@ export const MASCOTS = [
     name: "Flo",
     Avatar: AvatarFlo,
     line: ["Moi c'est Flo, l'œil créa. Je rends tout plus beau.", "I'm Flo, the creative eye. I make everything prettier."],
+  },
+  {
+    id: "maelie",
+    name: "Maélie",
+    Avatar: AvatarMaelie,
+    line: ["Moi c'est Maélie — la team thé, et les idées qui infusent.", "I'm Maélie — team tea, and the ideas that brew."],
   },
 ];
