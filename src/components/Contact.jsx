@@ -142,7 +142,7 @@ export default function Contact() {
           >
             {t(
               "Une question, un projet ? Écrivez-nous, on vous répond rapidement, le temps de faire couler un café.",
-              "A question, a project? Drop us a line — we'll get back to you fast, in the time it takes to brew a coffee."
+              "A question, a project? Drop us a line, we'll get back to you fast, in the time it takes to brew a coffee."
             )}
           </motion.p>
 

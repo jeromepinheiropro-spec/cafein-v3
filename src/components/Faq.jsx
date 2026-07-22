@@ -25,7 +25,7 @@ const FAQS_EN = [
   },
   {
     q: "How much does a website cost?",
-    a: "It depends on the project: a showcase site doesn't cost the same as an e-commerce store or a bespoke platform. We put together a clear, no-surprise quote after a first chat — free of charge, of course. You know exactly what you're paying for, and why.",
+    a: "It depends on the project: a showcase site doesn't cost the same as an e-commerce store or a bespoke platform. We put together a clear, no-surprise quote after a first chat, free of charge, of course. You know exactly what you're paying for, and why.",
   },
   {
     q: "How long before we show up on Google?",

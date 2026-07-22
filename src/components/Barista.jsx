@@ -4,7 +4,7 @@ import { useT, useLang } from "../lib/lang.jsx";
 import { AvatarBarista } from "../lib/avatars.jsx";
 
 /*
-  Barista IA — un petit chat façon barista qui répond aux questions simples
+  Barista IA, un petit chat façon barista qui répond aux questions simples
   sur Cafein (SEO, GEO, sites…) dans un ton décalé, et oriente vers la prise
   de contact. Jamais de prix (garde-fou côté serveur). Le widget est lui-même
   une démo de l'expertise IA/GEO de l'agence.
@@ -71,8 +71,8 @@ export default function Barista() {
             {
               role: "assistant",
               content: t(
-                "Le barista fait une pause pour l'instant ☕ En attendant, écris-nous à hello@cafein.lu ou via le formulaire de contact — on répond vite !",
-                "The barista is on a break right now ☕ In the meantime, drop us a line at hello@cafein.lu or via the contact form — we reply fast!",
+                "Le barista fait une pause pour l'instant ☕ En attendant, écris-nous à hello@cafein.lu ou via le formulaire de contact, on répond vite !",
+                "The barista is on a break right now ☕ In the meantime, drop us a line at hello@cafein.lu or via the contact form, we reply fast!",
               ),
             },
           ]);

@@ -6,7 +6,7 @@ import { useT } from "../lib/lang.jsx";
 
 /*
   Avant / après CONCEPTUEL : pas de photo, mais deux wireframes qui parlent
-  d'eux-mêmes — un « avant » daté (lent, invisible) vs un « après » Cafein
+  d'eux-mêmes, un « avant » daté (lent, invisible) vs un « après » Cafein
   (rapide, esthétique, optimisé). On tire la poignée pour comparer, et des
   puces de valeur projettent le bénéfice. Dès qu'on a de vraies captures d'un
   projet Nooki, renseigner BEFORE_IMG / AFTER_IMG et elles remplacent les
@@ -133,7 +133,7 @@ export default function BeforeAfter() {
           >
             {/* APRÈS (dessous, plein) */}
             {AFTER_IMG ? (
-              <img src={AFTER_IMG} alt={t("Après — Cafein", "After — Cafein")} className="absolute inset-0 w-full h-full object-cover object-top" draggable={false} />
+              <img src={AFTER_IMG} alt={t("Après, Cafein", "After, Cafein")} className="absolute inset-0 w-full h-full object-cover object-top" draggable={false} />
             ) : (
               <MockAfter t={t} />
             )}

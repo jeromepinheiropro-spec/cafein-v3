@@ -7,7 +7,7 @@ import { Link } from "../lib/link.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
 /*
-  « Imaginez votre site en direct » — le visiteur tape le nom de sa boîte,
+  « Imaginez votre site en direct », le visiteur tape le nom de sa boîte,
   choisit un secteur, une couleur et une ambiance (clair / sombre) : un aperçu
   de SON site apparaît dans un navigateur, en temps réel. La preuve, avant même
   le premier échange.
@@ -230,7 +230,7 @@ function Gauge({ score, size = 128, label, light = false }) {
           className={`absolute inset-0 grid place-items-center font-display font-extrabold ${light ? "text-ink" : "text-cream"}`}
           style={{ fontSize: size * 0.3 }}
         >
-          {score == null ? "—" : <CountUp to={score} />}
+          {score == null ? "–" : <CountUp to={score} />}
         </span>
       </div>
       <span className={`font-mono text-[10px] tracking-[0.15em] uppercase text-center leading-tight ${light ? "text-ink/55" : "text-cream/60"}`}>{label}</span>
@@ -309,14 +309,14 @@ function AuditForm({ lang, t, businessName }) {
     const who = businessName.trim() || host;
     const message =
       (lang === "en"
-        ? `Detailed audit request from the live audit.\nSite: ${scores.url}\nMeasured scores (mobile) — Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibility ${scores.accessibility}/100, Best practices ${scores.bestPractices}/100.\nBusiness: ${who}`
-        : `Demande d'audit détaillé depuis l'audit instantané.\nSite : ${scores.url}\nScores mesurés (mobile) — Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibilité ${scores.accessibility}/100, Bonnes pratiques ${scores.bestPractices}/100.\nEntreprise : ${who}`);
+        ? `Detailed audit request from the live audit.\nSite: ${scores.url}\nMeasured scores (mobile), Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibility ${scores.accessibility}/100, Best practices ${scores.bestPractices}/100.\nBusiness: ${who}`
+        : `Demande d'audit détaillé depuis l'audit instantané.\nSite : ${scores.url}\nScores mesurés (mobile), Performance ${scores.performance}/100, SEO ${scores.seo}/100, Accessibilité ${scores.accessibility}/100, Bonnes pratiques ${scores.bestPractices}/100.\nEntreprise : ${who}`);
     try {
       const r = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nom: `${host} — ${t("Audit", "Audit")}`,
+          nom: `${host}, ${t("Audit", "Audit")}`,
           email: mail,
           message,
           lang,
@@ -502,7 +502,7 @@ function AuditForm({ lang, t, businessName }) {
                         ].map((g) => (
                           <div key={g.l} className="flex flex-col items-center gap-1">
                             <span className="font-display font-extrabold text-2xl" style={{ color: scoreColor(g.s) }}>
-                              {g.s == null ? "—" : g.s}
+                              {g.s == null ? "–" : g.s}
                             </span>
                             <span className="font-mono text-[9px] tracking-wider uppercase text-ink/45 text-center leading-tight">{g.l}</span>
                           </div>
