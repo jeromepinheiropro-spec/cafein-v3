@@ -31,6 +31,7 @@ const LINKS = {
    mots), la feuille reste sur le I. Toutes les animations sont conservées. */
 const WORD = [
   { c: "C" }, { c: "A" }, { c: "F" }, { c: "E" },
+  { c: ".", accent: true },
   { c: "I", accent: true, leaf: true },
   { c: "N", accent: true },
 ];

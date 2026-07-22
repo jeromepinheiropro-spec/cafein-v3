@@ -14,6 +14,7 @@ import { useLang, useT } from "../lib/lang.jsx";
    footer), le grain de café reste le point du i. Animations conservées. */
 const letters = [
   { c: "C" }, { c: "a" }, { c: "f" }, { c: "e" },
+  { c: ".", accent: true, dot: true },
   { c: "i", accent: true, bean: true },
   { c: "n", accent: true },
 ];
