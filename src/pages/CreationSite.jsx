@@ -352,7 +352,7 @@ export default function CreationSite() {
         </div>
       </section>
 
-      {/* Imaginez votre site — démo interactive */}
+      {/* Imaginez votre site, démo interactive */}
       <SiteBuilder />
 
       {/* WordPress vs Sur mesure */}
@@ -488,7 +488,7 @@ export default function CreationSite() {
           lang === "en"
             ? [
                 <>Building a website in Luxembourg isn't just about "being online": it's about giving your clients a reason to choose you. A well-designed showcase site presents your business, inspires trust and turns visits into enquiries, whether you're an artisan, a freelancer, a firm or an SME in the Greater Region.</>,
-                <>At Cafein, every project starts with the foundations Google cares about: clear structure, fast loading, a flawless mobile version and organic search optimisation baked in from the design stage. The result: a site that's a pleasure to visit, simple to update, and above all easy to find. The coffee is on us — so is the quote.</>,
+                <>At Cafein, every project starts with the foundations Google cares about: clear structure, fast loading, a flawless mobile version and organic search optimisation baked in from the design stage. The result: a site that's a pleasure to visit, simple to update, and above all easy to find. The coffee is on us, so is the quote.</>,
               ]
             : [
                 <>Créer un site internet au Luxembourg, ce n'est pas seulement « être en ligne » : c'est donner à vos clients une raison de vous choisir. Un site vitrine bien conçu présente votre activité, inspire confiance et transforme les visites en prises de contact, que vous soyez artisan, indépendant, cabinet ou PME de la Grande Région.</>,

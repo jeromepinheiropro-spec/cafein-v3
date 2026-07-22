@@ -62,7 +62,7 @@ function MentionsLegales() {
       <Section title="Hébergement">
         <p>
           Le site est hébergé par <strong>Railway Corporation</strong>, 2261 Market Street #4059, San Francisco,
-          CA 94114, États-Unis — railway.app. Les données sont servies via l'infrastructure de Railway
+          CA 94114, États-Unis, railway.app. Les données sont servies via l'infrastructure de Railway
           (région Europe de l'Ouest).
         </p>
       </Section>
@@ -109,15 +109,15 @@ function Confidentialite() {
         <p>Nous ne collectons que les données strictement nécessaires, et uniquement lorsque vous nous les transmettez :</p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li>
-            <strong>Formulaire de contact</strong> : nom, adresse e-mail et message — pour répondre à votre demande.
+            <strong>Formulaire de contact</strong> : nom, adresse e-mail et message, pour répondre à votre demande.
             Base légale : votre consentement et notre intérêt légitime à traiter les demandes.
           </li>
           <li>
             <strong>Audit instantané</strong> : l'adresse de votre site, votre e-mail et les scores de performance
-            mesurés — pour vous transmettre un audit détaillé et vous recontacter. Base légale : votre consentement.
+            mesurés, pour vous transmettre un audit détaillé et vous recontacter. Base légale : votre consentement.
           </li>
           <li>
-            <strong>Commentaires</strong> : le nom affiché et le texte du commentaire — pour publication sur le site.
+            <strong>Commentaires</strong> : le nom affiché et le texte du commentaire, pour publication sur le site.
             Base légale : votre consentement.
           </li>
           <li>
@@ -130,10 +130,10 @@ function Confidentialite() {
       <Section title="Destinataires et sous-traitants">
         <p>Vos données peuvent être traitées par des prestataires techniques agissant pour notre compte :</p>
         <ul className="list-disc pl-5 space-y-1.5">
-          <li><strong>Brevo</strong> (Sendinblue SAS, France) — envoi et gestion des e-mails.</li>
-          <li><strong>Google</strong> (Google Ireland / LLC) — messagerie professionnelle (Google Workspace).</li>
-          <li><strong>Railway</strong> (Railway Corporation, États-Unis) — hébergement du site et stockage.</li>
-          <li><strong>Google PageSpeed Insights</strong> — mesure de performance lors de l'audit (l'URL analysée est transmise à Google).</li>
+          <li><strong>Brevo</strong> (Sendinblue SAS, France), envoi et gestion des e-mails.</li>
+          <li><strong>Google</strong> (Google Ireland / LLC), messagerie professionnelle (Google Workspace).</li>
+          <li><strong>Railway</strong> (Railway Corporation, États-Unis), hébergement du site et stockage.</li>
+          <li><strong>Google PageSpeed Insights</strong>, mesure de performance lors de l'audit (l'URL analysée est transmise à Google).</li>
         </ul>
         <p>
           Certains prestataires étant situés hors de l'Union européenne (États-Unis), les transferts sont encadrés par
@@ -157,7 +157,7 @@ function Confidentialite() {
         </p>
         <p>
           Vous pouvez également introduire une réclamation auprès de la Commission nationale pour la protection des
-          données (CNPD), autorité de contrôle au Luxembourg — cnpd.public.lu.
+          données (CNPD), autorité de contrôle au Luxembourg, cnpd.public.lu.
         </p>
       </Section>
 

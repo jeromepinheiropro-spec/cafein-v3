@@ -40,7 +40,7 @@ function ScoreChips({ scores }) {
       {items.map((it) => (
         <span key={it.l} className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-cream px-2.5 py-1 font-mono text-[11px] font-bold">
           <span className="text-ink/50 uppercase tracking-wider">{it.l}</span>
-          <span style={{ color: scoreColor(it.s) }}>{it.s == null ? "—" : it.s}</span>
+          <span style={{ color: scoreColor(it.s) }}>{it.s == null ? "–" : it.s}</span>
         </span>
       ))}
     </div>
@@ -270,7 +270,7 @@ function Dashboard({ stats, contacts, audits, onGo }) {
         <StatCard label="Leads au total" value={stats.leads} />
         <StatCard label="À traiter" value={stats.todo} accent="#D64545" />
         <StatCard label="URLs testées" value={stats.audits} accent="#E08A2B" />
-        <StatCard label="Perf. moyenne" value={stats.avgPerf == null ? "—" : stats.avgPerf} accent={scoreColor(stats.avgPerf)} />
+        <StatCard label="Perf. moyenne" value={stats.avgPerf == null ? "–" : stats.avgPerf} accent={scoreColor(stats.avgPerf)} />
         <StatCard label="Articles publiés" value={stats.published} sub={`${stats.drafts} brouillon(s)`} />
         <StatCard label="Demandes d'audit" value={stats.auditLeads} accent="#E08A2B" />
         <StatCard label="Messages contact" value={stats.messages} />
@@ -417,7 +417,7 @@ function Audits({ audits }) {
                   <a href={a.url} target="_blank" rel="noreferrer" className="hover:text-mint-dark hover:underline">{a.url}</a>
                 </td>
                 {["performance", "seo", "accessibility", "bestPractices"].map((kk) => (
-                  <td key={kk} className="px-4 py-3 font-display font-extrabold" style={{ color: scoreColor(a[kk]) }}>{a[kk] == null ? "—" : a[kk]}</td>
+                  <td key={kk} className="px-4 py-3 font-display font-extrabold" style={{ color: scoreColor(a[kk]) }}>{a[kk] == null ? "–" : a[kk]}</td>
                 ))}
                 <td className="px-4 py-3 font-mono text-[11px] text-ink/50 whitespace-nowrap">{new Date(a.date).toLocaleDateString("fr-FR")}</td>
               </tr>
@@ -514,7 +514,7 @@ function Blog({ posts, setPosts, k, setMsg }) {
             <span className={`rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase ${p.published ? "bg-mint" : "bg-cream-2"} text-ink`}>{p.published ? "Publié" : "Brouillon"}</span>
             <div className="min-w-0 flex-1">
               <p className="font-display font-bold text-ink truncate">{p.title}</p>
-              <p className="font-mono text-[10px] uppercase text-ink/40">{p.tag || "—"} · {new Date(p.date).toLocaleDateString("fr-FR")} · /blog/{p.slug}</p>
+              <p className="font-mono text-[10px] uppercase text-ink/40">{p.tag || "–"} · {new Date(p.date).toLocaleDateString("fr-FR")} · /blog/{p.slug}</p>
             </div>
             <div className="flex items-center gap-2">
               {p.published && <a href={`/blog/${p.slug}`} target="_blank" rel="noreferrer" className="rounded-full bg-white text-ink font-display font-bold text-xs px-3 py-2 border-2 border-ink">Voir</a>}
@@ -650,7 +650,7 @@ function SeoPages({ seo, setSeo, k, setMsg }) {
             <textarea value={form.description} onChange={(e) => set({ description: e.target.value })} rows={3} placeholder={pg.description} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark resize-y" />
           </Field>
           <div className="pt-2 border-t-2 border-ink/10">
-            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/40 mb-3">Version anglaise (/en) — optionnel</p>
+            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/40 mb-3">Version anglaise (/en), optionnel</p>
             <div className="space-y-4">
               <Field label={<span className="flex items-center justify-between">Meta title (EN) <CharCount value={form.titleEn} rec={60} /></span>}>
                 <input value={form.titleEn} onChange={(e) => set({ titleEn: e.target.value })} placeholder={pg.titleEn || pg.title} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" />
@@ -881,7 +881,7 @@ function Analytics({ k }) {
     return (
       <div className="max-w-2xl">
         <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
-        <p className="mt-1 font-medium text-ink/50">Google Analytics est installé sur le site — reste à le brancher ici.</p>
+        <p className="mt-1 font-medium text-ink/50">Google Analytics est installé sur le site, reste à le brancher ici.</p>
         <div className="mt-6 rounded-3xl bg-white border-[3px] border-ink p-8 shadow-[6px_6px_0_#0A0F0D]">
           <span className="inline-block rounded-full bg-sun border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest">À connecter</span>
           <p className="mt-4 text-ink/75 font-medium leading-relaxed">

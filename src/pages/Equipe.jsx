@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Link } from "../lib/link.jsx";
 import { PageHero, CtaBand, Edito } from "../lib/page.jsx";
@@ -68,8 +68,8 @@ const TEAM = [
     Avatar: AvatarMaelie,
     bg: "bg-[#F0876B]",
     shadow: "#F0876B",
-    bio: "Le cerveau à idées de l'équipe : c'est elle qui déniche le concept qui fait mouche et façonne des marques new-school qu'on n'oublie pas. Direction artistique, identité, ton de voix — elle donne une personnalité à ce qui n'en avait pas.",
-    bioEn: "The idea machine of the team: she's the one who finds the concept that lands and shapes new-school brands you won't forget. Art direction, identity, tone of voice — she gives personality to what had none.",
+    bio: "Le cerveau à idées de l'équipe : c'est elle qui déniche le concept qui fait mouche et façonne des marques new-school qu'on n'oublie pas. Direction artistique, identité, ton de voix, elle donne une personnalité à ce qui n'en avait pas.",
+    bioEn: "The idea machine of the team: she's the one who finds the concept that lands and shapes new-school brands you won't forget. Art direction, identity, tone of voice, she gives personality to what had none.",
     skills: ["Direction créative", "Branding & identité", "Idéation & concepts", "Social media"],
     skillsEn: ["Creative direction", "Branding & identity", "Ideation & concepts", "Social media"],
     fun: "La seule au thé chez les caféinés. Et elle infuse les meilleures idées.",
@@ -77,7 +77,12 @@ const TEAM = [
   },
 ];
 
-/* ── Carte membre avec tilt 3D ────────────────────────────────── */
+/* Photos de l'équipe : renseignez ici le chemin quand elles seront prêtes,
+   ex. stan: "/team/stan.jpg" (placez les fichiers dans public/team/).
+   Tant que la valeur est vide, le dos de la carte affiche un placeholder. */
+const PHOTOS = { stan: "", pinoo: "", flo: "", maelie: "" };
+
+/* ── Carte membre : tilt 3D au survol + flip au clic (photo au dos) ── */
 function TeamCard({ m, i }) {
   const eggSpeed = useEggSpeed();
   const t = useT();
@@ -91,6 +96,8 @@ function TeamCard({ m, i }) {
   const ry = useMotionValue(0);
   const srx = useSpring(rx, { stiffness: 200, damping: 18 });
   const sry = useSpring(ry, { stiffness: 200, damping: 18 });
+  const [flipped, setFlipped] = useState(false);
+  const photo = PHOTOS[m.id];
 
   function onMove(e) {
     const r = ref.current.getBoundingClientRect();
@@ -99,6 +106,7 @@ function TeamCard({ m, i }) {
   }
 
   return (
+    /* Scène : conserve l'apparition + le tilt 3D au survol (perspective). */
     <motion.article
       ref={ref}
       onMouseMove={onMove}
@@ -107,11 +115,29 @@ function TeamCard({ m, i }) {
       whileInView={{ opacity: 1, y: 0, rotate: i === 1 ? 0 : i % 2 ? 1 : -1 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ delay: i * 0.12, type: "spring", stiffness: 110, damping: 17 }}
-      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      className="group relative rounded-3xl bg-white border-[3px] border-ink p-6 pb-7 shadow-[8px_8px_0_#0A0F0D] transition-shadow duration-300"
-      whileHover={{ boxShadow: `12px 12px 0 ${m.shadow}` }}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 1000 }}
+      className="group relative"
     >
-      {/* avatar — fond teinté à la couleur du membre (style inline : évite la
+      {/* Carte qui se retourne au clic pour révéler la photo. */}
+      <motion.div
+        onClick={() => setFlipped((f) => !f)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlipped((f) => !f); } }}
+        role="button"
+        tabIndex={0}
+        aria-pressed={flipped}
+        aria-label={flipped ? t(`Revenir à la fiche de ${m.name}`, `Back to ${m.name}'s card`) : t(`Voir la photo de ${m.name}`, `See ${m.name}'s photo`)}
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 26 }}
+        style={{ transformStyle: "preserve-3d" }}
+        className="relative cursor-pointer focus:outline-none"
+      >
+        {/* ── FACE AVANT (fiche) ── */}
+        <motion.div
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", boxShadow: "8px 8px 0 #0A0F0D" }}
+          whileHover={{ boxShadow: `12px 12px 0 ${m.shadow}` }}
+          className="rounded-3xl bg-white border-[3px] border-ink p-6 pb-7"
+        >
+      {/* avatar, fond teinté à la couleur du membre (style inline : évite la
           purge Tailwind des classes dynamiques bg-…/25) */}
       <div className="relative rounded-2xl border-[3px] border-ink overflow-hidden" style={{ backgroundColor: `${m.shadow}40` }}>
         <motion.div
@@ -165,6 +191,41 @@ function TeamCard({ m, i }) {
         <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-mint mb-1.5">{t("Sa commande", "Their order")}</p>
         <p className="text-cream/85 font-medium text-sm leading-relaxed">{fun}</p>
       </div>
+
+          {/* indice : cliquer pour retourner */}
+          <span className="mt-5 flex items-center justify-center gap-1.5 font-mono text-[10px] tracking-[0.2em] uppercase text-ink/40">
+            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v4h-4" /></svg>
+            {t("Voir la photo", "See the photo")}
+          </span>
+        </motion.div>
+
+        {/* ── FACE ARRIÈRE (photo, ou placeholder en attendant) ── */}
+        <div
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)", boxShadow: "8px 8px 0 #0A0F0D" }}
+          className="absolute inset-0 rounded-3xl border-[3px] border-ink overflow-hidden bg-white"
+        >
+          {photo ? (
+            <img src={photo} alt={m.name} className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center" style={{ backgroundColor: `${m.shadow}30` }}>
+              <span className="grid place-items-center w-24 h-24 rounded-full bg-white border-[3px] border-ink">
+                <m.Avatar className="w-20 h-20" />
+              </span>
+              <div>
+                <p className="font-display font-extrabold text-2xl text-ink">{m.name} <span className="text-mint-dark">« {m.aka} »</span></p>
+                <p className="mt-2 font-mono text-[10px] tracking-[0.2em] uppercase text-ink/50">{t("Photo à venir", "Photo coming soon")}</p>
+              </div>
+            </div>
+          )}
+          <span className="absolute top-4 left-4 grid place-items-center w-10 h-10 rounded-full bg-espresso text-mint font-display font-extrabold text-sm">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-espresso/85 text-cream px-3 py-1.5 font-mono text-[9px] tracking-[0.2em] uppercase backdrop-blur-sm">
+            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v4h-4" /></svg>
+            {t("Retour", "Back")}
+          </span>
+        </div>
+      </motion.div>
     </motion.article>
   );
 }
@@ -189,8 +250,8 @@ export default function Equipe() {
       <Seo
         title="L'équipe Cafein : Stan, Pinoo, Flo & Maélie | Agence web Luxembourg"
         titleEn="The Cafein Team: Stan, Pinoo, Flo & Maélie | Web Agency Luxembourg"
-        description="Stan, Pinoo, Flo et Maélie : l'équipe de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO, communication et direction créative — une équipe resserrée qui s'occupe de tout."
-        descriptionEn="Stan, Pinoo, Flo and Maélie: the Cafein team, a web agency in Luxembourg. Strategy, website design, SEO, communication and creative direction — a tight-knit team that handles everything."
+        description="Stan, Pinoo, Flo et Maélie : l'équipe de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO, communication et direction créative, une équipe resserrée qui s'occupe de tout."
+        descriptionEn="Stan, Pinoo, Flo and Maélie: the Cafein team, a web agency in Luxembourg. Strategy, website design, SEO, communication and creative direction, a tight-knit team that handles everything."
         path="/equipe"
         jsonLd={[
           {

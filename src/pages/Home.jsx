@@ -8,7 +8,7 @@ import Services from "../components/Services.jsx";
 import Stats from "../components/Stats.jsx";
 import Process from "../components/Process.jsx";
 import Showcase from "../components/Showcase.jsx";
-// BeforeAfter est intégré dans Showcase (sous les projets) — pas de doublon ici
+// BeforeAfter est intégré dans Showcase (sous les projets), pas de doublon ici
 import Why from "../components/Why.jsx";
 import Blog from "../components/Blog.jsx";
 import Faq, { FAQS } from "../components/Faq.jsx";

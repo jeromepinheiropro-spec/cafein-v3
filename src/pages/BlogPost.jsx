@@ -61,7 +61,7 @@ export default function BlogPost() {
   return (
     <section className="relative bg-cream pt-36 pb-24 md:pt-44 md:pb-32 overflow-hidden">
       {post && (
-        <Seo title={`${post.title} | Cafein`} description={post.excerpt || `${post.title} — le blog de Cafein.`} path={`/blog/${post.slug}`} />
+        <Seo title={`${post.title} | Cafein`} description={post.excerpt || `${post.title}, le blog de Cafein.`} path={`/blog/${post.slug}`} />
       )}
       <div className="mx-auto max-w-3xl px-6 md:px-10">
         <Link to="/#blog" className="inline-flex items-center gap-2 font-display font-bold text-mint-dark hover:gap-3 transition-all">

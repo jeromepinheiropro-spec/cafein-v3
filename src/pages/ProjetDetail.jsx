@@ -288,7 +288,7 @@ export default function ProjetDetail() {
         title={t("Envie d'un projet comme celui-ci ?", "Want a project like this one?")}
         sub={t(
           "Racontez-nous le vôtre autour d'un café, devis gratuit, sans engagement.",
-          "Tell us about yours over a coffee — free quote, no strings attached.",
+          "Tell us about yours over a coffee, free quote, no strings attached.",
         )}
         label={t("Parlons-en", "Let's talk")}
       />
