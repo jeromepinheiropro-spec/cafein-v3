@@ -23,7 +23,7 @@ export function LeafMark({ className = "h-5 w-auto", leaf1 = "#1FCE8A", leaf2 = 
 export function Wordmark({ className = "text-2xl", dark = false }) {
   return (
     <span className={`font-display font-bold tracking-tight ${dark ? "text-cream" : "text-ink"} ${className}`}>
-      cafe<span className="font-extrabold text-mint">.</span>in
+      cafe<span className="font-extrabold text-mint">.</span><span className="text-mint">in</span>
     </span>
   );
 }
