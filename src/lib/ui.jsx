@@ -17,16 +17,13 @@ export function LeafMark({ className = "h-5 w-auto", leaf1 = "#1FCE8A", leaf2 = 
   );
 }
 
-/* ── Wordmark : Cafein avec le point du i vert ────────────────── */
+/* ── Wordmark : « Cafein » lu « cafe.in » ─────────────────────────
+   Jeu de mots — « Cafein » n'est pas un mot anglais : on le rend façon
+   adresse web « cafe.in », avec le point en vert (clin d'œil agence web). */
 export function Wordmark({ className = "text-2xl", dark = false }) {
   return (
     <span className={`font-display font-bold tracking-tight ${dark ? "text-cream" : "text-ink"} ${className}`}>
-      Cafe
-      <span className="relative inline-block">
-        ı
-        <span className="absolute left-1/2 top-[0.06em] h-[0.14em] w-[0.14em] -translate-x-1/2 rounded-[30%] bg-mint" />
-      </span>
-      n
+      cafe<span className="font-extrabold text-mint">.</span>in
     </span>
   );
 }
