@@ -10,7 +10,13 @@ import { Magnetic, Bean, Spark, ArrowUpRight, Cup } from "../lib/ui.jsx";
 import { useEgg, useEggSpeed } from "./EasterEggs.jsx";
 import { useLang, useT } from "../lib/lang.jsx";
 
-const letters = ["C", "a", "f", "e", "i", "n"];
+/* « Cafein » lu « Cafe·in » : les lettres « in » passent en vert (comme le
+   footer), le grain de café reste le point du i. Animations conservées. */
+const letters = [
+  { c: "C" }, { c: "a" }, { c: "f" }, { c: "e" },
+  { c: "i", accent: true, bean: true },
+  { c: "n", accent: true },
+];
 
 /* Badge circulaire qui tourne */
 function RotatingBadge() {
@@ -152,9 +158,10 @@ export default function Hero({ started }) {
                       damping: 16,
                     }}
                     whileHover={{ y: -18, rotate: i % 2 ? -6 : 6, color: "#1FCE8A", transition: { type: "spring", stiffness: 400, damping: 10 } }}
+                    style={l.accent ? { color: "#1FCE8A" } : undefined}
                     className="inline-block cursor-default"
                   >
-                    {l === "i" ? (
+                    {l.bean ? (
                       <span className="relative inline-block">
                         ı
                         {/* le point du i : un grain de café qui tombe */}
@@ -180,7 +187,7 @@ export default function Hero({ started }) {
                         </motion.span>
                       </span>
                     ) : (
-                      l
+                      l.c
                     )}
                   </motion.span>
                 ))}
