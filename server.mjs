@@ -280,13 +280,13 @@ async function callGemini(messages, system) {
     parts: [{ text: m.content }],
   }));
   const base = { system_instruction: { parts: [{ text: system }] }, contents };
-  const cfg = { maxOutputTokens: 700, temperature: 0.6 };
+  const cfg = { maxOutputTokens: 1200, temperature: 0.6 };
   /* thinkingBudget:0 coupe le raisonnement interne — MAIS ce champ n'existe que
      sur les modèles Gemini 2.5. L'envoyer à un modèle 2.0 provoque un 400
      « invalid argument ». On ne l'ajoute donc que pour les 2.5. */
-  const cfgThinking = /2\.5/.test(model)
-    ? { ...cfg, thinkingConfig: { thinkingBudget: 0 } }
-    : cfg;
+  const cfgThinking = /gemini-3|flash-latest|pro-latest|flash-lite-latest/.test(model)
+    ? { ...cfg, thinkingConfig: { thinkingLevel: "minimal" } }
+    : /2\.5/.test(model) ? { ...cfg, thinkingConfig: { thinkingBudget: 0 } } : cfg;
   const send = (generationConfig) =>
     fetch(url, {
       method: "POST",
