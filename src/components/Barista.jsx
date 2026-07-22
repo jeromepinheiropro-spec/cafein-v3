@@ -106,7 +106,13 @@ export default function Barista() {
   const showSuggestions = messages.length <= 1 && !pending;
 
   return (
-    <>
+    /* Conteneur fixe dédié au barista, promu en calque de compositing
+       (translateZ) : garantit qu'il reste DEVANT le marquee (transformé) même
+       sur les navigateurs in-app iOS, où un fixe sans calque passe dessous. */
+    <div
+      className="fixed bottom-5 left-5 z-[9150]"
+      style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)", willChange: "transform", backfaceVisibility: "hidden" }}
+    >
       {/* lanceur */}
       <AnimatePresence>
         {ready && !open && (
@@ -122,7 +128,7 @@ export default function Barista() {
             whileHover={{ scale: 1.06, rotate: -3 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 220, damping: 16 }}
-            className="fixed bottom-5 left-5 z-[9150] flex items-center rounded-full bg-espresso text-cream border-[3px] border-ink pl-[4.9rem] pr-5 py-3 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="absolute bottom-0 left-0 flex items-center rounded-full bg-espresso text-cream border-[3px] border-ink pl-[4.9rem] pr-5 py-3 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
             {/* mascotte qui dépasse en haut à gauche */}
             <motion.span
@@ -150,7 +156,7 @@ export default function Barista() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.92 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
-            className="fixed bottom-5 left-5 z-[9150] flex flex-col w-[min(23rem,calc(100vw-2.5rem))] h-[min(30rem,calc(100vh-7rem))] rounded-[1.4rem] overflow-hidden bg-cream border-[3px] border-ink shadow-[10px_10px_0_#0A0F0D]"
+            className="absolute bottom-0 left-0 flex flex-col w-[min(23rem,calc(100vw-2.5rem))] h-[min(30rem,calc(100vh-7rem))] rounded-[1.4rem] overflow-hidden bg-cream border-[3px] border-ink shadow-[10px_10px_0_#0A0F0D]"
           >
             {/* en-tête */}
             <div className="flex items-center gap-3 px-4 py-3 bg-espresso text-cream shrink-0">
@@ -260,6 +266,6 @@ export default function Barista() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
