@@ -27,7 +27,13 @@ const LINKS = {
     { label: "Contact", to: "/#contact" },
   ],
 };
-const WORD = ["C", "A", "F", "E", "I", "N"];
+/* « CAFEIN » lu « CAFE·IN » : les lettres « IN » passent en vert (le jeu de
+   mots), la feuille reste sur le I. Toutes les animations sont conservées. */
+const WORD = [
+  { c: "C" }, { c: "A" }, { c: "F" }, { c: "E" },
+  { c: "I", accent: true, leaf: true },
+  { c: "N", accent: true },
+];
 
 export default function Footer() {
   const eggSpeed = useEggSpeed();
@@ -77,11 +83,12 @@ export default function Footer() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.06, type: "spring", stiffness: 150, damping: 16 }}
                 whileHover={{ y: -20, color: "#1FCE8A", transition: { type: "spring", stiffness: 400, damping: 12 } }}
+                style={l.accent ? { color: "#1FCE8A" } : undefined}
                 className="font-display font-extrabold text-cream leading-none cursor-default text-[clamp(3rem,14vw,13rem)]"
               >
-                {l === "I" ? (
+                {l.leaf ? (
                   <span className="relative inline-block">
-                    I
+                    {l.c}
                     <motion.span
                       animate={{ rotate: [0, 15, -15, 0] }}
                       transition={{ repeat: Infinity, duration: (4) / eggSpeed }}
@@ -91,7 +98,7 @@ export default function Footer() {
                     </motion.span>
                   </span>
                 ) : (
-                  l
+                  l.c
                 )}
               </motion.span>
             ))}
