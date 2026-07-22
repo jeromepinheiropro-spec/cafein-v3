@@ -128,7 +128,7 @@ export default function Barista() {
             whileHover={{ scale: 1.06, rotate: -3 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 220, damping: 16 }}
-            className="absolute bottom-0 left-0 flex items-center rounded-full bg-espresso text-cream border-[3px] border-ink pl-[4.9rem] pr-5 py-3 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="absolute bottom-0 left-0 w-max flex items-center rounded-full bg-espresso text-cream border-[3px] border-ink pl-[4.9rem] pr-5 py-3 shadow-[5px_5px_0_#0A0F0D] hover:shadow-[2px_2px_0_#0A0F0D] hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
             {/* mascotte qui dépasse en haut à gauche */}
             <motion.span
