@@ -89,7 +89,8 @@ export default function Nav() {
         variants={{ visible: { y: 0 }, hidden: { y: "-110%" } }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ type: "spring", stiffness: 260, damping: 30 }}
-        className="fixed top-0 inset-x-0 z-[500] px-4 md:px-8 pt-4"
+        className="fixed top-0 inset-x-0 z-[500] px-4 md:px-8"
+        style={{ paddingTop: "calc(1rem + env(safe-area-inset-top))" }}
       >
         <div className="mx-auto max-w-7xl flex items-center justify-between rounded-2xl bg-cream/80 backdrop-blur-xl border-2 border-ink/10 px-4 md:px-6 py-3 shadow-[0_8px_30px_rgba(10,15,13,0.08)]">
           <Link

@@ -41,7 +41,10 @@ export default function Footer() {
   const { lang } = useLang();
   const t = useT();
   return (
-    <footer className="relative bg-espresso border-t-4 border-mint overflow-hidden">
+    <footer
+      className="relative bg-espresso border-t-4 border-mint overflow-hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       <div className="mx-auto max-w-7xl px-6 md:px-10 pt-16 pb-8">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap gap-x-6 gap-y-2">
