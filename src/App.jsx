@@ -96,7 +96,7 @@ export default function App() {
   return (
     <LangProvider>
     <EggProvider>
-    <div className="grain egg-scope">
+    <div className="grain egg-scope bg-cream min-h-[100svh]">
       <Cursor />
       <AnimatePresence>
         {loading && <Preloader onDone={() => setLoading(false)} />}
