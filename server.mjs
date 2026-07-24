@@ -1100,6 +1100,47 @@ app.get(["/moderation", "/en/moderation"], (_req, res) =>
   res.redirect(301, "https://admin.cafein.lu/")
 );
 
+/* Sitemap dynamique : pages statiques (FR + EN) + articles de blog publiés.
+   Généré à la volée → les nouveaux articles publiés depuis le back-office y
+   apparaissent automatiquement. lastmod = date du jour / maj de l'article. */
+const SITEMAP_PATHS = [
+  "/", "/creation-site-web", "/seo-geo", "/communication",
+  "/notre-expertise", "/equipe", "/lexique",
+  "/notre-expertise/sites-vitrine", "/notre-expertise/e-commerce",
+  "/notre-expertise/developpement-sur-mesure", "/notre-expertise/seo",
+  "/notre-expertise/geo-visibilite-ia", "/notre-expertise/seo-local-luxembourg",
+  "/notre-expertise/reseaux-sociaux", "/notre-expertise/contenus-copywriting",
+  "/notre-expertise/branding-identite", "/notre-expertise/campagnes-publicitaires",
+  "/notre-expertise/emailing-newsletters", "/notre-expertise/data-reporting",
+];
+app.get("/sitemap.xml", (_req, res) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = [];
+  for (const p of SITEMAP_PATHS) {
+    urls.push({ loc: CANON_SITE + p, lastmod: today });
+    urls.push({ loc: CANON_SITE + "/en" + (p === "/" ? "" : p), lastmod: today });
+  }
+  try {
+    const real = loadPosts().filter((x) => x.published);
+    const realSlugs = new Set(real.map((x) => x.slug));
+    const hidden = new Set(loadHidden());
+    const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !hidden.has(e.slug));
+    for (const post of [...real, ...examples]) {
+      const base = post.lang === "en" ? CANON_SITE + "/en/blog/" : CANON_SITE + "/blog/";
+      urls.push({ loc: base + post.slug, lastmod: String(post.updated || post.date || today).slice(0, 10) });
+    }
+  } catch (e) {
+    console.warn("sitemap posts:", e && e.message);
+  }
+  const body =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map((u) => `  <url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod></url>`).join("\n") +
+    '\n</urlset>\n';
+  res.set("Content-Type", "application/xml; charset=utf-8");
+  res.send(body);
+});
+
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
 app.get(/.*/, (req, res) => {
   res.set("Content-Type", "text/html; charset=utf-8");
