@@ -1094,6 +1094,12 @@ function htmlForPath(reqPath) {
   return out.replace(/<\/head>/i, tags + "\n</head>");
 }
 
+/* L'espace équipe n'existe plus que sur admin.cafein.lu : l'ancien chemin de
+   secours /moderation (et /en/moderation) redirige vers le sous-domaine dédié. */
+app.get(["/moderation", "/en/moderation"], (_req, res) =>
+  res.redirect(301, "https://admin.cafein.lu/")
+);
+
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
 app.get(/.*/, (req, res) => {
   res.set("Content-Type", "text/html; charset=utf-8");
