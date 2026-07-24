@@ -502,14 +502,20 @@ function savePosts(list) {
 
 /* Public : la liste ne renvoie que les articles publiés, sans le corps. */
 app.get("/api/posts", (_req, res) => {
-  const posts = loadPosts()
-    .filter((p) => p.published)
+  const real = loadPosts().filter((p) => p.published);
+  const realSlugs = new Set(real.map((p) => p.slug));
+  /* Les exemples (démo, SEA) sont ajoutés à la volée, sauf si un vrai
+     article publié porte déjà le même slug (il a alors la priorité). */
+  const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug));
+  const posts = [...real, ...examples]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .map(({ body, ...rest }) => rest);
   res.json(posts);
 });
 app.get("/api/posts/:slug", (req, res) => {
-  const p = loadPosts().find((x) => x.slug === req.params.slug && x.published);
+  const p =
+    loadPosts().find((x) => x.slug === req.params.slug && x.published) ||
+    EXAMPLE_POSTS.find((e) => e.slug === req.params.slug);
   if (!p) return res.status(404).json({ error: "Introuvable." });
   res.json(p);
 });
@@ -835,65 +841,8 @@ ou <a href="/creation-site-web" style="color:#17A46E;font-weight:700">ajouter un
 </style>
 <p><a class="cta-demo" href="/#contact">Un bouton stylé en CSS</a></p>`;
 
-/* Seed SÛR d'un article d'exemple. Règle d'or : ne JAMAIS écraser
-   posts.json s'il existe mais n'est pas lisible/parsable — sinon une
-   lecture ratée pendant un déploiement effacerait tous les articles.
-   Dans ce cas on reporte le seed (le marqueur n'est pas posé), et il
-   réessaiera au prochain démarrage. */
-function seedPostOnce(marker, slug, buildPost) {
-  if (fs.existsSync(marker)) return;
-  let raw = "";
-  try {
-    raw = fs.existsSync(POSTS_FILE) ? fs.readFileSync(POSTS_FILE, "utf8") : "";
-  } catch {
-    console.warn(`Seed ${slug} : lecture posts.json impossible, reporté.`);
-    return;
-  }
-  let posts = [];
-  if (raw.trim()) {
-    try {
-      posts = JSON.parse(raw);
-    } catch {
-      console.warn(`Seed ${slug} : posts.json illisible, seed reporté (aucune écriture).`);
-      return; // NE PAS écraser des données existantes
-    }
-    if (!Array.isArray(posts)) {
-      console.warn(`Seed ${slug} : posts.json inattendu, seed reporté.`);
-      return;
-    }
-  }
-  try {
-    if (!posts.some((p) => p.slug === slug)) {
-      posts.push(buildPost());
-      savePosts(posts);
-    }
-    fs.writeFileSync(marker, new Date().toISOString());
-  } catch (e) {
-    console.warn(`Seed ${slug} :`, e?.message);
-  }
-}
-
-/* Marqueurs « -v2 » : après un incident où le fichier avait été vidé, on
-   relance une fois le seed (avec la logique sûre) pour restaurer la démo. */
-seedPostOnce(path.join(DATA_DIR, ".demo-blog-seeded-v2"), "article-demo", () => ({
-  id: crypto.randomUUID(),
-  slug: "article-demo",
-  title: "Article démo : photo + HTML/CSS",
-  tag: "Démo",
-  excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
-  cover: "/blog-demo-photo.jpg",
-  format: "html",
-  body: DEMO_HTML,
-  lang: "fr",
-  published: true,
-  date: new Date().toISOString(),
-  updated: new Date().toISOString(),
-}));
-
-/* ── Article SEO d'exemple : le SEA (référencement payant) ─────
-   Article complet, optimisé, avec liens internes. Créé une seule fois
-   (marqueur), il sert de modèle réutilisable pour l'équipe. */
-const SEA_HTML = `<p>Vous venez de lancer votre site et vous aimeriez apparaître en haut de Google… tout de suite ? C'est exactement ce que permet le <strong>SEA</strong>. Là où le <a href="/seo-geo">référencement naturel (SEO)</a> demande des mois de patience, le référencement payant achète votre visibilité en quelques clics. On vous explique tout, sans jargon.</p>
+/* ── Article SEO d'exemple : le SEA (référencement payant) ───── */
+const SEA_HTML =`<p>Vous venez de lancer votre site et vous aimeriez apparaître en haut de Google… tout de suite ? C'est exactement ce que permet le <strong>SEA</strong>. Là où le <a href="/seo-geo">référencement naturel (SEO)</a> demande des mois de patience, le référencement payant achète votre visibilité en quelques clics. On vous explique tout, sans jargon.</p>
 
 <h2>Le SEA, c'est quoi ?</h2>
 <p>SEA signifie <em>Search Engine Advertising</em>, soit « publicité sur les moteurs de recherche ». Ce sont les résultats marqués <strong>« Annonce »</strong> qui apparaissent tout en haut (et en bas) d'une page Google, avant les résultats naturels. La régie la plus connue est <strong>Google Ads</strong> (l'ancien Google AdWords), mais le principe existe aussi sur Bing et sur les réseaux sociaux.</p>
@@ -938,37 +887,45 @@ const SEA_HTML = `<p>Vous venez de lancer votre site et vous aimeriez apparaîtr
 <h2>Le SEA avec Cafein</h2>
 <p>Chez Cafein, pas de vent : des campagnes claires, un suivi humain et des résultats mesurables. On combine <a href="/seo-geo">SEO &amp; GEO</a>, SEA, <a href="/creation-site-web">création de site</a> et <a href="/communication">communication digitale</a> pour une visibilité complète. Découvrez <a href="/notre-expertise">toutes nos expertises</a>.</p>`;
 
-seedPostOnce(path.join(DATA_DIR, ".sea-blog-seeded-v2"), "sea-referencement-payant-google-ads", () => ({
-  id: crypto.randomUUID(),
-  slug: "sea-referencement-payant-google-ads",
-  title: "SEA : le référencement payant pour être visible sur Google dès aujourd'hui",
-  tag: "SEA",
-  excerpt:
-    "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
-  cover: "/blog-sea-photo.jpg",
-  format: "html",
-  body: SEA_HTML,
-  lang: "fr",
-  published: true,
-  date: new Date().toISOString(),
-  updated: new Date().toISOString(),
-}));
-
-/* Migration : bascule l'article SEA de la maquette (/blog-sea-cover.png)
-   vers la vraie photo libre de droits (/blog-sea-photo.jpg). Sûre : ne
-   sauvegarde que si l'article est trouvé et sa couverture est la valeur
-   par défaut (respecte une éventuelle retouche manuelle). */
-try {
-  const posts = loadPosts();
-  const sea = posts.find((p) => p.slug === "sea-referencement-payant-google-ads");
-  if (sea && sea.cover === "/blog-sea-cover.png") {
-    sea.cover = "/blog-sea-photo.jpg";
-    sea.updated = new Date().toISOString();
-    savePosts(posts);
-  }
-} catch (e) {
-  console.warn("Migration image SEA ignorée :", e?.message);
-}
+/* ── Articles d'EXEMPLE servis « virtuellement » ───────────────
+   Ils NE SONT JAMAIS écrits dans posts.json : ils sont fusionnés à la
+   lecture (voir GET /api/posts). Avantages : ils s'affichent toujours,
+   et le code ne peut jamais écraser/effacer les vrais articles de
+   l'équipe. Un vrai article ayant le même slug a la priorité (permet de
+   remplacer un exemple par sa propre version depuis le back-office). */
+const EXAMPLE_POSTS = [
+  {
+    id: "example-article-demo",
+    slug: "article-demo",
+    title: "Article démo : photo + HTML/CSS",
+    tag: "Démo",
+    excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
+    cover: "/blog-demo-photo.jpg",
+    format: "html",
+    body: DEMO_HTML,
+    lang: "fr",
+    published: true,
+    example: true,
+    date: "2026-07-20T09:00:00.000Z",
+    updated: "2026-07-20T09:00:00.000Z",
+  },
+  {
+    id: "example-sea",
+    slug: "sea-referencement-payant-google-ads",
+    title: "SEA : le référencement payant pour être visible sur Google dès aujourd'hui",
+    tag: "SEA",
+    excerpt:
+      "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
+    cover: "/blog-sea-photo.jpg",
+    format: "html",
+    body: SEA_HTML,
+    lang: "fr",
+    published: true,
+    example: true,
+    date: "2026-07-24T09:00:00.000Z",
+    updated: "2026-07-24T09:00:00.000Z",
+  },
+];
 
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
