@@ -500,30 +500,70 @@ function savePosts(list) {
   fs.writeFileSync(POSTS_FILE, JSON.stringify(list, null, 2));
 }
 
+/* Exemples masqués : liste de slugs d'articles d'exemple que l'équipe a
+   choisi de retirer du site. Stockée dans un petit fichier séparé (jamais
+   dans posts.json), donc sans aucun risque pour les vrais articles. */
+const HIDDEN_FILE = path.join(DATA_DIR, "hidden-examples.json");
+function loadHidden() {
+  try {
+    const a = JSON.parse(fs.readFileSync(HIDDEN_FILE, "utf8"));
+    return Array.isArray(a) ? a : [];
+  } catch {
+    return [];
+  }
+}
+function saveHidden(list) {
+  try {
+    fs.writeFileSync(HIDDEN_FILE, JSON.stringify([...new Set(list)], null, 2));
+  } catch (e) {
+    console.warn("saveHidden :", e?.message);
+  }
+}
+function hideExample(slug) {
+  const h = loadHidden();
+  if (!h.includes(slug)) saveHidden([...h, slug]);
+}
+function unhideExample(slug) {
+  saveHidden(loadHidden().filter((s) => s !== slug));
+}
+
 /* Public : la liste ne renvoie que les articles publiés, sans le corps. */
 app.get("/api/posts", (_req, res) => {
   const real = loadPosts().filter((p) => p.published);
   const realSlugs = new Set(real.map((p) => p.slug));
+  const hidden = new Set(loadHidden());
   /* Les exemples (démo, SEA) sont ajoutés à la volée, sauf si un vrai
-     article publié porte déjà le même slug (il a alors la priorité). */
-  const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug));
+     article publié porte déjà le même slug (priorité), ou si l'équipe les
+     a masqués depuis le back-office. */
+  const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !hidden.has(e.slug));
   const posts = [...real, ...examples]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .map(({ body, ...rest }) => rest);
   res.json(posts);
 });
 app.get("/api/posts/:slug", (req, res) => {
-  const p =
-    loadPosts().find((x) => x.slug === req.params.slug && x.published) ||
-    EXAMPLE_POSTS.find((e) => e.slug === req.params.slug);
-  if (!p) return res.status(404).json({ error: "Introuvable." });
-  res.json(p);
+  const real = loadPosts().find((x) => x.slug === req.params.slug && x.published);
+  if (real) return res.json(real);
+  const ex = EXAMPLE_POSTS.find((e) => e.slug === req.params.slug);
+  if (ex && !loadHidden().includes(ex.slug)) return res.json(ex);
+  return res.status(404).json({ error: "Introuvable." });
 });
 
 /* Admin : gestion complète (liste, création, édition, suppression). */
 app.get("/api/admin/posts", (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
-  res.json(loadPosts().sort((a, b) => new Date(b.date) - new Date(a.date)));
+  const real = loadPosts();
+  const realSlugs = new Set(real.map((p) => p.slug));
+  const hidden = new Set(loadHidden());
+  /* On ajoute les exemples (non remplacés par un vrai article) à la liste
+     admin, marqués « example », avec published = false s'ils sont masqués.
+     L'équipe peut ainsi les publier/masquer ou les supprimer (= masquer). */
+  const exampleEntries = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug)).map((e) => ({
+    ...e,
+    example: true,
+    published: !hidden.has(e.slug),
+  }));
+  res.json([...real, ...exampleEntries].sort((a, b) => new Date(b.date) - new Date(a.date)));
 });
 app.post("/api/admin/posts", (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
@@ -554,10 +594,44 @@ app.post("/api/admin/posts", (req, res) => {
 });
 app.put("/api/admin/posts/:id", (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const b = req.body || {};
+
+  /* Cas d'un article d'EXEMPLE (virtuel). Publier/masquer = (dé)masquer.
+     Toute autre modification crée une vraie copie éditable qui prend le
+     dessus sur l'exemple (même slug). */
+  const ex = EXAMPLE_POSTS.find((e) => e.id === req.params.id);
+  if (ex) {
+    const onlyPublish = Object.keys(b).every((k) => k === "published");
+    if (onlyPublish && b.published != null) {
+      if (b.published) unhideExample(ex.slug);
+      else hideExample(ex.slug);
+      return res.json({ ...ex, example: true, published: !loadHidden().includes(ex.slug) });
+    }
+    // Édition de contenu : on matérialise l'exemple en vrai article.
+    const posts = loadPosts();
+    const real = {
+      ...ex,
+      id: crypto.randomUUID(),
+      example: false,
+      title: b.title != null ? String(b.title).trim().slice(0, 160) || "Sans titre" : ex.title,
+      tag: b.tag != null ? String(b.tag).trim().slice(0, 40) : ex.tag,
+      excerpt: b.excerpt != null ? String(b.excerpt).trim().slice(0, 400) : ex.excerpt,
+      body: b.body != null ? String(b.body).slice(0, 40000) : ex.body,
+      cover: b.cover != null ? String(b.cover).trim().slice(0, 500) : ex.cover,
+      format: b.format != null ? (b.format === "html" ? "html" : "text") : ex.format,
+      published: b.published != null ? !!b.published : true,
+      date: b.date || ex.date,
+      updated: new Date().toISOString(),
+    };
+    posts.push(real);
+    savePosts(posts);
+    unhideExample(ex.slug); // au cas où il était masqué
+    return res.json(real);
+  }
+
   const posts = loadPosts();
   const p = posts.find((x) => x.id === req.params.id);
   if (!p) return res.status(404).json({ error: "Introuvable." });
-  const b = req.body || {};
   if (b.title != null) p.title = String(b.title).trim().slice(0, 160) || "Sans titre";
   if (b.tag != null) p.tag = String(b.tag).trim().slice(0, 40);
   if (b.excerpt != null) p.excerpt = String(b.excerpt).trim().slice(0, 400);
@@ -573,7 +647,13 @@ app.put("/api/admin/posts/:id", (req, res) => {
 });
 app.delete("/api/admin/posts/:id", (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
-  savePosts(loadPosts().filter((x) => x.id !== req.params.id));
+  const posts = loadPosts();
+  const target = posts.find((x) => x.id === req.params.id);
+  if (target) savePosts(posts.filter((x) => x.id !== req.params.id));
+  /* Si on supprime un exemple (ou un vrai article portant le slug d'un
+     exemple), on masque aussi l'exemple pour qu'il ne réapparaisse pas. */
+  const ex = EXAMPLE_POSTS.find((e) => e.id === req.params.id || (target && e.slug === target.slug));
+  if (ex) hideExample(ex.slug);
   res.json({ ok: true });
 });
 
