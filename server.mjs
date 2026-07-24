@@ -803,7 +803,7 @@ const DEMO_HTML = `<p style="font-size:1.15rem;line-height:1.7;color:#0A0F0D">
 <p>Un paragraphe normal. Tu peux <em>mettre en italique</em>, <strong>en gras</strong>,
 ou <a href="/creation-site-web" style="color:#17A46E;font-weight:700">ajouter un lien</a>.</p>
 
-<img src="/blog-demo-cover.png" alt="Illustration de démonstration"
+<img src="/blog-demo-photo.jpg" alt="Illustration de démonstration"
      style="width:100%;border-radius:24px;border:3px solid #0A0F0D;box-shadow:8px 8px 0 #1FCE8A;margin:1.5rem 0" />
 <p style="font-size:.85rem;color:#0A0F0D99;text-align:center;margin-top:-.5rem">
   Une image insérée dans le corps (via le bouton « Insérer une image »).
@@ -846,7 +846,7 @@ if (!fs.existsSync(DEMO_MARKER)) {
         title: "Article démo : photo + HTML/CSS",
         tag: "Démo",
         excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
-        cover: "/blog-demo-cover.png",
+        cover: "/blog-demo-photo.jpg",
         format: "html",
         body: DEMO_HTML,
         lang: "fr",
@@ -860,6 +860,25 @@ if (!fs.existsSync(DEMO_MARKER)) {
   } catch (e) {
     console.warn("Seed démo blog ignoré :", e?.message);
   }
+}
+
+/* Migration : bascule l'article démo de l'ancienne image (placeholder,
+   /blog-demo-cover.png) vers la vraie photo (/blog-demo-photo.jpg). On ne
+   touche qu'aux références par défaut, pour respecter d'éventuelles retouches. */
+try {
+  const posts = loadPosts();
+  const demo = posts.find((p) => p.slug === "article-demo");
+  if (demo) {
+    let changed = false;
+    if (demo.cover === "/blog-demo-cover.png") { demo.cover = "/blog-demo-photo.jpg"; changed = true; }
+    if (demo.body && demo.body.includes("/blog-demo-cover.png")) {
+      demo.body = demo.body.split("/blog-demo-cover.png").join("/blog-demo-photo.jpg");
+      changed = true;
+    }
+    if (changed) { demo.updated = new Date().toISOString(); savePosts(posts); }
+  }
+} catch (e) {
+  console.warn("Migration image démo ignorée :", e?.message);
 }
 
 /* Site statique + fallback SPA */
