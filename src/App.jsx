@@ -30,6 +30,17 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
+  /* Couleur de la barre d'etat mobile : Safari iOS lit le fond du <body>.
+     Sombre pendant le chargement (comme le Preloader), creme ensuite
+     (comme le fond du header). On met aussi a jour theme-color pour les
+     navigateurs qui la respectent. */
+  useEffect(() => {
+    const color = loading ? "#0A0F0D" : "#F5EFE2";
+    document.body.style.backgroundColor = color;
+    const tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) tc.setAttribute("content", color);
+  }, [loading]);
+
   /* Défilement doux (Lenis) + ancres */
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });

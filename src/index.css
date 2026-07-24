@@ -26,7 +26,7 @@ html {
 }
 
 body {
-  @apply bg-mint text-ink font-body antialiased;
+  @apply bg-espresso text-ink font-body antialiased;
   overflow-x: hidden;
   overflow-x: clip;
   max-width: 100%;
