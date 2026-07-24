@@ -207,3 +207,75 @@ body {
   position: relative;
   overflow: hidden;
 }
+
+/* ── Corps d'article en HTML/CSS (mode « HTML » du back-office) ──
+   Styles de base pour que le HTML brut saisi dans l'éditeur reste lisible
+   et cohérent avec le site. Les images sont bornées en largeur ; le reste
+   (couleurs, encadrés…) peut être surchargé en ligne dans l'article. */
+.blog-html {
+  color: rgba(10, 15, 13, 0.85);
+  font-weight: 500;
+  line-height: 1.7;
+  font-size: 1.0625rem;
+}
+.blog-html > * + * {
+  margin-top: 1.25rem;
+}
+.blog-html img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.blog-html h2 {
+  font-family: "Bricolage Grotesque Variable", sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  letter-spacing: -0.01em;
+  color: #0a0f0d;
+  margin-top: 2.25rem;
+  line-height: 1.1;
+}
+.blog-html h3 {
+  font-family: "Bricolage Grotesque Variable", sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #0a0f0d;
+  margin-top: 1.75rem;
+}
+.blog-html a {
+  color: #17a46e;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.blog-html ul,
+.blog-html ol {
+  padding-left: 1.4rem;
+}
+.blog-html ul {
+  list-style: disc;
+}
+.blog-html ol {
+  list-style: decimal;
+}
+.blog-html li + li {
+  margin-top: 0.4rem;
+}
+.blog-html blockquote {
+  border-left: 4px solid #1fce8a;
+  padding-left: 1.1rem;
+  font-style: italic;
+  color: rgba(10, 15, 13, 0.75);
+}
+.blog-html pre {
+  background: #0a0f0d;
+  color: #f5efe2;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+.blog-html code {
+  font-family: "Space Mono", monospace;
+  font-size: 0.9em;
+}
