@@ -431,14 +431,64 @@ function Audits({ audits }) {
 }
 
 /* ══════════════ Blog (CMS) ══════════════ */
-const EMPTY_POST = { title: "", tag: "", cover: "", excerpt: "", body: "", published: false };
+const EMPTY_POST = { title: "", tag: "", cover: "", excerpt: "", body: "", format: "text", published: false };
 function Blog({ posts, setPosts, k, setMsg }) {
   const [editing, setEditing] = useState(null); // null = liste, "new" | post object = éditeur
   const [form, setForm] = useState(EMPTY_POST);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const bodyRef = useRef(null);
+  const coverInputRef = useRef(null);
+  const bodyImgInputRef = useRef(null);
 
   function openNew() { setForm(EMPTY_POST); setEditing("new"); }
-  function openEdit(p) { setForm({ ...p }); setEditing(p); }
+  function openEdit(p) { setForm({ format: "text", ...p }); setEditing(p); }
+  const set = (patch) => setForm((f) => ({ ...f, ...patch }));
+
+  /* Téléverse un fichier image (encodé en data URL) vers le serveur et
+     renvoie l'URL publique /uploads/<fichier>. */
+  async function uploadFile(file) {
+    const data = await new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = () => reject(new Error("Lecture du fichier impossible."));
+      fr.readAsDataURL(file);
+    });
+    const r = await api("/api/admin/upload", k, { method: "POST", body: JSON.stringify({ name: file.name, data }) });
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({}));
+      throw new Error(e.error || "Téléversement impossible.");
+    }
+    return (await r.json()).url;
+  }
+  async function onCoverFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    try { set({ cover: await uploadFile(file) }); }
+    catch (err) { setMsg(err.message); }
+    finally { setUploading(false); }
+  }
+  async function onBodyImageFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadFile(file);
+      const snippet = `\n<img src="${url}" alt="" style="width:100%;border-radius:16px;margin:1.25rem 0" />\n`;
+      const ta = bodyRef.current;
+      const cur = form.body || "";
+      if (ta && typeof ta.selectionStart === "number") {
+        const s = ta.selectionStart, en = ta.selectionEnd;
+        set({ body: cur.slice(0, s) + snippet + cur.slice(en) });
+      } else {
+        set({ body: cur + snippet });
+      }
+    } catch (err) { setMsg(err.message); }
+    finally { setUploading(false); }
+  }
 
   async function save() {
     setSaving(true);
@@ -467,7 +517,6 @@ function Blog({ posts, setPosts, k, setMsg }) {
   }
 
   if (editing) {
-    const set = (patch) => setForm((f) => ({ ...f, ...patch }));
     return (
       <div className="max-w-2xl">
         <button onClick={() => setEditing(null)} className="font-mono text-[11px] tracking-wide uppercase text-mint-dark hover:underline">← Retour aux articles</button>
@@ -478,13 +527,40 @@ function Blog({ posts, setPosts, k, setMsg }) {
           </Field>
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Catégorie (tag)"><input value={form.tag} onChange={(e) => set({ tag: e.target.value })} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" placeholder="SEO, GEO, Site web…" /></Field>
-            <Field label="Image de couverture (URL, optionnel)"><input value={form.cover} onChange={(e) => set({ cover: e.target.value })} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" placeholder="https://…" /></Field>
+            <Field label="Photo de couverture">
+              <div className="flex gap-2">
+                <input value={form.cover} onChange={(e) => set({ cover: e.target.value })} className="flex-1 min-w-0 rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark" placeholder="URL, ou téléverse →" />
+                <input ref={coverInputRef} type="file" accept="image/*" onChange={onCoverFile} className="hidden" />
+                <button type="button" onClick={() => coverInputRef.current?.click()} disabled={uploading} className="shrink-0 rounded-xl bg-ink text-cream font-display font-bold text-sm px-4 border-2 border-ink hover:bg-mint hover:text-ink transition-colors disabled:opacity-60">{uploading ? "…" : "Téléverser"}</button>
+              </div>
+            </Field>
           </div>
+          {form.cover ? (
+            <div className="flex items-center gap-3">
+              <img src={form.cover} alt="" className="w-24 h-16 rounded-lg border-2 border-ink object-cover" />
+              <button type="button" onClick={() => set({ cover: "" })} className="font-mono text-[11px] uppercase tracking-wide text-ink/50 hover:text-ink underline">Retirer la photo</button>
+            </div>
+          ) : null}
           <Field label="Accroche (résumé affiché sur les cartes)">
             <textarea value={form.excerpt} onChange={(e) => set({ excerpt: e.target.value })} rows={2} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark resize-y" placeholder="Une ou deux phrases qui donnent envie de lire." />
           </Field>
-          <Field label="Contenu (une ligne vide = nouveau paragraphe · « ## » = sous-titre)">
-            <textarea value={form.body} onChange={(e) => set({ body: e.target.value })} rows={12} className="w-full rounded-xl border-2 border-ink px-4 py-2.5 font-medium text-ink focus:outline-none focus:border-mint-dark resize-y leading-relaxed" placeholder={"Votre article ici.\n\n## Un sous-titre\n\nUn paragraphe."} />
+
+          <Field label="Format du contenu">
+            <div className="flex gap-2">
+              <button type="button" onClick={() => set({ format: "text" })} className={`rounded-full font-display font-bold text-sm px-4 py-2 border-2 border-ink transition-colors ${form.format !== "html" ? "bg-mint text-ink" : "bg-white text-ink/60 hover:text-ink"}`}>Texte simple</button>
+              <button type="button" onClick={() => set({ format: "html" })} className={`rounded-full font-display font-bold text-sm px-4 py-2 border-2 border-ink transition-colors ${form.format === "html" ? "bg-mint text-ink" : "bg-white text-ink/60 hover:text-ink"}`}>HTML / CSS</button>
+            </div>
+          </Field>
+
+          <Field label={form.format === "html" ? "Contenu HTML / CSS (écris ton propre HTML ; préfixe le CSS par « .blog-html »)" : "Contenu (une ligne vide = nouveau paragraphe · « ## » = sous-titre)"}>
+            {form.format === "html" && (
+              <div className="mb-2 flex items-center gap-2">
+                <input ref={bodyImgInputRef} type="file" accept="image/*" onChange={onBodyImageFile} className="hidden" />
+                <button type="button" onClick={() => bodyImgInputRef.current?.click()} disabled={uploading} className="rounded-full bg-ink text-cream font-display font-bold text-xs px-3 py-1.5 border-2 border-ink hover:bg-mint hover:text-ink transition-colors disabled:opacity-60">{uploading ? "Envoi…" : "＋ Insérer une image"}</button>
+                <span className="font-mono text-[10px] uppercase tracking-wide text-ink/40">insérée à l'endroit du curseur</span>
+              </div>
+            )}
+            <textarea ref={bodyRef} value={form.body} onChange={(e) => set({ body: e.target.value })} rows={form.format === "html" ? 16 : 12} className={`w-full rounded-xl border-2 border-ink px-4 py-2.5 text-ink focus:outline-none focus:border-mint-dark resize-y leading-relaxed ${form.format === "html" ? "font-mono text-[13px]" : "font-medium"}`} placeholder={form.format === "html" ? "<h2>Un titre</h2>\n<p>Un paragraphe avec du <strong>gras</strong>.</p>\n<img src=\"…\" alt=\"\" />" : "Votre article ici.\n\n## Un sous-titre\n\nUn paragraphe."} />
           </Field>
           <label className="flex items-center gap-3 cursor-pointer">
             <button type="button" onClick={() => set({ published: !form.published })} className={`relative w-12 h-7 rounded-full border-2 border-ink transition-colors ${form.published ? "bg-mint" : "bg-white"}`}>

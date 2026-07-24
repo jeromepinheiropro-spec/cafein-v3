@@ -110,7 +110,11 @@ export default function BlogPost() {
               </p>
             )}
 
-            <Body text={post.body} />
+            {post.format === "html" ? (
+              <div className="blog-html mt-8" dangerouslySetInnerHTML={{ __html: post.body }} />
+            ) : (
+              <Body text={post.body} />
+            )}
 
             <div className="mt-16 rounded-3xl bg-espresso border-[3px] border-ink p-8 md:p-10 text-center shadow-[8px_8px_0_#1FCE8A]">
               <p className="font-display font-extrabold text-2xl md:text-3xl text-cream">
