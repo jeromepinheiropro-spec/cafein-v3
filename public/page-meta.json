@@ -1,0 +1,134 @@
+{
+  "/": {
+    "title": "Cafein, agence web & marketing digital à Luxembourg",
+    "titleEn": "Cafein, web & digital marketing agency in Luxembourg",
+    "description": "Agence web à Luxembourg : création de sites, SEO/GEO et communication digitale. On transforme votre présence en ligne en clients. Devis gratuit.",
+    "descriptionEn": "Web agency in Luxembourg: website design, SEO/GEO and digital communication. We turn your online presence into customers. Get a free quote."
+  },
+  "/creation-site-web": {
+    "title": "Création de site web à Luxembourg | Cafein",
+    "titleEn": "Web Design & Website Creation in Luxembourg | Cafein",
+    "description": "Création de sites web sur mesure à Luxembourg : vitrine ou e-commerce, rapides et pensés pour convertir. Design soigné, SEO intégré. Parlons de votre projet.",
+    "descriptionEn": "Custom website creation in Luxembourg: showcase sites and e-commerce, fast and built to convert. Polished design, SEO-ready. Let's talk about your project."
+  },
+  "/seo-geo": {
+    "title": "SEO & GEO à Luxembourg : Google + IA | Cafein",
+    "titleEn": "SEO & GEO in Luxembourg: rank on Google + AI | Cafein",
+    "description": "Agence SEO à Luxembourg : référencement naturel Google et optimisation IA (ChatGPT, Perplexity). Plus de trafic qualifié, durablement. Audit SEO offert.",
+    "descriptionEn": "Luxembourg SEO agency: organic Google ranking and AI optimization (ChatGPT, Perplexity). More qualified traffic, built to last. Free SEO audit."
+  },
+  "/communication": {
+    "title": "Communication digitale à Luxembourg | Cafein",
+    "titleEn": "Digital Communication in Luxembourg | Cafein",
+    "description": "Agence de communication digitale à Luxembourg : réseaux sociaux, contenus, branding et campagnes. Une marque cohérente qui attire et fidélise. Discutons-en.",
+    "descriptionEn": "Digital communication agency in Luxembourg: social media, content, branding and ad campaigns. A consistent brand that attracts and retains. Let's talk."
+  },
+  "/notre-expertise": {
+    "title": "Nos expertises web, SEO & communication | Cafein",
+    "titleEn": "Our web, SEO & communication expertise | Cafein",
+    "description": "Toutes les expertises Cafein au Luxembourg : création de site, SEO/GEO, publicité, réseaux sociaux, branding, emailing, data. Une équipe pour tous vos besoins.",
+    "descriptionEn": "All of Cafein's expertise in Luxembourg: web design, SEO/GEO, ads, social media, branding, emailing and data. One team for all your digital needs."
+  },
+  "/equipe": {
+    "title": "L'équipe Cafein : Stan, Pinoo & Flo | Luxembourg",
+    "titleEn": "Meet the Cafein team: Stan, Pinoo & Flo | Luxembourg",
+    "description": "Rencontrez l'équipe Cafein : trois passionnés du web au Luxembourg qui conçoivent sites, SEO et communication avec exigence et bonne humeur.",
+    "descriptionEn": "Meet the Cafein team: three web enthusiasts in Luxembourg crafting websites, SEO and communication with high standards and good vibes."
+  },
+  "/lexique": {
+    "title": "Lexique du web, SEO & marketing digital | Cafein",
+    "titleEn": "Web, SEO & digital marketing glossary | Cafein",
+    "description": "69 termes du web, SEO, GEO et marketing digital expliqués simplement. Le glossaire Cafein pour comprendre votre projet, sans jargon.",
+    "descriptionEn": "69 web, SEO, GEO and digital marketing terms explained simply. Cafein's glossary to understand your project, without the jargon."
+  },
+  "/notre-expertise/sites-vitrine": {
+    "title": "Création de site vitrine à Luxembourg | Cafein",
+    "titleEn": "Showcase Website Design in Luxembourg | Cafein",
+    "description": "Site vitrine à Luxembourg pour restaurants, artisans et indépendants : beau, rapide et pensé pour transformer vos visiteurs en contacts. Devis gratuit.",
+    "descriptionEn": "Showcase websites in Luxembourg for restaurants, craftsmen and freelancers: beautiful, fast and built to turn visitors into leads. Free quote."
+  },
+  "/notre-expertise/e-commerce": {
+    "title": "Création de site e-commerce à Luxembourg | Cafein",
+    "titleEn": "E-commerce Website Development in Luxembourg | Cafein",
+    "description": "Boutique en ligne à Luxembourg : catalogue, paiement et livraison optimisés pour réduire les abandons et vendre plus. Un e-commerce rapide et rassurant.",
+    "descriptionEn": "Online store in Luxembourg: catalog, checkout and delivery optimized to cut cart abandonment and sell more. A fast, reassuring e-commerce site."
+  },
+  "/notre-expertise/developpement-sur-mesure": {
+    "title": "Développement web sur mesure à Luxembourg | Cafein",
+    "titleEn": "Custom Web Development in Luxembourg | Cafein",
+    "description": "Développement web sur mesure à Luxembourg : SaaS, portails clients, outils internes et intégrations. Des applications robustes qui épousent vos process.",
+    "descriptionEn": "Custom web development in Luxembourg: SaaS, client portals, internal tools and integrations. Robust apps that fit your processes, not the reverse."
+  },
+  "/notre-expertise/seo": {
+    "title": "Référencement naturel (SEO) à Luxembourg | Cafein",
+    "titleEn": "Organic SEO in Luxembourg | Cafein",
+    "description": "Référencement naturel à Luxembourg : technique, contenus et popularité pour capter un trafic qualifié sur Google sans payer chaque clic. Audit offert.",
+    "descriptionEn": "Organic SEO in Luxembourg: technical, content and authority work to capture qualified Google traffic without paying per click. Free audit."
+  },
+  "/notre-expertise/geo-visibilite-ia": {
+    "title": "GEO : visibilité sur les IA à Luxembourg | Cafein",
+    "titleEn": "GEO: AI Visibility (ChatGPT, Gemini) | Cafein",
+    "description": "GEO à Luxembourg : devenez la réponse recommandée par ChatGPT, Perplexity et Gemini. Optimisez votre visibilité sur les moteurs IA. Prenons rendez-vous.",
+    "descriptionEn": "GEO in Luxembourg: become the answer recommended by ChatGPT, Perplexity and Gemini. Optimize your visibility on AI engines. Let's talk."
+  },
+  "/notre-expertise/seo-local-luxembourg": {
+    "title": "SEO local & Google Maps à Luxembourg | Cafein",
+    "titleEn": "Local SEO & Google Maps in Luxembourg | Cafein",
+    "description": "SEO local à Luxembourg : sortez en premier sur Google Maps et les recherches « près de moi ». Plus de clients de votre région. Audit local offert.",
+    "descriptionEn": "Local SEO in Luxembourg: rank first on Google Maps and 'near me' searches. Win more customers from your area. Free local audit."
+  },
+  "/notre-expertise/reseaux-sociaux": {
+    "title": "Gestion des réseaux sociaux à Luxembourg | Cafein",
+    "titleEn": "Social Media Management in Luxembourg | Cafein",
+    "description": "Community management à Luxembourg : stratégie, contenus et publication sur Instagram, LinkedIn, Facebook et TikTok. Votre marque vit, vous travaillez.",
+    "descriptionEn": "Social media management in Luxembourg: strategy, content and posting on Instagram, LinkedIn, Facebook and TikTok. Your brand thrives while you work."
+  },
+  "/notre-expertise/contenus-copywriting": {
+    "title": "Rédaction web & copywriting à Luxembourg | Cafein",
+    "titleEn": "Copywriting & Web Content in Luxembourg | Cafein",
+    "description": "Copywriting et contenus à Luxembourg : pages, articles et newsletters qui vendent, rassurent et référencent. Des textes que vos clients et Google adorent.",
+    "descriptionEn": "Copywriting and content in Luxembourg: pages, articles and newsletters that sell, reassure and rank. Text your customers and Google love."
+  },
+  "/notre-expertise/branding-identite": {
+    "title": "Branding & identité visuelle à Luxembourg | Cafein",
+    "titleEn": "Branding & Visual Identity in Luxembourg | Cafein",
+    "description": "Branding à Luxembourg : logo, palette, typographies et ton de marque. Une identité cohérente et mémorable, déclinée partout. Construisons votre marque.",
+    "descriptionEn": "Branding in Luxembourg: logo, palette, typography and brand voice. A consistent, memorable identity applied everywhere. Let's build your brand."
+  },
+  "/notre-expertise/campagnes-publicitaires": {
+    "title": "Publicité Google Ads & social ads | Cafein Luxembourg",
+    "titleEn": "Google Ads & Social Ads in Luxembourg | Cafein",
+    "description": "Campagnes publicitaires à Luxembourg : Google Ads et social ads conçus, lancés et optimisés. Visibilité immédiate, chaque euro suivi, résultats mesurables.",
+    "descriptionEn": "Ad campaigns in Luxembourg: Google Ads and social ads built, launched and optimized. Instant visibility, every euro tracked, measurable results."
+  },
+  "/notre-expertise/emailing-newsletters": {
+    "title": "Emailing & newsletters à Luxembourg | Cafein",
+    "titleEn": "Email Marketing & Newsletters in Luxembourg | Cafein",
+    "description": "Emailing à Luxembourg : newsletters soignées et séquences automatiques qui font de votre liste un canal de vente régulier et rentable. Parlons stratégie.",
+    "descriptionEn": "Email marketing in Luxembourg: polished newsletters and automated sequences that turn your list into a steady, profitable sales channel. Let's talk."
+  },
+  "/notre-expertise/data-reporting": {
+    "title": "Data & reporting marketing à Luxembourg | Cafein",
+    "titleEn": "Marketing Data & Reporting in Luxembourg | Cafein",
+    "description": "Data & reporting à Luxembourg : trafic, positions, conversions et coût par lead réunis dans des rapports clairs. Pilotez votre marketing, plus à l'aveugle.",
+    "descriptionEn": "Data & reporting in Luxembourg: traffic, rankings, conversions and cost per lead in clear reports. Steer your marketing, no more guesswork."
+  },
+  "/mentions-legales": {
+    "title": "Mentions légales | Cafein",
+    "titleEn": "Legal Notice | Cafein",
+    "description": "Mentions légales du site Cafein, agence web et marketing digital au Luxembourg.",
+    "descriptionEn": "Legal notice for Cafein, a web and digital marketing agency in Luxembourg."
+  },
+  "/confidentialite": {
+    "title": "Politique de confidentialité (RGPD) | Cafein",
+    "titleEn": "Privacy Policy (GDPR) | Cafein",
+    "description": "Comment Cafein protège vos données personnelles : politique de confidentialité conforme au RGPD.",
+    "descriptionEn": "How Cafein protects your personal data: GDPR-compliant privacy policy."
+  },
+  "/politique-cookies": {
+    "title": "Politique de cookies | Cafein",
+    "titleEn": "Cookie Policy | Cafein",
+    "description": "Gestion des cookies sur le site Cafein et vos choix de consentement.",
+    "descriptionEn": "How cookies are used on the Cafein website and how to manage your consent."
+  }
+}
