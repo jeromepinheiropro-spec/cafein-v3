@@ -1016,9 +1016,47 @@ const EXAMPLE_POSTS = [
   },
 ];
 
-/* Site statique + fallback SPA */
+/* Site statique + fallback SPA (avec <head> correct par route).
+   La SPA (React) reecrit deja le <head> cote client via src/lib/seo.jsx,
+   mais Google et les crawlers se fient au HTML BRUT : on injecte donc
+   canonical + hreflang + og:url corrects PAR ROUTE, pour que chaque page se
+   declare elle-meme canonique (et non l'accueil). Miroir de urlFor()/setHreflang(). */
 const DIST = path.join(__dirname, "dist");
+const INDEX_HTML = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
+const CANON_SITE = "https://www.cafein.lu";
+
+function absUrl(neutral, lang) {
+  const n = neutral === "/" ? "" : neutral;
+  return lang === "en" ? CANON_SITE + "/en" + n : CANON_SITE + (n || "/");
+}
+function urlsForPath(reqPath) {
+  let p = (reqPath || "/").split("?")[0];
+  if (p.length > 1 && p.endsWith("/")) p = p.replace(/\/+$/, "");
+  const isEn = p === "/en" || p.startsWith("/en/");
+  const neutral = isEn ? (p === "/en" ? "/" : p.slice(3)) : p;
+  const frUrl = absUrl(neutral, "fr");
+  const enUrl = absUrl(neutral, "en");
+  return { canonical: isEn ? enUrl : frUrl, frUrl, enUrl };
+}
+function htmlForPath(reqPath) {
+  const { canonical, frUrl, enUrl } = urlsForPath(reqPath);
+  const tags =
+    `<link rel="canonical" href="${canonical}" />` +
+    `<link rel="alternate" hreflang="fr" href="${frUrl}" />` +
+    `<link rel="alternate" hreflang="en" href="${enUrl}" />` +
+    `<link rel="alternate" hreflang="x-default" href="${frUrl}" />` +
+    `<meta property="og:url" content="${canonical}" />`;
+  return INDEX_HTML
+    .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
+    .replace(/\s*<link[^>]+rel="alternate"[^>]+hreflang[^>]*>/gi, "")
+    .replace(/\s*<meta[^>]+property="og:url"[^>]*>/i, "")
+    .replace(/<\/head>/i, tags + "\n</head>");
+}
+
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
-app.get(/.*/, (_req, res) => res.sendFile(path.join(DIST, "index.html")));
+app.get(/.*/, (req, res) => {
+  res.set("Content-Type", "text/html; charset=utf-8");
+  res.send(htmlForPath(req.path));
+});
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Cafein en ligne sur :${PORT} — data: ${FILE}`));
