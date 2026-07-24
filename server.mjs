@@ -835,51 +835,60 @@ ou <a href="/creation-site-web" style="color:#17A46E;font-weight:700">ajouter un
 </style>
 <p><a class="cta-demo" href="/#contact">Un bouton stylé en CSS</a></p>`;
 
-const DEMO_MARKER = path.join(DATA_DIR, ".demo-blog-seeded");
-if (!fs.existsSync(DEMO_MARKER)) {
+/* Seed SÛR d'un article d'exemple. Règle d'or : ne JAMAIS écraser
+   posts.json s'il existe mais n'est pas lisible/parsable — sinon une
+   lecture ratée pendant un déploiement effacerait tous les articles.
+   Dans ce cas on reporte le seed (le marqueur n'est pas posé), et il
+   réessaiera au prochain démarrage. */
+function seedPostOnce(marker, slug, buildPost) {
+  if (fs.existsSync(marker)) return;
+  let raw = "";
   try {
-    const posts = loadPosts();
-    if (!posts.some((p) => p.slug === "article-demo")) {
-      posts.push({
-        id: crypto.randomUUID(),
-        slug: "article-demo",
-        title: "Article démo : photo + HTML/CSS",
-        tag: "Démo",
-        excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
-        cover: "/blog-demo-photo.jpg",
-        format: "html",
-        body: DEMO_HTML,
-        lang: "fr",
-        published: true,
-        date: new Date().toISOString(),
-        updated: new Date().toISOString(),
-      });
+    raw = fs.existsSync(POSTS_FILE) ? fs.readFileSync(POSTS_FILE, "utf8") : "";
+  } catch {
+    console.warn(`Seed ${slug} : lecture posts.json impossible, reporté.`);
+    return;
+  }
+  let posts = [];
+  if (raw.trim()) {
+    try {
+      posts = JSON.parse(raw);
+    } catch {
+      console.warn(`Seed ${slug} : posts.json illisible, seed reporté (aucune écriture).`);
+      return; // NE PAS écraser des données existantes
+    }
+    if (!Array.isArray(posts)) {
+      console.warn(`Seed ${slug} : posts.json inattendu, seed reporté.`);
+      return;
+    }
+  }
+  try {
+    if (!posts.some((p) => p.slug === slug)) {
+      posts.push(buildPost());
       savePosts(posts);
     }
-    fs.writeFileSync(DEMO_MARKER, new Date().toISOString());
+    fs.writeFileSync(marker, new Date().toISOString());
   } catch (e) {
-    console.warn("Seed démo blog ignoré :", e?.message);
+    console.warn(`Seed ${slug} :`, e?.message);
   }
 }
 
-/* Migration : bascule l'article démo de l'ancienne image (placeholder,
-   /blog-demo-cover.png) vers la vraie photo (/blog-demo-photo.jpg). On ne
-   touche qu'aux références par défaut, pour respecter d'éventuelles retouches. */
-try {
-  const posts = loadPosts();
-  const demo = posts.find((p) => p.slug === "article-demo");
-  if (demo) {
-    let changed = false;
-    if (demo.cover === "/blog-demo-cover.png") { demo.cover = "/blog-demo-photo.jpg"; changed = true; }
-    if (demo.body && demo.body.includes("/blog-demo-cover.png")) {
-      demo.body = demo.body.split("/blog-demo-cover.png").join("/blog-demo-photo.jpg");
-      changed = true;
-    }
-    if (changed) { demo.updated = new Date().toISOString(); savePosts(posts); }
-  }
-} catch (e) {
-  console.warn("Migration image démo ignorée :", e?.message);
-}
+/* Marqueurs « -v2 » : après un incident où le fichier avait été vidé, on
+   relance une fois le seed (avec la logique sûre) pour restaurer la démo. */
+seedPostOnce(path.join(DATA_DIR, ".demo-blog-seeded-v2"), "article-demo", () => ({
+  id: crypto.randomUUID(),
+  slug: "article-demo",
+  title: "Article démo : photo + HTML/CSS",
+  tag: "Démo",
+  excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
+  cover: "/blog-demo-photo.jpg",
+  format: "html",
+  body: DEMO_HTML,
+  lang: "fr",
+  published: true,
+  date: new Date().toISOString(),
+  updated: new Date().toISOString(),
+}));
 
 /* ── Article SEO d'exemple : le SEA (référencement payant) ─────
    Article complet, optimisé, avec liens internes. Créé une seule fois
@@ -929,33 +938,21 @@ const SEA_HTML = `<p>Vous venez de lancer votre site et vous aimeriez apparaîtr
 <h2>Le SEA avec Cafein</h2>
 <p>Chez Cafein, pas de vent : des campagnes claires, un suivi humain et des résultats mesurables. On combine <a href="/seo-geo">SEO &amp; GEO</a>, SEA, <a href="/creation-site-web">création de site</a> et <a href="/communication">communication digitale</a> pour une visibilité complète. Découvrez <a href="/notre-expertise">toutes nos expertises</a>.</p>`;
 
-const SEA_MARKER = path.join(DATA_DIR, ".sea-blog-seeded");
-if (!fs.existsSync(SEA_MARKER)) {
-  try {
-    const posts = loadPosts();
-    if (!posts.some((p) => p.slug === "sea-referencement-payant-google-ads")) {
-      posts.push({
-        id: crypto.randomUUID(),
-        slug: "sea-referencement-payant-google-ads",
-        title: "SEA : le référencement payant pour être visible sur Google dès aujourd'hui",
-        tag: "SEA",
-        excerpt:
-          "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
-        cover: "/blog-sea-cover.png",
-        format: "html",
-        body: SEA_HTML,
-        lang: "fr",
-        published: true,
-        date: new Date().toISOString(),
-        updated: new Date().toISOString(),
-      });
-      savePosts(posts);
-    }
-    fs.writeFileSync(SEA_MARKER, new Date().toISOString());
-  } catch (e) {
-    console.warn("Seed article SEA ignoré :", e?.message);
-  }
-}
+seedPostOnce(path.join(DATA_DIR, ".sea-blog-seeded-v2"), "sea-referencement-payant-google-ads", () => ({
+  id: crypto.randomUUID(),
+  slug: "sea-referencement-payant-google-ads",
+  title: "SEA : le référencement payant pour être visible sur Google dès aujourd'hui",
+  tag: "SEA",
+  excerpt:
+    "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
+  cover: "/blog-sea-cover.png",
+  format: "html",
+  body: SEA_HTML,
+  lang: "fr",
+  published: true,
+  date: new Date().toISOString(),
+  updated: new Date().toISOString(),
+}));
 
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
