@@ -881,6 +881,82 @@ try {
   console.warn("Migration image démo ignorée :", e?.message);
 }
 
+/* ── Article SEO d'exemple : le SEA (référencement payant) ─────
+   Article complet, optimisé, avec liens internes. Créé une seule fois
+   (marqueur), il sert de modèle réutilisable pour l'équipe. */
+const SEA_HTML = `<p>Vous venez de lancer votre site et vous aimeriez apparaître en haut de Google… tout de suite ? C'est exactement ce que permet le <strong>SEA</strong>. Là où le <a href="/seo-geo">référencement naturel (SEO)</a> demande des mois de patience, le référencement payant achète votre visibilité en quelques clics. On vous explique tout, sans jargon.</p>
+
+<h2>Le SEA, c'est quoi ?</h2>
+<p>SEA signifie <em>Search Engine Advertising</em>, soit « publicité sur les moteurs de recherche ». Ce sont les résultats marqués <strong>« Annonce »</strong> qui apparaissent tout en haut (et en bas) d'une page Google, avant les résultats naturels. La régie la plus connue est <strong>Google Ads</strong> (l'ancien Google AdWords), mais le principe existe aussi sur Bing et sur les réseaux sociaux.</p>
+<p>Le point clé : vous ne payez que lorsqu'un internaute <strong>clique</strong> sur votre annonce (le coût par clic, ou CPC). Pas de clic, pas de facture.</p>
+
+<h2>SEA ou SEO : lequel choisir ?</h2>
+<p>Ce n'est pas l'un <em>contre</em> l'autre, c'est l'un <em>avec</em> l'autre :</p>
+<ul>
+  <li><strong>SEO</strong> (<a href="/seo-geo">référencement naturel &amp; GEO</a>) : gratuit au clic, durable, mais lent (2 à 6 mois pour de vrais résultats). Vous « méritez » votre place.</li>
+  <li><strong>SEA</strong> (référencement payant) : immédiat, mais vous payez chaque visite. Dès que le budget s'arrête, les visites aussi.</li>
+</ul>
+<p>La stratégie gagnante ? Le SEA pour <strong>démarrer vite</strong> (nouveau site, offre limitée, lancement de produit) pendant que le SEO se construit en arrière-plan et prend le relais sur le long terme.</p>
+
+<h2>Comment fonctionne une campagne Google Ads ?</h2>
+<p>Google fonctionne comme une <strong>enchère permanente</strong> : à chaque recherche, les annonceurs se disputent les premières places. Mais ce n'est pas le plus offrant qui gagne. Google combine votre enchère avec un <strong>score de qualité</strong> (la pertinence de votre annonce et de votre page). Résultat : une annonce bien faite paie <em>moins cher</em> pour une meilleure position.</p>
+<p>Les ingrédients d'une campagne :</p>
+<ul>
+  <li><strong>Les mots-clés</strong> : les recherches sur lesquelles vous voulez apparaître (« plombier Luxembourg », « restaurant Kirchberg »…).</li>
+  <li><strong>L'annonce</strong> : un titre accrocheur, une description claire, un appel à l'action.</li>
+  <li><strong>La page de destination</strong> : là où atterrit l'internaute. Elle doit être rapide et convaincante, d'où l'importance d'un <a href="/creation-site-web">site bien conçu</a>.</li>
+  <li><strong>Le budget</strong> : un plafond quotidien que vous fixez et ne dépassez jamais.</li>
+</ul>
+
+<h2>Les grands formats du SEA</h2>
+<ul>
+  <li><strong>Search</strong> : les annonces texte dans les résultats de recherche. Le cœur du SEA.</li>
+  <li><strong>Shopping</strong> : les fiches produits avec photo et prix, idéales pour l'e-commerce.</li>
+  <li><strong>Display</strong> : les bannières visuelles sur les sites partenaires de Google.</li>
+  <li><strong>YouTube</strong> : les vidéos publicitaires, parfaites pour la notoriété.</li>
+</ul>
+<p>Pour une présence complète, le SEA se marie très bien avec une vraie stratégie de <a href="/communication">communication digitale</a> et de réseaux sociaux.</p>
+
+<div style="background:#F5EFE2;border:3px solid #0A0F0D;border-radius:24px;padding:1.5rem 1.75rem;box-shadow:6px 6px 0 #0A0F0D;margin:2rem 0">
+  <p style="margin:0;font-weight:800;color:#0A0F0D">💡 Le conseil Cafein</p>
+  <p style="margin:.5rem 0 0;color:#0A0F0D">Ne visez pas « large ». Une campagne avec 10 mots-clés bien choisis et une page de destination claire rapporte plus que 200 mots-clés génériques qui brûlent le budget en clics inutiles.</p>
+</div>
+
+<h2>Combien ça coûte ?</h2>
+<p>Il n'y a pas de « prix du SEA » : vous fixez votre budget, et il peut démarrer petit. Ce qui compte, c'est le <strong>retour sur investissement</strong> : combien vous rapporte chaque euro dépensé. Un bon paramétrage (mots-clés précis, annonces pertinentes, page efficace) fait toute la différence entre un budget qui part en fumée et des clients qui arrivent.</p>
+<p>C'est là qu'une agence est utile : éviter les pièges, suivre les bons indicateurs et optimiser en continu. Perdu dans les acronymes (CPC, CTR, ROAS…) ? Notre <a href="/lexique">lexique du web</a> décode tout.</p>
+
+<h2>Le SEA avec Cafein</h2>
+<p>Chez Cafein, pas de vent : des campagnes claires, un suivi humain et des résultats mesurables. On combine <a href="/seo-geo">SEO &amp; GEO</a>, SEA, <a href="/creation-site-web">création de site</a> et <a href="/communication">communication digitale</a> pour une visibilité complète. Découvrez <a href="/notre-expertise">toutes nos expertises</a>.</p>`;
+
+const SEA_MARKER = path.join(DATA_DIR, ".sea-blog-seeded");
+if (!fs.existsSync(SEA_MARKER)) {
+  try {
+    const posts = loadPosts();
+    if (!posts.some((p) => p.slug === "sea-referencement-payant-google-ads")) {
+      posts.push({
+        id: crypto.randomUUID(),
+        slug: "sea-referencement-payant-google-ads",
+        title: "SEA : le référencement payant pour être visible sur Google dès aujourd'hui",
+        tag: "SEA",
+        excerpt:
+          "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
+        cover: "/blog-sea-cover.png",
+        format: "html",
+        body: SEA_HTML,
+        lang: "fr",
+        published: true,
+        date: new Date().toISOString(),
+        updated: new Date().toISOString(),
+      });
+      savePosts(posts);
+    }
+    fs.writeFileSync(SEA_MARKER, new Date().toISOString());
+  } catch (e) {
+    console.warn("Seed article SEA ignoré :", e?.message);
+  }
+}
+
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
