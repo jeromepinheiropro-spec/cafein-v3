@@ -945,7 +945,7 @@ seedPostOnce(path.join(DATA_DIR, ".sea-blog-seeded-v2"), "sea-referencement-paya
   tag: "SEA",
   excerpt:
     "Le SEA (référencement payant, Google Ads) place votre site tout en haut de Google immédiatement. Fonctionnement, formats, budget et différences avec le SEO : le guide Cafein.",
-  cover: "/blog-sea-cover.png",
+  cover: "/blog-sea-photo.jpg",
   format: "html",
   body: SEA_HTML,
   lang: "fr",
@@ -953,6 +953,22 @@ seedPostOnce(path.join(DATA_DIR, ".sea-blog-seeded-v2"), "sea-referencement-paya
   date: new Date().toISOString(),
   updated: new Date().toISOString(),
 }));
+
+/* Migration : bascule l'article SEA de la maquette (/blog-sea-cover.png)
+   vers la vraie photo libre de droits (/blog-sea-photo.jpg). Sûre : ne
+   sauvegarde que si l'article est trouvé et sa couverture est la valeur
+   par défaut (respecte une éventuelle retouche manuelle). */
+try {
+  const posts = loadPosts();
+  const sea = posts.find((p) => p.slug === "sea-referencement-payant-google-ads");
+  if (sea && sea.cover === "/blog-sea-cover.png") {
+    sea.cover = "/blog-sea-photo.jpg";
+    sea.updated = new Date().toISOString();
+    savePosts(posts);
+  }
+} catch (e) {
+  console.warn("Migration image SEA ignorée :", e?.message);
+}
 
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
