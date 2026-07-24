@@ -512,8 +512,10 @@ function Blog({ posts, setPosts, k, setMsg }) {
     if (!r.ok) { setPosts((l) => l.map((x) => (x.id === p.id ? { ...x, published: !next } : x))); setMsg("Impossible."); }
   }
   async function remove(p) {
+    if (!window.confirm(`Supprimer définitivement « ${p.title} » ? Il ne sera plus visible sur le site.`)) return;
     const r = await api(`/api/admin/posts/${p.id}`, k, { method: "DELETE" });
-    if (r.ok) setPosts((l) => l.filter((x) => x.id !== p.id)); else setMsg("Suppression impossible.");
+    if (r.ok) { setPosts((l) => l.filter((x) => x.id !== p.id)); setMsg("Article supprimé du site."); }
+    else setMsg("Suppression impossible.");
   }
 
   if (editing) {
@@ -583,11 +585,12 @@ function Blog({ posts, setPosts, k, setMsg }) {
         <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Blog</h1>
         <button onClick={openNew} className="rounded-full bg-mint text-ink font-display font-bold text-sm px-5 py-2.5 border-[3px] border-ink shadow-[4px_4px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">+ Nouvel article</button>
       </div>
-      <p className="mt-1 font-medium text-ink/50">Les articles publiés apparaissent automatiquement sur le site.</p>
+      <p className="mt-1 font-medium text-ink/50">Les articles publiés apparaissent automatiquement sur le site. Les articles marqués « Exemple » sont fournis par défaut : tu peux les supprimer, ils disparaîtront définitivement du site.</p>
       <ul className="mt-6 space-y-3">
         {posts.map((p) => (
           <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-white border-[3px] border-ink p-4 shadow-[3px_3px_0_#0A0F0D]">
             <span className={`rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase ${p.published ? "bg-mint" : "bg-cream-2"} text-ink`}>{p.published ? "Publié" : "Brouillon"}</span>
+            {p.example && <span style={{ backgroundColor: "#F4A259" }} className="rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-ink">Exemple</span>}
             <div className="min-w-0 flex-1">
               <p className="font-display font-bold text-ink truncate">{p.title}</p>
               <p className="font-mono text-[10px] uppercase text-ink/40">{p.tag || "–"} · {new Date(p.date).toLocaleDateString("fr-FR")} · /blog/{p.slug}</p>
@@ -596,7 +599,7 @@ function Blog({ posts, setPosts, k, setMsg }) {
               {p.published && <a href={`/blog/${p.slug}`} target="_blank" rel="noreferrer" className="rounded-full bg-white text-ink font-display font-bold text-xs px-3 py-2 border-2 border-ink">Voir</a>}
               <button onClick={() => togglePublish(p)} className="rounded-full bg-white text-ink font-display font-bold text-xs px-3 py-2 border-2 border-ink">{p.published ? "Dépublier" : "Publier"}</button>
               <button onClick={() => openEdit(p)} className="rounded-full bg-mint text-ink font-display font-bold text-xs px-3 py-2 border-2 border-ink">Modifier</button>
-              <button onClick={() => remove(p)} className="rounded-full bg-espresso text-cream font-display font-bold text-xs px-3 py-2 border-2 border-ink">✕</button>
+              <button onClick={() => remove(p)} className="rounded-full bg-espresso text-cream font-display font-bold text-xs px-4 py-2 border-2 border-ink hover:bg-[#D64545] transition-colors">Supprimer</button>
             </div>
           </li>
         ))}
