@@ -63,8 +63,17 @@ const app = express();
 /* Le corps des requêtes publiques reste borné (10 ko) ; seule la restauration
    d'une sauvegarde (admin) accepte un gros fichier JSON. */
 const jsonSmall = express.json({ limit: "10kb" });
+/* Les articles de blog peuvent être volumineux (HTML, JSON-LD, jusqu'à
+   40 000 caractères) : leurs routes admin acceptent un corps plus gros. */
+const jsonPosts = express.json({ limit: "256kb" });
 app.use((req, res, next) => {
-  if (req.path === "/api/admin/restore" || req.path === "/api/admin/upload") return next();
+  if (
+    req.path === "/api/admin/restore" ||
+    req.path === "/api/admin/upload" ||
+    req.path.startsWith("/api/admin/posts")
+  ) {
+    return next();
+  }
   return jsonSmall(req, res, next);
 });
 app.disable("x-powered-by");
@@ -565,7 +574,7 @@ app.get("/api/admin/posts", (req, res) => {
   }));
   res.json([...real, ...exampleEntries].sort((a, b) => new Date(b.date) - new Date(a.date)));
 });
-app.post("/api/admin/posts", (req, res) => {
+app.post("/api/admin/posts", jsonPosts, (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
   const b = req.body || {};
   const posts = loadPosts();
@@ -592,7 +601,7 @@ app.post("/api/admin/posts", (req, res) => {
   savePosts(posts);
   res.status(201).json(post);
 });
-app.put("/api/admin/posts/:id", (req, res) => {
+app.put("/api/admin/posts/:id", jsonPosts, (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
   const b = req.body || {};
 
