@@ -1056,8 +1056,17 @@ function htmlForPath(reqPath) {
   const noindex = /^\/realisations(\/|$)/.test(neutral) || neutral === "/moderation";
   /* Métas par route : title + description (+ OG/Twitter). Miroir de src/lib/seo.jsx. */
   const meta = PAGE_META[neutral] || {};
-  const title = (isEn ? meta.titleEn || meta.title : meta.title) || "";
-  const desc = (isEn ? meta.descriptionEn || meta.description : meta.description) || "";
+  /* Surcharge back-office (seo.json) PRIORITAIRE sur page-meta, pour que les
+     modifs de title/description faites dans l'admin apparaissent AUSSI dans le
+     HTML brut (donc pour Google), pas seulement dans le rendu React.
+     Priorité identique au client : back-office > page-meta > défaut. */
+  const ovr = loadSeo()[neutral] || {};
+  const title =
+    (isEn ? ovr.titleEn || ovr.title : ovr.title) ||
+    (isEn ? meta.titleEn || meta.title : meta.title) || "";
+  const desc =
+    (isEn ? ovr.descriptionEn || ovr.description : ovr.description) ||
+    (isEn ? meta.descriptionEn || meta.description : meta.description) || "";
   let out = INDEX_HTML
     .replace(/\s*<meta[^>]+name="robots"[^>]*>/i, "")
     .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
