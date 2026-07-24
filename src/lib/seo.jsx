@@ -36,6 +36,41 @@ function useSeoOverrides() {
   return _seoCache || {};
 }
 
+/* ── Métas par page (title/description) : source unique /page-meta.json ──
+   Même mécanisme que les surcharges : /page-meta.json est récupéré une fois,
+   et chaque page applique le title/description optimisé de son chemin. Le HTML
+   brut (server.mjs) injecte déjà les mêmes valeurs → rendu et brut cohérents.
+   Repli : sans entrée pour le chemin, on garde les valeurs par défaut. */
+let _pmCache = null;
+let _pmLoading = false;
+const _pmSubs = new Set();
+function fetchPageMeta() {
+  if (_pmCache || _pmLoading) return;
+  _pmLoading = true;
+  fetch("/page-meta.json")
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((m) => {
+      _pmCache = m && typeof m === "object" ? m : {};
+    })
+    .catch(() => {
+      _pmCache = {};
+    })
+    .finally(() => {
+      _pmLoading = false;
+      _pmSubs.forEach((fn) => fn());
+    });
+}
+function usePageMeta() {
+  const [, bump] = useReducer((x) => x + 1, 0);
+  useEffect(() => {
+    if (_pmCache) return;
+    _pmSubs.add(bump);
+    fetchPageMeta();
+    return () => _pmSubs.delete(bump);
+  }, []);
+  return _pmCache || {};
+}
+
 /* ── SEO léger pour SPA, bilingue FR/EN ────────────────────────
    Met à jour <title>, meta description, canonical, Open Graph,
    les balises hreflang (fr / en / x-default) et injecte le JSON-LD.
@@ -100,12 +135,15 @@ export default function Seo({ title, titleEn, description, descriptionEn, path =
   const { lang } = useLang();
   const overrides = useSeoOverrides();
   const ov = overrides[path] || {};
+  const pm = usePageMeta()[path] || {};
   const baseT = lang === "en" && titleEn ? titleEn : title;
   const baseD = lang === "en" && descriptionEn ? descriptionEn : description;
   /* La surcharge du back-office l'emporte quand elle est renseignée ;
      en EN, on retombe sur la surcharge FR si l'EN n'est pas défini. */
-  const t = (lang === "en" ? ov.titleEn || ov.title : ov.title) || baseT;
-  const d = (lang === "en" ? ov.descriptionEn || ov.description : ov.description) || baseD;
+  const pmT = lang === "en" ? pm.titleEn || pm.title : pm.title;
+  const pmD = lang === "en" ? pm.descriptionEn || pm.description : pm.description;
+  const t = (lang === "en" ? ov.titleEn || ov.title : ov.title) || pmT || baseT;
+  const d = (lang === "en" ? ov.descriptionEn || ov.description : ov.description) || pmD || baseD;
 
   useEffect(() => {
     const frUrl = urlFor(path, "fr");
