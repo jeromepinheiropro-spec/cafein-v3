@@ -1040,13 +1040,22 @@ function urlsForPath(reqPath) {
 }
 function htmlForPath(reqPath) {
   const { canonical, frUrl, enUrl } = urlsForPath(reqPath);
+  let p = (reqPath || "/").split("?")[0];
+  if (p.length > 1 && p.endsWith("/")) p = p.replace(/\/+$/, "");
+  const neutral = p === "/en" ? "/" : p.startsWith("/en/") ? p.slice(3) : p;
+  /* Seules les pages "references client" (/realisations/:slug) et l'espace
+     equipe (/moderation) sont en noindex — comme le fait deja src/lib/seo.jsx.
+     Toutes les autres pages restent indexables. */
+  const noindex = /^\/realisations(\/|$)/.test(neutral) || neutral === "/moderation";
   const tags =
+    (noindex ? `<meta name="robots" content="noindex, follow" />` : "") +
     `<link rel="canonical" href="${canonical}" />` +
     `<link rel="alternate" hreflang="fr" href="${frUrl}" />` +
     `<link rel="alternate" hreflang="en" href="${enUrl}" />` +
     `<link rel="alternate" hreflang="x-default" href="${frUrl}" />` +
     `<meta property="og:url" content="${canonical}" />`;
   return INDEX_HTML
+    .replace(/\s*<meta[^>]+name="robots"[^>]*>/i, "")
     .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
     .replace(/\s*<link[^>]+rel="alternate"[^>]+hreflang[^>]*>/gi, "")
     .replace(/\s*<meta[^>]+property="og:url"[^>]*>/i, "")
