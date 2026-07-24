@@ -30,6 +30,11 @@ const PORT = process.env.PORT || 3000;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
+/* Dossier des images téléversées depuis le back-office (volume /data,
+   donc persistant). Servi publiquement sur /uploads. */
+const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
 function load() {
   try {
     return JSON.parse(fs.readFileSync(FILE, "utf8"));
@@ -59,7 +64,7 @@ const app = express();
    d'une sauvegarde (admin) accepte un gros fichier JSON. */
 const jsonSmall = express.json({ limit: "10kb" });
 app.use((req, res, next) => {
-  if (req.path === "/api/admin/restore") return next();
+  if (req.path === "/api/admin/restore" || req.path === "/api/admin/upload") return next();
   return jsonSmall(req, res, next);
 });
 app.disable("x-powered-by");
@@ -280,13 +285,13 @@ async function callGemini(messages, system) {
     parts: [{ text: m.content }],
   }));
   const base = { system_instruction: { parts: [{ text: system }] }, contents };
-  const cfg = { maxOutputTokens: 1200, temperature: 0.6 };
+  const cfg = { maxOutputTokens: 700, temperature: 0.6 };
   /* thinkingBudget:0 coupe le raisonnement interne — MAIS ce champ n'existe que
      sur les modèles Gemini 2.5. L'envoyer à un modèle 2.0 provoque un 400
      « invalid argument ». On ne l'ajoute donc que pour les 2.5. */
-  const cfgThinking = /gemini-3|flash-latest|pro-latest|flash-lite-latest/.test(model)
-    ? { ...cfg, thinkingConfig: { thinkingLevel: "minimal" } }
-    : /2\.5/.test(model) ? { ...cfg, thinkingConfig: { thinkingBudget: 0 } } : cfg;
+  const cfgThinking = /2\.5/.test(model)
+    ? { ...cfg, thinkingConfig: { thinkingBudget: 0 } }
+    : cfg;
   const send = (generationConfig) =>
     fetch(url, {
       method: "POST",
@@ -531,6 +536,7 @@ app.post("/api/admin/posts", (req, res) => {
     excerpt: String(b.excerpt || "").trim().slice(0, 400),
     body: String(b.body || "").slice(0, 40000),
     cover: String(b.cover || "").trim().slice(0, 500),
+    format: b.format === "html" ? "html" : "text",
     lang: b.lang === "en" ? "en" : "fr",
     published: !!b.published,
     date: b.date || new Date().toISOString(),
@@ -551,6 +557,7 @@ app.put("/api/admin/posts/:id", (req, res) => {
   if (b.excerpt != null) p.excerpt = String(b.excerpt).trim().slice(0, 400);
   if (b.body != null) p.body = String(b.body).slice(0, 40000);
   if (b.cover != null) p.cover = String(b.cover).trim().slice(0, 500);
+  if (b.format != null) p.format = b.format === "html" ? "html" : "text";
   if (b.lang != null) p.lang = b.lang === "en" ? "en" : "fr";
   if (b.published != null) p.published = !!b.published;
   if (b.date != null) p.date = b.date;
@@ -562,6 +569,35 @@ app.delete("/api/admin/posts/:id", (req, res) => {
   if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
   savePosts(loadPosts().filter((x) => x.id !== req.params.id));
   res.json({ ok: true });
+});
+
+/* ── Téléversement d'images (back-office) ──────────────────────
+   Reçoit une image encodée en data URL base64 (JSON), l'écrit dans
+   /data/uploads et renvoie son URL publique /uploads/<fichier>.
+   Utilisé pour la couverture et pour insérer des images dans le corps. */
+const jsonUpload = express.json({ limit: "12mb" });
+app.post("/api/admin/upload", jsonUpload, (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: "Clé invalide." });
+  const { name, data } = req.body || {};
+  const m = /^data:(image\/(png|jpe?g|webp|gif|svg\+xml));base64,(.+)$/i.exec(String(data || ""));
+  if (!m) return res.status(400).json({ error: "Image invalide (png, jpg, webp, gif ou svg)." });
+  const ext = m[2].toLowerCase().replace("jpeg", "jpg").replace("svg+xml", "svg");
+  let buf;
+  try {
+    buf = Buffer.from(m[3], "base64");
+  } catch {
+    return res.status(400).json({ error: "Image illisible." });
+  }
+  if (!buf.length) return res.status(400).json({ error: "Image vide." });
+  if (buf.length > 8 * 1024 * 1024) return res.status(413).json({ error: "Image trop lourde (8 Mo max)." });
+  const base = blogSlug(String(name || "").replace(/\.[^.]+$/, "")).slice(0, 40) || "image";
+  const file = `${base}-${crypto.randomBytes(4).toString("hex")}.${ext}`;
+  try {
+    fs.writeFileSync(path.join(UPLOADS_DIR, file), buf);
+  } catch {
+    return res.status(500).json({ error: "Écriture impossible." });
+  }
+  res.status(201).json({ url: `/uploads/${file}` });
 });
 
 /* ── Google Analytics (GA4 Data API) ──────────────────────────
@@ -748,6 +784,83 @@ app.post("/api/admin/restore", express.json({ limit: "16mb" }), (req, res) => {
   if (!Object.keys(restored).length) return res.status(400).json({ error: "Aucune donnée reconnue dans le fichier." });
   res.json({ ok: true, restored });
 });
+
+/* Images téléversées (volume persistant) */
+app.use("/uploads", express.static(UPLOADS_DIR, { maxAge: "7d", index: false }));
+
+/* ── Article de démonstration (créé une seule fois) ────────────
+   Montre une couverture + un contenu en HTML/CSS. Un marqueur évite
+   de le recréer : si tu le supprimes, il ne réapparaît pas.
+   Astuce : pour ne pas déborder sur le reste du site, on préfixe les
+   sélecteurs CSS par « .blog-html » (le conteneur de l'article). */
+const DEMO_HTML = `<p style="font-size:1.15rem;line-height:1.7;color:#0A0F0D">
+  Ceci est un article écrit <strong>directement en HTML/CSS</strong>. Tu peux
+  mettre des titres, des images, des encadrés, des boutons… bref, tout ce que
+  permet le HTML.
+</p>
+
+<h2>Un titre de section</h2>
+<p>Un paragraphe normal. Tu peux <em>mettre en italique</em>, <strong>en gras</strong>,
+ou <a href="/creation-site-web" style="color:#17A46E;font-weight:700">ajouter un lien</a>.</p>
+
+<img src="/blog-demo-cover.png" alt="Illustration de démonstration"
+     style="width:100%;border-radius:24px;border:3px solid #0A0F0D;box-shadow:8px 8px 0 #1FCE8A;margin:1.5rem 0" />
+<p style="font-size:.85rem;color:#0A0F0D99;text-align:center;margin-top:-.5rem">
+  Une image insérée dans le corps (via le bouton « Insérer une image »).
+</p>
+
+<div style="background:#F5EFE2;border:3px solid #0A0F0D;border-radius:24px;padding:1.5rem 1.75rem;box-shadow:6px 6px 0 #0A0F0D;margin:2rem 0">
+  <p style="margin:0;font-weight:700;color:#0A0F0D">💡 Un encadré personnalisé</p>
+  <p style="margin:.5rem 0 0;color:#0A0F0D">
+    Fait avec un simple &lt;div&gt; et du style en ligne. Idéal pour une astuce
+    ou une mise en avant.
+  </p>
+</div>
+
+<h2>Une liste</h2>
+<ul>
+  <li>Point un</li>
+  <li>Point deux</li>
+  <li>Point trois</li>
+</ul>
+
+<!-- Astuce CSS : préfixe tes sélecteurs par .blog-html pour rester isolé du site -->
+<style>
+  .blog-html .cta-demo{
+    display:inline-block;background:#1FCE8A;color:#0A0F0D;font-weight:800;
+    text-decoration:none;padding:.75rem 1.5rem;border:3px solid #0A0F0D;
+    border-radius:999px;box-shadow:5px 5px 0 #0A0F0D;transition:.2s;
+  }
+  .blog-html .cta-demo:hover{transform:translate(5px,5px);box-shadow:0 0 0 #0A0F0D}
+</style>
+<p><a class="cta-demo" href="/#contact">Un bouton stylé en CSS</a></p>`;
+
+const DEMO_MARKER = path.join(DATA_DIR, ".demo-blog-seeded");
+if (!fs.existsSync(DEMO_MARKER)) {
+  try {
+    const posts = loadPosts();
+    if (!posts.some((p) => p.slug === "article-demo")) {
+      posts.push({
+        id: crypto.randomUUID(),
+        slug: "article-demo",
+        title: "Article démo : photo + HTML/CSS",
+        tag: "Démo",
+        excerpt: "Un exemple d'article avec une image de couverture et un contenu écrit directement en HTML/CSS.",
+        cover: "/blog-demo-cover.png",
+        format: "html",
+        body: DEMO_HTML,
+        lang: "fr",
+        published: true,
+        date: new Date().toISOString(),
+        updated: new Date().toISOString(),
+      });
+      savePosts(posts);
+    }
+    fs.writeFileSync(DEMO_MARKER, new Date().toISOString());
+  } catch (e) {
+    console.warn("Seed démo blog ignoré :", e?.message);
+  }
+}
 
 /* Site statique + fallback SPA */
 const DIST = path.join(__dirname, "dist");
