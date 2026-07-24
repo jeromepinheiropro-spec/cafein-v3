@@ -1024,6 +1024,13 @@ const EXAMPLE_POSTS = [
 const DIST = path.join(__dirname, "dist");
 const INDEX_HTML = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
 const CANON_SITE = "https://www.cafein.lu";
+/* Métas par route (title/description/OG) — source unique partagée avec le
+   front (public/page-meta.json, copié dans dist/ au build). Repli sûr : si le
+   fichier manque, on n'injecte pas de title/description (comportement actuel). */
+let PAGE_META = {};
+try { PAGE_META = JSON.parse(fs.readFileSync(path.join(DIST, "page-meta.json"), "utf8")); } catch { PAGE_META = {}; }
+const escHtml = (x) => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const escAttr = (x) => escHtml(x).replace(/"/g, "&quot;");
 
 function absUrl(neutral, lang) {
   const n = neutral === "/" ? "" : neutral;
@@ -1042,24 +1049,40 @@ function htmlForPath(reqPath) {
   const { canonical, frUrl, enUrl } = urlsForPath(reqPath);
   let p = (reqPath || "/").split("?")[0];
   if (p.length > 1 && p.endsWith("/")) p = p.replace(/\/+$/, "");
-  const neutral = p === "/en" ? "/" : p.startsWith("/en/") ? p.slice(3) : p;
+  const isEn = p === "/en" || p.startsWith("/en/");
+  const neutral = isEn ? (p === "/en" ? "/" : p.slice(3)) : p;
   /* Seules les pages "references client" (/realisations/:slug) et l'espace
-     equipe (/moderation) sont en noindex — comme le fait deja src/lib/seo.jsx.
-     Toutes les autres pages restent indexables. */
+     equipe (/moderation) sont en noindex. Toutes les autres restent indexables. */
   const noindex = /^\/realisations(\/|$)/.test(neutral) || neutral === "/moderation";
+  /* Métas par route : title + description (+ OG/Twitter). Miroir de src/lib/seo.jsx. */
+  const meta = PAGE_META[neutral] || {};
+  const title = (isEn ? meta.titleEn || meta.title : meta.title) || "";
+  const desc = (isEn ? meta.descriptionEn || meta.description : meta.description) || "";
+  let out = INDEX_HTML
+    .replace(/\s*<meta[^>]+name="robots"[^>]*>/i, "")
+    .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
+    .replace(/\s*<link[^>]+rel="alternate"[^>]+hreflang[^>]*>/gi, "")
+    .replace(/\s*<meta[^>]+property="og:url"[^>]*>/i, "");
+  if (title) {
+    out = out
+      .replace(/<title>[\s\S]*?<\/title>/i, () => `<title>${escHtml(title)}</title>`)
+      .replace(/(<meta[^>]+property="og:title"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(title) + b);
+  }
+  if (desc) {
+    out = out
+      .replace(/(<meta[^>]+name="description"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(desc) + b)
+      .replace(/(<meta[^>]+property="og:description"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(desc) + b);
+  }
   const tags =
     (noindex ? `<meta name="robots" content="noindex, follow" />` : "") +
     `<link rel="canonical" href="${canonical}" />` +
     `<link rel="alternate" hreflang="fr" href="${frUrl}" />` +
     `<link rel="alternate" hreflang="en" href="${enUrl}" />` +
     `<link rel="alternate" hreflang="x-default" href="${frUrl}" />` +
-    `<meta property="og:url" content="${canonical}" />`;
-  return INDEX_HTML
-    .replace(/\s*<meta[^>]+name="robots"[^>]*>/i, "")
-    .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
-    .replace(/\s*<link[^>]+rel="alternate"[^>]+hreflang[^>]*>/gi, "")
-    .replace(/\s*<meta[^>]+property="og:url"[^>]*>/i, "")
-    .replace(/<\/head>/i, tags + "\n</head>");
+    `<meta property="og:url" content="${canonical}" />` +
+    (title ? `<meta name="twitter:title" content="${escAttr(title)}" />` : "") +
+    (desc ? `<meta name="twitter:description" content="${escAttr(desc)}" />` : "");
+  return out.replace(/<\/head>/i, tags + "\n</head>");
 }
 
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
