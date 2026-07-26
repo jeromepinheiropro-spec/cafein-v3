@@ -256,7 +256,7 @@ export default function Legal({ kind }) {
   const Body = doc.Body;
   return (
     <section className="relative bg-cream pt-36 pb-24 md:pt-44 md:pb-32 overflow-hidden">
-      <Seo title={doc.seoTitle} description={`${doc.title} du site Cafein, agence web au Luxembourg.`} path={doc.path} />
+      <Seo title={doc.seoTitle} description={`${doc.title} du site Cafein, agence web au Luxembourg.`} path={doc.path} noindex />
       <div className="mx-auto max-w-3xl px-6 md:px-10">
         <SectionLabel>( {doc.tag} )</SectionLabel>
         <motion.h1
