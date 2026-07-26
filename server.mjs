@@ -1016,135 +1016,140 @@ const EXAMPLE_POSTS = [
   },
 ];
 
-/* Site statique + fallback SPA (avec <head> correct par route).
-   La SPA (React) reecrit deja le <head> cote client via src/lib/seo.jsx,
-   mais Google et les crawlers se fient au HTML BRUT : on injecte donc
-   canonical + hreflang + og:url corrects PAR ROUTE, pour que chaque page se
-   declare elle-meme canonique (et non l'accueil). Miroir de urlFor()/setHreflang(). */
+/* ── Site statique + prérendu SEO + fallback SPA ─────────────────
+   Pour les crawlers et outils SEO qui n'exécutent pas le JavaScript,
+   on injecte dans la coquille dist/index.html FRAÎCHE le contenu
+   prérendu de la page (H1, texte, liens) + ses balises SEO (title,
+   description, canonical, hreflang, Open Graph, JSON-LD), capturés au
+   build par scripts/prerender.cjs. Les balises <script>/<link> d'assets
+   restent celles du build en cours -> aucun risque de décalage de hash.
+   React reprend la main normalement au chargement (createRoot). */
 const DIST = path.join(__dirname, "dist");
-const INDEX_HTML = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
-const CANON_SITE = "https://www.cafein.lu";
-/* Métas par route (title/description/OG) — source unique partagée avec le
-   front (public/page-meta.json, copié dans dist/ au build). Repli sûr : si le
-   fichier manque, on n'injecte pas de title/description (comportement actuel). */
-let PAGE_META = {};
-try { PAGE_META = JSON.parse(fs.readFileSync(path.join(DIST, "page-meta.json"), "utf8")); } catch { PAGE_META = {}; }
-const escHtml = (x) => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const escAttr = (x) => escHtml(x).replace(/"/g, "&quot;");
 
-function absUrl(neutral, lang) {
-  const n = neutral === "/" ? "" : neutral;
-  return lang === "en" ? CANON_SITE + "/en" + n : CANON_SITE + (n || "/");
-}
-function urlsForPath(reqPath) {
-  let p = (reqPath || "/").split("?")[0];
-  if (p.length > 1 && p.endsWith("/")) p = p.replace(/\/+$/, "");
-  const isEn = p === "/en" || p.startsWith("/en/");
-  const neutral = isEn ? (p === "/en" ? "/" : p.slice(3)) : p;
-  const frUrl = absUrl(neutral, "fr");
-  const enUrl = absUrl(neutral, "en");
-  return { canonical: isEn ? enUrl : frUrl, frUrl, enUrl };
-}
-function htmlForPath(reqPath) {
-  const { canonical, frUrl, enUrl } = urlsForPath(reqPath);
-  let p = (reqPath || "/").split("?")[0];
-  if (p.length > 1 && p.endsWith("/")) p = p.replace(/\/+$/, "");
-  const isEn = p === "/en" || p.startsWith("/en/");
-  const neutral = isEn ? (p === "/en" ? "/" : p.slice(3)) : p;
-  /* Seules les pages "references client" (/realisations/:slug) et l'espace
-     equipe (/moderation) sont en noindex. Toutes les autres restent indexables. */
-  const noindex = /^\/realisations(\/|$)/.test(neutral) || neutral === "/moderation";
-  /* Métas par route : title + description (+ OG/Twitter). Miroir de src/lib/seo.jsx. */
-  const meta = PAGE_META[neutral] || {};
-  /* Surcharge back-office (seo.json) PRIORITAIRE sur page-meta, pour que les
-     modifs de title/description faites dans l'admin apparaissent AUSSI dans le
-     HTML brut (donc pour Google), pas seulement dans le rendu React.
-     Priorité identique au client : back-office > page-meta > défaut. */
-  const ovr = loadSeo()[neutral] || {};
-  const title =
-    (isEn ? ovr.titleEn || ovr.title : ovr.title) ||
-    (isEn ? meta.titleEn || meta.title : meta.title) || "";
-  const desc =
-    (isEn ? ovr.descriptionEn || ovr.description : ovr.description) ||
-    (isEn ? meta.descriptionEn || meta.description : meta.description) || "";
-  let out = INDEX_HTML
-    .replace(/\s*<meta[^>]+name="robots"[^>]*>/i, "")
-    .replace(/\s*<link[^>]+rel="canonical"[^>]*>/i, "")
-    .replace(/\s*<link[^>]+rel="alternate"[^>]+hreflang[^>]*>/gi, "")
-    .replace(/\s*<meta[^>]+property="og:url"[^>]*>/i, "");
-  if (title) {
-    out = out
-      .replace(/<title>[\s\S]*?<\/title>/i, () => `<title>${escHtml(title)}</title>`)
-      .replace(/(<meta[^>]+property="og:title"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(title) + b);
-  }
-  if (desc) {
-    out = out
-      .replace(/(<meta[^>]+name="description"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(desc) + b)
-      .replace(/(<meta[^>]+property="og:description"[^>]*content=")[^"]*(")/i, (m, a, b) => a + escAttr(desc) + b);
-  }
-  const tags =
-    (noindex ? `<meta name="robots" content="noindex, follow" />` : "") +
-    `<link rel="canonical" href="${canonical}" />` +
-    `<link rel="alternate" hreflang="fr" href="${frUrl}" />` +
-    `<link rel="alternate" hreflang="en" href="${enUrl}" />` +
-    `<link rel="alternate" hreflang="x-default" href="${frUrl}" />` +
-    `<meta property="og:url" content="${canonical}" />` +
-    (title ? `<meta name="twitter:title" content="${escAttr(title)}" />` : "") +
-    (desc ? `<meta name="twitter:description" content="${escAttr(desc)}" />` : "");
-  return out.replace(/<\/head>/i, tags + "\n</head>");
+/* Snapshots prérendus : { "/seo-geo": { root, head, lang }, … } */
+let PRERENDER = {};
+try {
+  const pr = path.join(__dirname, "prerender-data.json");
+  if (fs.existsSync(pr)) PRERENDER = JSON.parse(fs.readFileSync(pr, "utf8"));
+  console.log(`Prérendu : ${Object.keys(PRERENDER).length} pages chargées`);
+} catch (e) {
+  console.warn("Prérendu indisponible :", e.message);
 }
 
-/* L'espace équipe n'existe plus que sur admin.cafein.lu : l'ancien chemin de
-   secours /moderation (et /en/moderation) redirige vers le sous-domaine dédié. */
-app.get(["/moderation", "/en/moderation"], (_req, res) =>
-  res.redirect(301, "https://admin.cafein.lu/")
-);
+/* Coquille HTML du build en cours (lue une fois : dist ne change pas
+   pendant l'exécution). */
+let SHELL = "";
+try {
+  SHELL = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
+} catch { /* build absent en dev : on retombera sur sendFile */ }
 
-/* Sitemap dynamique : pages statiques (FR + EN) + articles de blog publiés.
-   Généré à la volée → les nouveaux articles publiés depuis le back-office y
-   apparaissent automatiquement. lastmod = date du jour / maj de l'article. */
-const SITEMAP_PATHS = [
-  "/", "/creation-site-web", "/seo-geo", "/communication",
-  "/notre-expertise", "/equipe", "/lexique",
-  "/notre-expertise/sites-vitrine", "/notre-expertise/e-commerce",
-  "/notre-expertise/developpement-sur-mesure", "/notre-expertise/seo",
-  "/notre-expertise/geo-visibilite-ia", "/notre-expertise/seo-local-luxembourg",
-  "/notre-expertise/reseaux-sociaux", "/notre-expertise/contenus-copywriting",
-  "/notre-expertise/branding-identite", "/notre-expertise/campagnes-publicitaires",
-  "/notre-expertise/emailing-newsletters", "/notre-expertise/data-reporting",
-];
-app.get("/sitemap.xml", (_req, res) => {
-  const today = new Date().toISOString().slice(0, 10);
-  const urls = [];
-  for (const p of SITEMAP_PATHS) {
-    urls.push({ loc: CANON_SITE + p, lastmod: today });
-    urls.push({ loc: CANON_SITE + "/en" + (p === "/" ? "" : p), lastmod: today });
+/* Bloc SEO surchargeable, délimité dans index.html. Selon que le build
+   conserve ou non les commentaires HTML, on prend le marqueur commenté
+   ou, à défaut, le segment entre theme-color et </title>. */
+const SEO_RE = SHELL.includes("<!--SEO:START")
+  ? /<!--SEO:START[\s\S]*?<!--SEO:END-->/
+  : /(<meta name="theme-color"[^>]*>)[\s\S]*?<\/title>/;
+const SEO_HAS_MARKERS = SHELL.includes("<!--SEO:START");
+
+function normalizePath(p) {
+  if (p.length > 1 && p.endsWith("/")) return p.slice(0, -1);
+  return p;
+}
+
+function renderPrerendered(snap) {
+  let html = SHELL;
+  /* Remplacements par FONCTION : le contenu injecté peut contenir des « $ »
+     (prix, regex, code…), que String.replace interpréterait ($&, $1…) s'il
+     était passé comme chaîne. La fonction renvoie le texte tel quel. */
+  html = html.replace(SEO_RE, (m, g1) => {
+    const start = SEO_HAS_MARKERS ? "<!--SEO:START-->" : g1;
+    const end = SEO_HAS_MARKERS ? "\n    <!--SEO:END-->" : "";
+    return `${start}\n    ${snap.head}${end}`;
+  });
+  html = html.replace('<div id="root"></div>', () => `<div id="root">${snap.root}</div>`);
+  if (snap.lang && snap.lang !== "fr") {
+    html = html.replace('<html lang="fr">', () => `<html lang="${snap.lang}">`);
   }
-  try {
-    const real = loadPosts().filter((x) => x.published);
-    const realSlugs = new Set(real.map((x) => x.slug));
-    const hidden = new Set(loadHidden());
-    const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !hidden.has(e.slug));
-    for (const post of [...real, ...examples]) {
-      const base = post.lang === "en" ? CANON_SITE + "/en/blog/" : CANON_SITE + "/blog/";
-      urls.push({ loc: base + post.slug, lastmod: String(post.updated || post.date || today).slice(0, 10) });
-    }
-  } catch (e) {
-    console.warn("sitemap posts:", e && e.message);
-  }
-  const body =
-    '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    urls.map((u) => `  <url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod></url>`).join("\n") +
-    '\n</urlset>\n';
-  res.set("Content-Type", "application/xml; charset=utf-8");
-  res.send(body);
-});
+  return html;
+}
+
+/* ── Prérendu DYNAMIQUE des articles de blog ─────────────────────
+   Les articles vivent dans posts.json (contenu dynamique) : impossible
+   de les figer au build. On injecte donc leur H1 + méta + contenu dans
+   la coquille au moment de la requête, pour que les crawlers et outils
+   SEO (qui n'exécutent pas le JS) voient un vrai article avec son H1. */
+const SITE_URL = "https://www.cafein.lu";
+function escHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function getPublicPostBySlug(slug) {
+  const real = loadPosts().find((x) => x.slug === slug && x.published);
+  if (real) return real;
+  const ex = EXAMPLE_POSTS.find((e) => e.slug === slug);
+  if (ex && !loadHidden().includes(ex.slug)) return ex;
+  return null;
+}
+function buildBlogSnap(post, isEn) {
+  const base = "/blog/" + post.slug;
+  const urlFr = SITE_URL + base, urlEn = SITE_URL + "/en" + base;
+  const url = isEn ? urlEn : urlFr;
+  const title = `${post.title} | Cafein`;
+  const desc = (post.excerpt || `${post.title} — le blog de Cafein.`).slice(0, 300);
+  const img = post.cover ? (post.cover.startsWith("http") ? post.cover : SITE_URL + post.cover) : "";
+  const bodyHtml = post.format === "html"
+    ? String(post.body || "")
+    : String(post.body || "").split(/\n{2,}/).map((b) => b.trim()).filter(Boolean)
+        .map((b) => (b.startsWith("## ") ? `<h2>${escHtml(b.slice(3))}</h2>` : `<p>${escHtml(b)}</p>`)).join("\n");
+  const ld = {
+    "@context": "https://schema.org", "@type": "BlogPosting",
+    headline: post.title, description: post.excerpt || post.title, url,
+    datePublished: post.date, dateModified: post.updated || post.date,
+    ...(img ? { image: img } : {}),
+    author: { "@type": "Organization", name: "Cafein" },
+    publisher: { "@type": "Organization", name: "Cafein", logo: { "@type": "ImageObject", url: SITE_URL + "/favicon.svg" } },
+    mainEntityOfPage: url,
+  };
+  const head = [
+    `<title>${escHtml(title)}</title>`,
+    `<meta name="description" content="${escHtml(desc)}">`,
+    `<meta name="robots" content="index, follow">`,
+    `<link rel="canonical" href="${url}">`,
+    `<link rel="alternate" hreflang="fr" href="${urlFr}">`,
+    `<link rel="alternate" hreflang="en" href="${urlEn}">`,
+    `<link rel="alternate" hreflang="x-default" href="${urlFr}">`,
+    `<meta property="og:type" content="article">`,
+    `<meta property="og:title" content="${escHtml(title)}">`,
+    `<meta property="og:description" content="${escHtml(desc)}">`,
+    `<meta property="og:url" content="${url}">`,
+    img ? `<meta property="og:image" content="${escHtml(img)}">` : "",
+    `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
+  ].filter(Boolean).join("\n    ");
+  const cover = post.cover ? `<img src="${escHtml(post.cover)}" alt="${escHtml(post.title)}" />` : "";
+  const root = `<article><h1>${escHtml(post.title)}</h1>${cover}`
+    + (post.excerpt ? `<p>${escHtml(post.excerpt)}</p>` : "") + bodyHtml + "</article>";
+  return { head, root, lang: isEn ? "en" : "fr" };
+}
 
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
 app.get(/.*/, (req, res) => {
-  res.set("Content-Type", "text/html; charset=utf-8");
-  res.send(htmlForPath(req.path));
+  if (SHELL) {
+    /* Article de blog : injection dynamique du H1 + méta + contenu. */
+    const m = normalizePath(req.path).match(/^(\/en)?\/blog\/(.+)$/);
+    if (m) {
+      const post = getPublicPostBySlug(decodeURIComponent(m[2]));
+      if (post) {
+        return res.set("Content-Type", "text/html; charset=utf-8")
+          .send(renderPrerendered(buildBlogSnap(post, !!m[1])));
+      }
+    }
+    /* Pages figées au build (prérendu SEO). */
+    const snap = PRERENDER[normalizePath(req.path)];
+    if (snap) {
+      return res.set("Content-Type", "text/html; charset=utf-8").send(renderPrerendered(snap));
+    }
+  }
+  res.sendFile(path.join(DIST, "index.html"));
 });
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Cafein en ligne sur :${PORT} — data: ${FILE}`));
