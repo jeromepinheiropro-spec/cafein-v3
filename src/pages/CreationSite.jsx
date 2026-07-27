@@ -6,6 +6,7 @@ import SiteBuilder from "../components/SiteBuilder.jsx";
 import { Spark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
+import { Link } from "../lib/link.jsx";
 import { useT, useLang } from "../lib/lang.jsx";
 
 /* Mockup navigateur animé : le site se construit en boucle sous vos yeux */
@@ -308,6 +309,15 @@ export default function CreationSite() {
           "Whether you need a showcase site, an online store or a custom platform, Cafein designs fast, clean websites built to turn your visitors into clients, for businesses based in Luxembourg and abroad."
         )}
       >
+        <div className="mb-8 flex justify-center">
+          <Link
+            to="/diagnostic"
+            data-cursor="Go !"
+            className="inline-flex items-center gap-2 rounded-full bg-mint text-ink font-display font-bold text-base md:text-lg px-6 py-3 border-[3px] border-ink shadow-[5px_5px_0_#0A0F0D] hover:shadow-[0_0_0_#0A0F0D] hover:translate-x-[5px] hover:translate-y-[5px] transition-all"
+          >
+            {t("Testez votre site gratuitement", "Test your site for free")} ↗
+          </Link>
+        </div>
         <BrowserDeco />
       </PageHero>
 
@@ -354,6 +364,33 @@ export default function CreationSite() {
 
       {/* Imaginez votre site, démo interactive */}
       <SiteBuilder />
+
+      {/* CTA vers le diagnostic complet */}
+      <section className="bg-cream pb-20 md:pb-28">
+        <div className="mx-auto max-w-5xl px-6 md:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            className="rounded-3xl bg-mint border-[3px] border-ink p-8 md:p-10 shadow-[8px_8px_0_#0A0F0D] flex flex-col md:flex-row items-center gap-6 text-center md:text-left"
+          >
+            <div className="flex-1">
+              <h3 className="font-display font-extrabold text-2xl md:text-3xl text-ink tracking-tight">
+                {t("Le rapport complet de votre site, gratuit", "Your site's full report, free")}
+              </h3>
+              <p className="mt-2 text-ink/75 font-medium">
+                {t("Vitesse, SEO, mobile : vos vrais scores Google et le détail de chaque point à corriger, en 30 secondes.", "Speed, SEO, mobile: your real Google scores and every issue to fix, in 30 seconds.")}
+              </p>
+            </div>
+            <Link
+              to="/diagnostic"
+              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-ink text-cream font-display font-bold text-lg px-7 py-3.5 border-[3px] border-ink shadow-[5px_5px_0_#F5EFE2] hover:shadow-[0_0_0_#F5EFE2] hover:translate-x-[5px] hover:translate-y-[5px] transition-all"
+            >
+              {t("Tester mon site", "Test my site")} ↗
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
       {/* WordPress vs Sur mesure */}
       <section className="bg-espresso py-20 md:py-28">
