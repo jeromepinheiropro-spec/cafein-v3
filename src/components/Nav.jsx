@@ -16,6 +16,7 @@ const LINKS = [
   { label: "SEO & GEO", en: "SEO & GEO", to: "/seo-geo" },
   { label: "Communication", en: "Communication", to: "/communication" },
   { label: "L'équipe", en: "The team", to: "/equipe" },
+  { label: "Diagnostic", en: "Free audit", to: "/diagnostic" },
 ];
 
 /* Petit interrupteur FR | EN */

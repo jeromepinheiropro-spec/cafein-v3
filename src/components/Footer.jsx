@@ -12,6 +12,7 @@ const LINKS = {
     { label: "SEO & GEO", to: "/seo-geo" },
     { label: "Communication", to: "/communication" },
     { label: "L'équipe", to: "/equipe" },
+    { label: "Diagnostic", to: "/diagnostic" },
     { label: "Lexique", to: "/lexique" },
     { label: "Blog", to: "/#blog" },
     { label: "Contact", to: "/#contact" },
@@ -22,6 +23,7 @@ const LINKS = {
     { label: "SEO & GEO", to: "/seo-geo" },
     { label: "Communication", to: "/communication" },
     { label: "The team", to: "/equipe" },
+    { label: "Free audit", to: "/diagnostic" },
     { label: "Glossary", to: "/lexique" },
     { label: "Blog", to: "/#blog" },
     { label: "Contact", to: "/#contact" },
@@ -59,9 +61,6 @@ export default function Footer() {
             ))}
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[11px] md:text-xs tracking-[0.25em] uppercase text-cream/50">
-              FR / EN
-            </span>
             <motion.a
               href="#top"
               data-cursor={t("Hop !", "Up we go!")}
