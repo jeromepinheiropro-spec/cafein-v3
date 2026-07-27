@@ -23,7 +23,9 @@ import ExpertiseDetail from "./pages/ExpertiseDetail.jsx";
 import ProjetDetail from "./pages/ProjetDetail.jsx";
 import Equipe from "./pages/Equipe.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
+import Diagnostic from "./pages/Diagnostic.jsx";
 import Legal from "./pages/Legal.jsx";
+import Moderation from "./pages/Moderation.jsx";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -129,6 +131,7 @@ export default function App() {
             { path: "/notre-expertise/:slug", element: <ExpertiseDetail /> },
             { path: "/realisations/:slug", element: <ProjetDetail /> },
             { path: "/equipe", element: <Equipe /> },
+            { path: "/diagnostic", element: <Diagnostic /> },
             { path: "/blog/:slug", element: <BlogPost /> },
             { path: "/mentions-legales", element: <Legal kind="mentions" /> },
             { path: "/confidentialite", element: <Legal kind="confidentialite" /> },
@@ -141,6 +144,8 @@ export default function App() {
               element={r.element}
             />,
           ])}
+          {/* Modération : espace équipe, non traduit, noindex */}
+          <Route path="/moderation" element={<Moderation />} />
           <Route path="*" element={<Home started={!loading} />} />
         </Routes>
       </main>
