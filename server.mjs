@@ -407,6 +407,62 @@ function mockScores(url) {
   };
 }
 
+/* ── Détail des problèmes : on traduit les audits Lighthouse en cartes
+   lisibles (gravité, explication, impact, correctif, icône maison). ── */
+const AUDIT_MAP = {
+  "uses-optimized-images": { cat: "Vitesse", icon: "ic-image", title: "Images trop lourdes", desc: "Vos images ne sont pas assez compressées : elles ralentissent surtout l'affichage sur mobile.", fix: "Compresser les images + chargement différé (lazy-load)" },
+  "modern-image-formats": { cat: "Vitesse", icon: "ic-image", title: "Images à moderniser", desc: "Vos images gagneraient à passer en format nouvelle génération (WebP/AVIF), bien plus léger.", fix: "Servir les images en WebP / AVIF" },
+  "uses-responsive-images": { cat: "Vitesse", icon: "ic-image", title: "Images non adaptées", desc: "Des images sont affichées plus grandes que nécessaire, du poids téléchargé pour rien.", fix: "Servir des tailles d'images adaptées à l'écran" },
+  "render-blocking-resources": { cat: "Vitesse", icon: "ic-hourglass", title: "Ressources qui bloquent l'affichage", desc: "Des fichiers CSS/JS se chargent avant le contenu et retardent l'apparition de la page.", fix: "Différer le CSS/JS non essentiel" },
+  "unused-javascript": { cat: "Vitesse", icon: "ic-hourglass", title: "JavaScript inutilisé", desc: "Du code JavaScript est chargé mais pas utilisé : autant de temps perdu au chargement.", fix: "Alléger et découper le JavaScript" },
+  "unminified-javascript": { cat: "Vitesse", icon: "ic-hourglass", title: "JavaScript non minifié", desc: "Vos fichiers JS ne sont pas compressés : ils pèsent plus lourd que nécessaire.", fix: "Minifier le JavaScript" },
+  "uses-long-cache-ttl": { cat: "Vitesse", icon: "ic-thermos", title: "Pas de mise en cache efficace", desc: "Les visiteurs re-téléchargent le site à chaque visite au lieu de le garder en mémoire.", fix: "Activer un cache navigateur (en-têtes)" },
+  "server-response-time": { cat: "Vitesse", icon: "ic-hourglass", title: "Serveur lent à répondre", desc: "Votre hébergement met du temps à envoyer la première réponse. Tout le reste attend.", fix: "Optimiser l'hébergement / le backend" },
+  "total-byte-weight": { cat: "Vitesse", icon: "ic-image", title: "Page trop lourde", desc: "Le poids total de la page est élevé : c'est long à télécharger, surtout en 4G.", fix: "Réduire le poids global de la page" },
+  "document-title": { cat: "SEO", icon: "ic-tag", title: "Balise titre à revoir", desc: "Le titre de la page (ce qui s'affiche dans l'onglet et sur Google) est manquant ou peu optimisé.", fix: "Un titre unique et clair, < 60 caractères" },
+  "meta-description": { cat: "SEO", icon: "ic-tag", title: "Meta description manquante", desc: "Sans description, Google invente le résumé sous votre lien : moins de clics.", fix: "Rédiger une description unique par page" },
+  "is-crawlable": { cat: "SEO", icon: "ic-beans", title: "Indexation gênée", desc: "Quelque chose empêche Google d'explorer/indexer correctement la page.", fix: "Vérifier robots.txt et les balises noindex" },
+  "link-text": { cat: "SEO", icon: "ic-tag", title: "Liens peu explicites", desc: "Des liens du type « cliquez ici » n'aident ni l'internaute ni Google à comprendre la destination.", fix: "Des intitulés de liens descriptifs" },
+  "image-alt": { cat: "SEO", icon: "ic-image", title: "Images sans texte alternatif", desc: "Des images n'ont pas de texte alternatif : mauvais pour l'accessibilité et le SEO images.", fix: "Ajouter un attribut alt à chaque image" },
+  "hreflang": { cat: "SEO", icon: "ic-tag", title: "Balises de langue (hreflang)", desc: "Le balisage multilingue est incomplet : Google peut servir la mauvaise version linguistique.", fix: "Compléter les balises hreflang" },
+  "tap-targets": { cat: "Mobile", icon: "ic-phone", title: "Zones tactiles trop petites", desc: "Des boutons/liens sont trop rapprochés sur mobile : on clique à côté.", fix: "Agrandir les zones cliquables (min. 48 px)" },
+  "font-size": { cat: "Mobile", icon: "ic-phone", title: "Texte trop petit sur mobile", desc: "Une partie du texte est trop petite pour être lue confortablement sur téléphone.", fix: "Passer le corps de texte à ≥ 16 px" },
+  "viewport": { cat: "Mobile", icon: "ic-phone", title: "Affichage mobile non configuré", desc: "La balise viewport est absente : le site ne s'adapte pas correctement aux petits écrans.", fix: "Ajouter la balise meta viewport" },
+  "color-contrast": { cat: "Accessibilité", icon: "ic-rosette", title: "Contraste des textes insuffisant", desc: "Certains textes manquent de contraste avec le fond : durs à lire pour beaucoup d'utilisateurs.", fix: "Renforcer le contraste texte / fond" },
+  "is-on-https": { cat: "Sécurité", icon: "ic-rosette", title: "Site sécurisé (HTTPS)", desc: "Votre site est bien servi en HTTPS. Rien à changer, c'est parfait.", fix: "Rien à faire" },
+  "uses-http2": { cat: "Sécurité", icon: "ic-rosette", title: "Protocole HTTP/2", desc: "Le protocole moderne HTTP/2 accélère le chargement de plusieurs fichiers en parallèle.", fix: "Activer HTTP/2 côté serveur" },
+};
+function sevOfScore(sc) {
+  if (sc == null) return null;
+  if (sc >= 0.9) return "ok";
+  if (sc >= 0.5) return "warn";
+  return "crit";
+}
+function buildIssues(audits) {
+  const out = [];
+  for (const id of Object.keys(AUDIT_MAP)) {
+    const a = audits && audits[id];
+    if (!a) continue;
+    const sev = sevOfScore(a.score);
+    if (!sev) continue;
+    const m = AUDIT_MAP[id];
+    out.push({ id, sev, cat: m.cat, icon: m.icon, title: m.title, desc: m.desc,
+      impact: a.displayValue || (sev === "ok" ? "Conforme" : ""), fix: m.fix });
+  }
+  const order = { crit: 0, warn: 1, ok: 2 };
+  out.sort((x, y) => order[x.sev] - order[y.sev]);
+  return out;
+}
+const MOCK_ISSUES = [
+  { id: "uses-optimized-images", sev: "crit", cat: "Vitesse", icon: "ic-image", title: "Images trop lourdes", desc: "Vos images ne sont pas assez compressées : elles ralentissent surtout l'affichage sur mobile.", impact: "Jusqu'à 2,4 s à gagner", fix: "Compresser les images + lazy-load" },
+  { id: "render-blocking-resources", sev: "crit", cat: "Vitesse", icon: "ic-hourglass", title: "Ressources qui bloquent l'affichage", desc: "Des fichiers CSS/JS se chargent avant le contenu et retardent l'apparition de la page.", impact: "Env. 1,6 s à gagner", fix: "Différer le CSS/JS non essentiel" },
+  { id: "uses-long-cache-ttl", sev: "warn", cat: "Vitesse", icon: "ic-thermos", title: "Pas de mise en cache efficace", desc: "Les visiteurs re-téléchargent le site à chaque visite au lieu de le garder en mémoire.", impact: "Retours plus lents", fix: "Activer un cache navigateur" },
+  { id: "meta-description", sev: "warn", cat: "SEO", icon: "ic-tag", title: "Meta description manquante", desc: "Sans description, Google invente le résumé sous votre lien : moins de clics.", impact: "Moins de clics sur Google", fix: "Une description unique par page" },
+  { id: "tap-targets", sev: "warn", cat: "Mobile", icon: "ic-phone", title: "Zones tactiles trop petites", desc: "Des boutons/liens sont trop rapprochés sur mobile : on clique à côté.", impact: "Frustration sur mobile", fix: "Agrandir les zones cliquables (48 px)" },
+  { id: "image-alt", sev: "warn", cat: "SEO", icon: "ic-beans", title: "Images sans texte alternatif", desc: "Des images n'ont pas de texte alternatif : mauvais pour l'accessibilité et le SEO images.", impact: "SEO images limité", fix: "Ajouter un alt à chaque image" },
+  { id: "is-on-https", sev: "ok", cat: "Sécurité", icon: "ic-rosette", title: "Site sécurisé (HTTPS)", desc: "Votre site est bien servi en HTTPS. Rien à changer, c'est parfait.", impact: "Conforme", fix: "Rien à faire" },
+];
+
 app.post("/api/audit", async (req, res) => {
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "?";
   if (auditRateLimited(ip)) return res.status(429).json({ error: "Trop d'analyses d'affilée. Réessayez dans un moment." });
@@ -418,7 +474,7 @@ app.post("/api/audit", async (req, res) => {
     await new Promise((r) => setTimeout(r, 1600));
     const s = mockScores(url);
     logAudit({ url, ...s, ip });
-    return res.json({ ok: true, url, mock: true, ...s });
+    return res.json({ ok: true, url, mock: true, ...s, issues: MOCK_ISSUES });
   }
 
   const cats = ["performance", "seo", "accessibility", "best-practices"];
@@ -449,8 +505,9 @@ app.post("/api/audit", async (req, res) => {
       accessibility: pct(c.accessibility),
       bestPractices: pct(c["best-practices"]),
     };
+    const issues = buildIssues(data.lighthouseResult?.audits);
     logAudit({ url: finalUrl, ...s, ip });
-    return res.json({ ok: true, url: finalUrl, ...s });
+    return res.json({ ok: true, url: finalUrl, ...s, issues });
   } catch (e) {
     const aborted = e?.name === "AbortError";
     return res.status(aborted ? 504 : 502).json({
