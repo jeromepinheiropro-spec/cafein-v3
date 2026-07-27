@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Seo, { breadcrumbLd, serviceLd } from "../lib/seo.jsx";
 import { Link } from "../lib/link.jsx";
 import { useT } from "../lib/lang.jsx";
@@ -32,7 +32,7 @@ const CSS = `
 .diag .spinner{width:64px;height:64px;margin:0 auto 20px;border:7px solid var(--cream2);border-top-color:var(--mint);border-radius:50%;animation:dgspin .8s linear infinite;}
 @keyframes dgspin{to{transform:rotate(360deg);}}
 .diag .loadtxt{font-family:"Bricolage Grotesque Variable",sans-serif;font-weight:700;font-size:21px;color:var(--esp);}
-.diag .res{padding:16px 0 90px;}
+.diag .res{padding:120px 0 90px;}
 .diag .rhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
 .diag .rhead h2{font-family:"Bricolage Grotesque Variable",sans-serif;font-size:30px;font-weight:800;color:var(--esp);}
 .diag .rurl{font-family:"Space Mono",monospace;font-size:14px;background:var(--esp);color:var(--cream);padding:5px 12px;border-radius:999px;}
@@ -112,6 +112,15 @@ export default function Diagnostic() {
   const [loadIdx, setLoadIdx] = useState(0);
   const [filter, setFilter] = useState("all");
   const timers = useRef([]);
+
+  /* Quand le rapport s'affiche, on remonte en haut pour que le visiteur
+     voie le verdict (et pas le milieu de la page). */
+  useEffect(() => {
+    if (status === "done") {
+      const L = window.__lenis;
+      if (L) L.scrollTo(0, { immediate: true }); else window.scrollTo(0, 0);
+    }
+  }, [status]);
 
   const scores = data ? [data.performance, data.seo, data.accessibility, data.bestPractices].filter((x) => x != null) : [];
   const global = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null;
