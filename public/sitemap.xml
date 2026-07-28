@@ -305,4 +305,20 @@
     <lastmod>2026-07-20</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://www.cafein.lu/realisations/cerberion</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/cerberion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/cerberion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/cerberion"/>
+    <lastmod>2026-07-28</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.cafein.lu/en/realisations/cerberion</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.cafein.lu/realisations/cerberion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cafein.lu/en/realisations/cerberion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cafein.lu/realisations/cerberion"/>
+    <lastmod>2026-07-28</lastmod>
+    <priority>0.6</priority>
+  </url>
 </urlset>
