@@ -240,17 +240,19 @@ export const PROJETS = [
     mission: [
       "Cerberion Group arrive sur le marché luxembourgeois, et pour un nouvel acteur, tout se joue sur la première impression. Nous les accompagnons de bout en bout : de leur identité visuelle (logo, univers graphique, ton de marque) à la création de leur site web, pour installer d'emblée une image sérieuse, premium et rassurante, à la hauteur d'un métier où la confiance est primordiale.",
       "Côté visibilité, on a travaillé et innové sur plusieurs fronts : un SEO local solide pour les positionner sur leurs mots-clés au Luxembourg, mais aussi un travail de GEO (optimisation pour les moteurs IA comme ChatGPT et Perplexity) pour que Cerberion soit cité dès les premières recherches. Le site met en avant leurs expertises (Security Manager externalisé, gardiennage, formations, audits) avec des parcours pensés pour transformer le visiteur en prise de contact.",
+      "Pour aller plus loin, on a développé pour eux un plugin WordPress sur mesure : une expérience prospect interactive et pédagogique, intégrée directement à leur site, qui informe et forme le visiteur tout en le menant, étape après étape, vers la conversion.",
     ],
     done: [
       "Accompagnement de A à Z : identité visuelle et site web",
       "Création de l'identité de marque : logo, univers graphique, ton",
+      "Plugin WordPress sur mesure : expérience prospect interactive, formatrice et orientée conversion",
       "SEO local pour émerger vite sur le marché luxembourgeois",
       "GEO : visibilité sur les moteurs IA (ChatGPT, Perplexity)",
       "Mise en avant claire des expertises sûreté et sécurité",
       "Parcours pensés pour générer des demandes de contact",
     ],
     stats: null,
-    words: ["Identité visuelle", "Site web", "SEO local", "GEO", "Luxembourg"],
+    words: ["Identité visuelle", "Plugin WordPress", "Site web", "SEO local", "GEO"],
     related: ["branding-identite", "seo-local-luxembourg", "geo-visibilite-ia"],
   },
 ];
@@ -431,16 +433,18 @@ const EN = {
     mission: [
       "Cerberion Group is entering the Luxembourg market, and for a newcomer everything rides on the first impression. We're supporting them end to end: from their visual identity (logo, graphic world, brand tone) to the creation of their website, to establish a serious, premium and reassuring image from day one, fitting for a business where trust is everything.",
       "On the visibility side, we worked and innovated on several fronts: solid local SEO to rank them on their Luxembourg keywords, plus GEO work (optimization for AI engines like ChatGPT and Perplexity) so Cerberion gets cited from the very first searches. The site showcases their expertise (outsourced Security Manager, guarding, training, audits) with journeys built to turn visitors into enquiries.",
+      "To go further, we built them a custom WordPress plugin: an interactive, educational prospect experience embedded right into their site, one that informs and teaches the visitor while leading them, step by step, towards conversion.",
     ],
     done: [
       "End-to-end support: visual identity and website",
       "Brand identity creation: logo, graphic world, tone",
+      "Custom WordPress plugin: an interactive, educational, conversion-focused prospect experience",
       "Local SEO to emerge quickly on the Luxembourg market",
       "GEO: visibility on AI engines (ChatGPT, Perplexity)",
       "Clear presentation of security and safety expertise",
       "Journeys designed to generate contact requests",
     ],
-    words: ["Visual identity", "Website", "Local SEO", "GEO", "Luxembourg"],
+    words: ["Visual identity", "WordPress plugin", "Website", "Local SEO", "GEO"],
   },
 };
 
