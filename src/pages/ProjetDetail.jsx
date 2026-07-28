@@ -111,7 +111,7 @@ export default function ProjetDetail() {
             : `${pFr.client} Découvrez ce que notre groupe a réalisé : ${pFr.tags.toLowerCase()}.`
         }
         path={`/realisations/${pFr.slug}`}
-        noindex
+        noindex={!pFr.index}
         jsonLd={[
           {
             "@context": "https://schema.org",
