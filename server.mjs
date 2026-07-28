@@ -119,16 +119,17 @@ function loadContacts() {
   }
 }
 
-async function sendViaBrevo({ nom, email, message, lang }) {
+async function sendViaBrevo({ nom, entreprise, email, message, lang }) {
   if (!BREVO_API_KEY) return { sent: false, reason: "no-key" };
   const body = {
     sender: { name: "Site Cafein", email: CONTACT_FROM },
     to: [{ email: CONTACT_TO }],
     replyTo: { email, name: nom },
-    subject: `Nouveau message du site (${lang || "fr"}) — ${nom}`,
+    subject: `Nouveau message du site (${lang || "fr"}) — ${nom}${entreprise ? ` · ${entreprise}` : ""}`,
     htmlContent:
       `<h2>Nouveau message depuis cafein.lu</h2>` +
       `<p><b>Nom :</b> ${escapeHtml(nom)}</p>` +
+      (entreprise ? `<p><b>Entreprise :</b> ${escapeHtml(entreprise)}</p>` : "") +
       `<p><b>Email :</b> ${escapeHtml(email)}</p>` +
       `<p><b>Langue :</b> ${escapeHtml(lang || "fr")}</p>` +
       `<p><b>Message :</b></p><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
@@ -153,8 +154,9 @@ app.post("/api/contact", async (req, res) => {
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "?";
   if (rateLimited(ip)) return res.status(429).json({ error: "Trop d'envois. Réessayez dans un instant." });
 
-  let { nom, email, message, lang, source, scores } = req.body || {};
+  let { nom, entreprise, email, message, lang, source, scores } = req.body || {};
   nom = String(nom || "").trim().slice(0, 80);
+  entreprise = String(entreprise || "").trim().slice(0, 120);
   email = String(email || "").trim().slice(0, 120);
   message = String(message || "").trim().slice(0, 4000);
   lang = lang === "en" ? "en" : "fr";
@@ -173,7 +175,7 @@ app.post("/api/contact", async (req, res) => {
   if (!nom || !email || !message) return res.status(400).json({ error: "Champs manquants." });
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: "E-mail invalide." });
 
-  const entry = { id: crypto.randomUUID(), nom, email, message, lang, source, scores: cleanScores, handled: false, date: new Date().toISOString(), ip };
+  const entry = { id: crypto.randomUUID(), nom, entreprise, email, message, lang, source, scores: cleanScores, handled: false, date: new Date().toISOString(), ip };
   let contacts = loadContacts();
   contacts.push(entry);
   if (contacts.length > 1000) contacts = contacts.slice(-1000);
@@ -593,15 +595,41 @@ function unhideExample(slug) {
   saveHidden(loadHidden().filter((s) => s !== slug));
 }
 
+/* Exemples SUPPRIMÉS (différent de « masqué/dépublié »). Un exemple
+   supprimé disparaît définitivement du site ET de la liste du back-office
+   (il ne réapparaît plus au rechargement). « Dépublier » ne fait que le
+   passer en brouillon ; « Supprimer » l'ajoute ici. */
+const DELETED_FILE = path.join(DATA_DIR, "deleted-examples.json");
+function loadDeleted() {
+  try {
+    const a = JSON.parse(fs.readFileSync(DELETED_FILE, "utf8"));
+    return Array.isArray(a) ? a : [];
+  } catch {
+    return [];
+  }
+}
+function saveDeleted(list) {
+  try {
+    fs.writeFileSync(DELETED_FILE, JSON.stringify([...new Set(list)], null, 2));
+  } catch (e) {
+    console.warn("saveDeleted :", e?.message);
+  }
+}
+function deleteExample(slug) {
+  const d = loadDeleted();
+  if (!d.includes(slug)) saveDeleted([...d, slug]);
+}
+
 /* Public : la liste ne renvoie que les articles publiés, sans le corps. */
 app.get("/api/posts", (_req, res) => {
   const real = loadPosts().filter((p) => p.published);
   const realSlugs = new Set(real.map((p) => p.slug));
   const hidden = new Set(loadHidden());
+  const deleted = new Set(loadDeleted());
   /* Les exemples (démo, SEA) sont ajoutés à la volée, sauf si un vrai
-     article publié porte déjà le même slug (priorité), ou si l'équipe les
-     a masqués depuis le back-office. */
-  const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !hidden.has(e.slug));
+     article publié porte déjà le même slug (priorité), s'ils ont été
+     masqués, ou s'ils ont été supprimés depuis le back-office. */
+  const examples = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !hidden.has(e.slug) && !deleted.has(e.slug));
   const posts = [...real, ...examples]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .map(({ body, ...rest }) => rest);
@@ -611,7 +639,7 @@ app.get("/api/posts/:slug", (req, res) => {
   const real = loadPosts().find((x) => x.slug === req.params.slug && x.published);
   if (real) return res.json(real);
   const ex = EXAMPLE_POSTS.find((e) => e.slug === req.params.slug);
-  if (ex && !loadHidden().includes(ex.slug)) return res.json(ex);
+  if (ex && !loadHidden().includes(ex.slug) && !loadDeleted().includes(ex.slug)) return res.json(ex);
   return res.status(404).json({ error: "Introuvable." });
 });
 
@@ -621,10 +649,12 @@ app.get("/api/admin/posts", (req, res) => {
   const real = loadPosts();
   const realSlugs = new Set(real.map((p) => p.slug));
   const hidden = new Set(loadHidden());
-  /* On ajoute les exemples (non remplacés par un vrai article) à la liste
-     admin, marqués « example », avec published = false s'ils sont masqués.
-     L'équipe peut ainsi les publier/masquer ou les supprimer (= masquer). */
-  const exampleEntries = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug)).map((e) => ({
+  const deleted = new Set(loadDeleted());
+  /* On ajoute les exemples (non remplacés par un vrai article, et non
+     supprimés) à la liste admin, marqués « example », avec published =
+     false s'ils sont masqués. L'équipe peut les publier/dépublier, ou les
+     supprimer définitivement (ils disparaissent alors de cette liste). */
+  const exampleEntries = EXAMPLE_POSTS.filter((e) => !realSlugs.has(e.slug) && !deleted.has(e.slug)).map((e) => ({
     ...e,
     example: true,
     published: !hidden.has(e.slug),
@@ -717,9 +747,11 @@ app.delete("/api/admin/posts/:id", (req, res) => {
   const target = posts.find((x) => x.id === req.params.id);
   if (target) savePosts(posts.filter((x) => x.id !== req.params.id));
   /* Si on supprime un exemple (ou un vrai article portant le slug d'un
-     exemple), on masque aussi l'exemple pour qu'il ne réapparaisse pas. */
+     exemple), on l'enregistre comme SUPPRIMÉ pour qu'il ne réapparaisse
+     ni sur le site ni dans la liste du back-office. On nettoie aussi le
+     flag « masqué » devenu inutile. */
   const ex = EXAMPLE_POSTS.find((e) => e.id === req.params.id || (target && e.slug === target.slug));
-  if (ex) hideExample(ex.slug);
+  if (ex) { deleteExample(ex.slug); unhideExample(ex.slug); }
   res.json({ ok: true });
 });
 
