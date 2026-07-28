@@ -66,7 +66,7 @@ export default function Contact() {
   const eggSpeed = useEggSpeed();
   const { lang } = useLang();
   const t = useT();
-  const [form, setForm] = useState({ nom: "", email: "", message: "" });
+  const [form, setForm] = useState({ nom: "", entreprise: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | done | error
   const [errMsg, setErrMsg] = useState("");
 
@@ -211,6 +211,7 @@ export default function Contact() {
                 className="space-y-8 rounded-[2rem] border-2 border-cream/15 p-8 md:p-12 bg-espresso-2/60 backdrop-blur"
               >
                 <Field label={t("Nom", "Name")} id="nom" value={form.nom} onChange={set("nom")} required />
+                <Field label={t("Entreprise", "Company")} id="entreprise" value={form.entreprise} onChange={set("entreprise")} />
                 <Field label="Email" id="email" type="email" value={form.email} onChange={set("email")} required />
                 <Field label="Message" id="message" as="textarea" value={form.message} onChange={set("message")} required />
                 <Magnetic strength={0.2}>
