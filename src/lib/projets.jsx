@@ -218,6 +218,41 @@ export const PROJETS = [
     words: ["Refonte", "Institutionnel", "UX", "Arborescence", "Grand Est"],
     related: ["sites-vitrine", "developpement-sur-mesure", "contenus-copywriting"],
   },
+  {
+    slug: "cerberion",
+    n: "07",
+    year: "2026",
+    title: "Cerberion Group",
+    tags: "Site web · Identité · SEO/GEO",
+    tagList: ["Site web", "Identité visuelle", "SEO", "GEO"],
+    img: "https://cerberion.lu/wp-content/uploads/2026/05/agents-securite-cerberion-luxembourg-vue-ville.webp",
+    alt: "Projet Cerberion Group : création du site web d'un nouvel acteur de la sûreté et de la sécurité au Luxembourg",
+    shadow: "#F4A259",
+    bg: "bg-cream-2",
+    index: true,
+    client:
+      "Nouveau venu sur le marché luxembourgeois, Cerberion Group accompagne les entreprises sur toute la chaîne de la sûreté et de la sécurité : audits, mise en conformité, formations et gardiennage.",
+    tagline: (
+      <>
+        Lancer un nouvel acteur de la sécurité <span className="text-mint-dark">avec un site à sa hauteur</span>
+      </>
+    ),
+    mission: [
+      "Cerberion Group arrive sur le marché luxembourgeois, et pour un nouvel acteur, tout se joue sur la première impression. Nous les accompagnons de bout en bout : de leur identité visuelle (logo, univers graphique, ton de marque) à la création de leur site web, pour installer d'emblée une image sérieuse, premium et rassurante, à la hauteur d'un métier où la confiance est primordiale.",
+      "Côté visibilité, on a travaillé et innové sur plusieurs fronts : un SEO local solide pour les positionner sur leurs mots-clés au Luxembourg, mais aussi un travail de GEO (optimisation pour les moteurs IA comme ChatGPT et Perplexity) pour que Cerberion soit cité dès les premières recherches. Le site met en avant leurs expertises (Security Manager externalisé, gardiennage, formations, audits) avec des parcours pensés pour transformer le visiteur en prise de contact.",
+    ],
+    done: [
+      "Accompagnement de A à Z : identité visuelle et site web",
+      "Création de l'identité de marque : logo, univers graphique, ton",
+      "SEO local pour émerger vite sur le marché luxembourgeois",
+      "GEO : visibilité sur les moteurs IA (ChatGPT, Perplexity)",
+      "Mise en avant claire des expertises sûreté et sécurité",
+      "Parcours pensés pour générer des demandes de contact",
+    ],
+    stats: null,
+    words: ["Identité visuelle", "Site web", "SEO local", "GEO", "Luxembourg"],
+    related: ["branding-identite", "seo-local-luxembourg", "geo-visibilite-ia"],
+  },
 ];
 
 /* ── Traductions anglaises (champs textuels uniquement) ───────── */
@@ -381,6 +416,31 @@ const EN = {
       "Expertise, projects and training brought to the fore",
     ],
     words: ["Redesign", "Institutional", "UX", "Site structure", "Grand Est"],
+  },
+  cerberion: {
+    tags: "Website · Branding · SEO/GEO",
+    tagList: ["Website", "Visual identity", "SEO", "GEO"],
+    alt: "Cerberion Group project: visual identity and website creation for a new security and safety player in Luxembourg",
+    client:
+      "A new arrival on the Luxembourg market, Cerberion Group supports companies across the whole security and safety chain: audits, compliance, training and guarding.",
+    tagline: (
+      <>
+        Launching a new security player <span className="text-mint-dark">with a site to match</span>
+      </>
+    ),
+    mission: [
+      "Cerberion Group is entering the Luxembourg market, and for a newcomer everything rides on the first impression. We're supporting them end to end: from their visual identity (logo, graphic world, brand tone) to the creation of their website, to establish a serious, premium and reassuring image from day one, fitting for a business where trust is everything.",
+      "On the visibility side, we worked and innovated on several fronts: solid local SEO to rank them on their Luxembourg keywords, plus GEO work (optimization for AI engines like ChatGPT and Perplexity) so Cerberion gets cited from the very first searches. The site showcases their expertise (outsourced Security Manager, guarding, training, audits) with journeys built to turn visitors into enquiries.",
+    ],
+    done: [
+      "End-to-end support: visual identity and website",
+      "Brand identity creation: logo, graphic world, tone",
+      "Local SEO to emerge quickly on the Luxembourg market",
+      "GEO: visibility on AI engines (ChatGPT, Perplexity)",
+      "Clear presentation of security and safety expertise",
+      "Journeys designed to generate contact requests",
+    ],
+    words: ["Visual identity", "Website", "Local SEO", "GEO", "Luxembourg"],
   },
 };
 
