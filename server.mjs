@@ -78,6 +78,18 @@ app.use((req, res, next) => {
 });
 app.disable("x-powered-by");
 
+/* Canonicalisation du domaine : le domaine nu « cafein.lu » redirige en 301
+   vers « www.cafein.lu » (version canonique). Ne s'applique QUE si l'apex
+   pointe vers Railway (sinon la requête n'arrive jamais ici) ; sans effet
+   sur www.cafein.lu et admin.cafein.lu. */
+app.use((req, res, next) => {
+  const host = String(req.headers.host || "").toLowerCase().split(":")[0];
+  if (host === "cafein.lu") {
+    return res.redirect(301, "https://www.cafein.lu" + req.originalUrl);
+  }
+  next();
+});
+
 app.get("/api/comments", (_req, res) => {
   res.json(comments.map(({ id, name, text, date }) => ({ id, name, text, date })));
 });
