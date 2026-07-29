@@ -1220,11 +1220,26 @@ function buildBlogSnap(post, isEn) {
   return { head, root, lang: isEn ? "en" : "fr" };
 }
 
+/* Routes applicatives légitimes SANS prérendu (servies en 200 malgré tout).
+   Le back-office (SPA, protégé par clé, en Disallow dans robots.txt). */
+const KNOWN_SPA = new Set(["/moderation", "/en/moderation"]);
+
+/* Snapshot « 404 » : coquille sans contenu indexable, en noindex, servie
+   avec le statut HTTP 404 pour les URLs inconnues (évite les soft 404 :
+   sinon Google indexe des pages fantômes renvoyant 200). React reprend la
+   main et affiche une page normale côté visiteur. */
+const NOTFOUND_SNAP = {
+  head: `<title>Page introuvable — Cafein</title>\n    <meta name="robots" content="noindex, follow">`,
+  root: "",
+  lang: "fr",
+};
+
 app.use(express.static(DIST, { maxAge: "1h", index: false }));
 app.get(/.*/, (req, res) => {
   if (SHELL) {
+    const np = normalizePath(req.path);
     /* Article de blog : injection dynamique du H1 + méta + contenu. */
-    const m = normalizePath(req.path).match(/^(\/en)?\/blog\/(.+)$/);
+    const m = np.match(/^(\/en)?\/blog\/(.+)$/);
     if (m) {
       const post = getPublicPostBySlug(decodeURIComponent(m[2]));
       if (post) {
@@ -1233,10 +1248,17 @@ app.get(/.*/, (req, res) => {
       }
     }
     /* Pages figées au build (prérendu SEO). */
-    const snap = PRERENDER[normalizePath(req.path)];
+    const snap = PRERENDER[np];
     if (snap) {
       return res.set("Content-Type", "text/html; charset=utf-8").send(renderPrerendered(snap));
     }
+    /* Route applicative connue mais non prérendue (back-office). */
+    if (KNOWN_SPA.has(np)) {
+      return res.sendFile(path.join(DIST, "index.html"));
+    }
+    /* URL inconnue : vrai 404 + noindex (fin des soft 404). */
+    return res.status(404).set("Content-Type", "text/html; charset=utf-8")
+      .send(renderPrerendered(NOTFOUND_SNAP));
   }
   res.sendFile(path.join(DIST, "index.html"));
 });
