@@ -43,19 +43,20 @@ function MentionsLegales() {
     <>
       <Section title="Éditeur du site">
         <p>
-          Le site <strong>www.cafein.lu</strong> est édité par <Fill>raison sociale</Fill>,{" "}
-          <Fill>forme juridique (ex. SARL, société à responsabilité limitée)</Fill>, dont le siège social est situé{" "}
-          <Fill>adresse complète</Fill>, Luxembourg.
+          Le site <strong>www.cafein.lu</strong> est édité par <strong>Cafein communication S.à r.l.</strong>,
+          société à responsabilité limitée de droit luxembourgeois, dont le siège social est situé{" "}
+          2, rue de l'École, L-4394 Pontpierre (commune de Mondercange), Grand-Duché de Luxembourg.
         </p>
         <ul className="list-disc pl-5 space-y-1.5">
-          <li>Numéro d'immatriculation (RCS Luxembourg) : <Fill>n° RCS</Fill></li>
+          <li>Registre de commerce et des sociétés (RCS) Luxembourg : <strong>B285.136</strong></li>
+          <li>Capital social : <Fill>montant du capital social</Fill></li>
           <li>Numéro de TVA intracommunautaire : <Fill>n° TVA (LU…)</Fill></li>
           <li>Autorisation d'établissement : <Fill>n° d'autorisation</Fill></li>
           <li>Adresse e-mail : hello@cafein.lu</li>
           <li>Téléphone : <Fill>numéro de téléphone</Fill></li>
         </ul>
         <p>
-          Directeur / directrice de la publication : <Fill>nom du responsable de la publication</Fill>.
+          Gérant et directeur de la publication : <strong>Jérôme Pinheiro</strong>.
         </p>
       </Section>
 
@@ -99,8 +100,9 @@ function Confidentialite() {
     <>
       <Section title="Responsable du traitement">
         <p>
-          Le responsable du traitement des données collectées sur www.cafein.lu est <Fill>raison sociale</Fill>,{" "}
-          <Fill>adresse</Fill>. Pour toute question relative à vos données, écrivez à{" "}
+          Le responsable du traitement des données collectées sur www.cafein.lu est{" "}
+          <strong>Cafein communication S.à r.l.</strong>, 2, rue de l'École, L-4394 Pontpierre, Grand-Duché de
+          Luxembourg. Pour toute question relative à vos données, écrivez à{" "}
           <a href="mailto:hello@cafein.lu" className="text-mint-dark font-semibold hover:underline">hello@cafein.lu</a>.
         </p>
       </Section>
@@ -143,7 +145,7 @@ function Confidentialite() {
 
       <Section title="Durée de conservation">
         <p>
-          Les messages et demandes sont conservés pendant <Fill>durée (ex. 3 ans à compter du dernier contact)</Fill>,
+          Les messages et demandes sont conservés pendant trois (3) ans à compter du dernier contact,
           puis supprimés. Les commentaires publiés sont conservés tant qu'ils restent en ligne.
         </p>
       </Section>
@@ -227,6 +229,131 @@ function Cookies() {
   );
 }
 
+function CGV() {
+  return (
+    <>
+      <Section title="1. Objet et champ d'application">
+        <p>
+          Les présentes conditions générales de vente (« CGV ») régissent les prestations de services fournies
+          par <strong>Cafein communication S.à r.l.</strong> (ci-après « Cafein » ou « le Prestataire »), société à
+          responsabilité limitée dont le siège social est situé 2, rue de l'École, L-4394 Pontpierre, immatriculée
+          au RCS Luxembourg sous le numéro B285.136, à toute personne physique ou morale qui recourt à ses services
+          (ci-après « le Client »). Toute commande implique l'acceptation sans réserve des présentes CGV, qui
+          prévalent sur tout autre document du Client, sauf dérogation écrite et expresse.
+        </p>
+      </Section>
+
+      <Section title="2. Prestations">
+        <p>
+          Cafein propose des prestations de communication et de marketing digital : création de sites internet et
+          d'e-commerce, référencement (SEO, GEO), campagnes publicitaires (SEA, réseaux sociaux), gestion des réseaux
+          sociaux, création de contenus, branding et identité visuelle, conseil et formation. Le détail, le périmètre
+          et le prix de chaque prestation sont définis dans le devis accepté par le Client.
+        </p>
+      </Section>
+
+      <Section title="3. Devis et commande">
+        <p>
+          Chaque prestation fait l'objet d'un devis personnalisé, valable trente (30) jours sauf mention contraire.
+          La commande est ferme dès la réception par Cafein du devis daté, accepté et signé par le Client (par voie
+          électronique ou manuscrite) et, le cas échéant, du versement de l'acompte prévu. Toute modification du
+          périmètre en cours de projet peut donner lieu à un avenant et à un ajustement du prix et des délais.
+        </p>
+      </Section>
+
+      <Section title="4. Prix">
+        <p>
+          Les prix sont exprimés en euros (€). Sauf mention contraire, ils s'entendent hors taxes (HT) ; la TVA
+          applicable et les éventuels frais tiers (noms de domaine, hébergement, licences, budgets publicitaires,
+          banques d'images, etc.) sont facturés en sus. Les budgets média (Google Ads, réseaux sociaux…) sont
+          distincts des honoraires de gestion et refacturés ou réglés directement par le Client.
+        </p>
+      </Section>
+
+      <Section title="5. Modalités de paiement">
+        <p>
+          Sauf convention particulière, un acompte de 30 % à 50 % est exigible à la commande, le solde étant dû à la
+          livraison ou selon l'échéancier prévu au devis. Les factures sont payables à trente (30) jours date de
+          facture. Tout retard de paiement entraîne de plein droit, après mise en demeure restée sans effet, des
+          intérêts de retard au taux légal luxembourgeois ainsi qu'une indemnité forfaitaire pour frais de
+          recouvrement, sans préjudice de la suspension des prestations en cours.
+        </p>
+      </Section>
+
+      <Section title="6. Délais et obligations du Client">
+        <p>
+          Les délais indiqués sont donnés à titre indicatif et dépendent de la collaboration du Client. Le Client
+          s'engage à fournir en temps utile l'ensemble des éléments nécessaires (contenus, accès, validations,
+          informations) et à désigner un interlocuteur. Un retard, une absence de réponse ou une validation tardive
+          du Client suspend d'autant les délais et ne saurait engager la responsabilité de Cafein.
+        </p>
+      </Section>
+
+      <Section title="7. Propriété intellectuelle">
+        <p>
+          Les créations réalisées par Cafein restent sa propriété jusqu'au paiement intégral du prix. Après paiement
+          complet, les droits d'exploitation sur les livrables finaux sont cédés au Client pour l'usage convenu.
+          Cafein conserve la propriété de ses savoir-faire, méthodes, outils et éléments préexistants, ainsi que le
+          droit de mentionner la réalisation à titre de référence, sauf demande écrite contraire du Client. Les
+          éléments fournis par le Client restent sa propriété et sous sa responsabilité (droits, autorisations).
+        </p>
+      </Section>
+
+      <Section title="8. Hébergement, maintenance et services tiers">
+        <p>
+          Lorsque la prestation inclut l'hébergement ou la maintenance d'un site, les conditions (durée, périmètre,
+          disponibilité) sont précisées au devis. Cafein s'appuie sur des prestataires tiers (hébergeurs, régies
+          publicitaires, outils SaaS) dont les propres conditions s'appliquent ; Cafein ne saurait être tenue
+          responsable d'une interruption ou d'une défaillance imputable à ces tiers.
+        </p>
+      </Section>
+
+      <Section title="9. Responsabilité">
+        <p>
+          Cafein est tenue à une obligation de moyens. Elle met en œuvre son savoir-faire pour atteindre les objectifs
+          du Client mais ne garantit pas un résultat commercial déterminé (positions, trafic, chiffre d'affaires),
+          ces résultats dépendant de nombreux facteurs externes. La responsabilité de Cafein, toutes causes
+          confondues, est limitée au montant des sommes effectivement payées par le Client pour la prestation
+          concernée. Cafein ne répond pas des dommages indirects (perte de chiffre d'affaires, de données, d'image…).
+        </p>
+      </Section>
+
+      <Section title="10. Données personnelles">
+        <p>
+          Les données personnelles sont traitées conformément au RGPD et à notre{" "}
+          <Link to="/confidentialite" className="text-mint-dark font-semibold hover:underline">politique de confidentialité</Link>.
+          Lorsque Cafein traite des données pour le compte du Client, un accord de sous-traitance encadre ce
+          traitement.
+        </p>
+      </Section>
+
+      <Section title="11. Résiliation">
+        <p>
+          En cas de manquement grave de l'une des parties non réparé dans un délai de quinze (15) jours après mise en
+          demeure, l'autre partie peut résilier le contrat de plein droit. Les prestations réalisées et les frais
+          engagés jusqu'à la résiliation restent dus. Les acomptes versés restent acquis à Cafein à hauteur du
+          travail effectué.
+        </p>
+      </Section>
+
+      <Section title="12. Force majeure">
+        <p>
+          Aucune des parties ne saurait être tenue responsable d'un manquement résultant d'un cas de force majeure au
+          sens du droit luxembourgeois. Les obligations affectées sont suspendues pendant la durée de l'événement.
+        </p>
+      </Section>
+
+      <Section title="13. Droit applicable et juridiction">
+        <p>
+          Les présentes CGV sont régies par le droit luxembourgeois. À défaut de résolution amiable, tout litige
+          relatif à leur validité, leur interprétation ou leur exécution relève de la compétence exclusive des
+          tribunaux de l'arrondissement du siège social de Cafein, au Grand-Duché de Luxembourg.
+        </p>
+      </Section>
+    </>
+  );
+}
+
 const DOCS = {
   mentions: {
     tag: "Mentions légales",
@@ -234,6 +361,13 @@ const DOCS = {
     seoTitle: "Mentions légales | Cafein",
     path: "/mentions-legales",
     Body: MentionsLegales,
+  },
+  cgv: {
+    tag: "CGV",
+    title: "Conditions générales de vente",
+    seoTitle: "Conditions générales de vente | Cafein",
+    path: "/cgv",
+    Body: CGV,
   },
   confidentialite: {
     tag: "Confidentialité",
