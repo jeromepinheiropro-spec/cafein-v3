@@ -36,6 +36,7 @@ const STATIC = [
   "/equipe",
   "/diagnostic",
   "/mentions-legales",
+  "/cgv",
   "/confidentialite",
   "/politique-cookies",
 ];
