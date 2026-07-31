@@ -6,21 +6,11 @@ import { SectionLabel } from "../lib/ui.jsx";
 
 /*
   Pages légales : mentions légales, politique de confidentialité (RGPD),
-  politique cookies. Contenu en français (langue de référence au Luxembourg).
-  Les identifiants propres à l'entreprise sont laissés en [À COMPLÉTER] :
-  Pinoo n'a qu'à les renseigner ici avant mise en ligne définitive.
+  politique cookies, CGV. Contenu en français (langue de référence au Luxembourg).
+  Éditeur : Cafein communication S.à r.l. (RCS Luxembourg B285.136).
 */
 
 const UPDATED = "juillet 2026";
-
-/* Petit composant : une entrée à compléter, visuellement repérable. */
-function Fill({ children }) {
-  return (
-    <mark className="bg-sun/60 text-ink font-semibold px-1.5 py-0.5 rounded not-italic">
-      [À COMPLÉTER : {children}]
-    </mark>
-  );
-}
 
 function Section({ title, children }) {
   return (
@@ -49,11 +39,8 @@ function MentionsLegales() {
         </p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li>Registre de commerce et des sociétés (RCS) Luxembourg : <strong>B285.136</strong></li>
-          <li>Capital social : <Fill>montant du capital social</Fill></li>
-          <li>Numéro de TVA intracommunautaire : <Fill>n° TVA (LU…)</Fill></li>
-          <li>Autorisation d'établissement : <Fill>n° d'autorisation</Fill></li>
           <li>Adresse e-mail : hello@cafein.lu</li>
-          <li>Téléphone : <Fill>numéro de téléphone</Fill></li>
+          <li>Téléphone : +33 6 16 25 44 67</li>
         </ul>
         <p>
           Gérant et directeur de la publication : <strong>Jérôme Pinheiro</strong>.
