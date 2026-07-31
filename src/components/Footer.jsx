@@ -112,6 +112,7 @@ export default function Footer() {
         <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2">
           {[
             { to: "/mentions-legales", fr: "Mentions légales", en: "Legal notice" },
+            { to: "/cgv", fr: "CGV", en: "Terms of sale" },
             { to: "/confidentialite", fr: "Confidentialité", en: "Privacy" },
             { to: "/politique-cookies", fr: "Cookies", en: "Cookies" },
           ].map((l) => (
