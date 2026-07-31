@@ -134,6 +134,7 @@ export default function App() {
             { path: "/diagnostic", element: <Diagnostic /> },
             { path: "/blog/:slug", element: <BlogPost /> },
             { path: "/mentions-legales", element: <Legal kind="mentions" /> },
+            { path: "/cgv", element: <Legal kind="cgv" /> },
             { path: "/confidentialite", element: <Legal kind="confidentialite" /> },
             { path: "/politique-cookies", element: <Legal kind="cookies" /> },
           ].flatMap((r) => [
