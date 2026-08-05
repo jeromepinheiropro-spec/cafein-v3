@@ -40,7 +40,7 @@ function MentionsLegales() {
         <ul className="list-disc pl-5 space-y-1.5">
           <li>Registre de commerce et des sociétés (RCS) Luxembourg : <strong>B285.136</strong></li>
           <li>Adresse e-mail : hello@cafein.lu</li>
-          <li>Téléphone : +33 6 16 25 44 67</li>
+          <li>Téléphone : +33 6 38 95 25 22</li>
         </ul>
         <p>
           Gérant et directeur de la publication : <strong>Jérôme Pinheiro</strong>.
