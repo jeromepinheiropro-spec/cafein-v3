@@ -45,12 +45,12 @@ const SERVICES = {
   fr: [
     {
       n: "01",
-      to: "/creation-site-web",
-      title: "Création de site web",
-      desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
-      tags: ["Vitrine", "E-commerce", "Sur mesure"],
-      Icon: IconSite,
-      bg: "bg-mint",
+      to: "/communication",
+      title: "Communication digitale",
+      desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
+      tags: ["Réseaux sociaux", "Contenus", "Campagnes"],
+      Icon: IconCom,
+      bg: "bg-sun",
       text: "text-ink",
       rotate: -1.5,
     },
@@ -67,12 +67,12 @@ const SERVICES = {
     },
     {
       n: "03",
-      to: "/communication",
-      title: "Communication digitale",
-      desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
-      tags: ["Réseaux sociaux", "Contenus", "Campagnes"],
-      Icon: IconCom,
-      bg: "bg-sun",
+      to: "/creation-site-web",
+      title: "Création de site web",
+      desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
+      tags: ["Vitrine", "E-commerce", "Sur mesure"],
+      Icon: IconSite,
+      bg: "bg-mint",
       text: "text-ink",
       rotate: -1,
     },
@@ -80,12 +80,12 @@ const SERVICES = {
   en: [
     {
       n: "01",
-      to: "/creation-site-web",
-      title: "Website design",
-      desc: "WordPress or fully custom development, tailored to your needs and budget: showcase sites, e-commerce or bespoke platforms, built for the Luxembourg market.",
-      tags: ["Showcase", "E-commerce", "Custom-built"],
-      Icon: IconSite,
-      bg: "bg-mint",
+      to: "/communication",
+      title: "Digital communication",
+      desc: "Strategy, social media, content and campaigns: we handle your digital communication from A to Z to make your brand shine across Luxembourg.",
+      tags: ["Social media", "Content", "Campaigns"],
+      Icon: IconCom,
+      bg: "bg-sun",
       text: "text-ink",
       rotate: -1.5,
     },
@@ -102,12 +102,12 @@ const SERVICES = {
     },
     {
       n: "03",
-      to: "/communication",
-      title: "Digital communication",
-      desc: "Strategy, social media, content and campaigns: we handle your digital communication from A to Z to make your brand shine across Luxembourg.",
-      tags: ["Social media", "Content", "Campaigns"],
-      Icon: IconCom,
-      bg: "bg-sun",
+      to: "/creation-site-web",
+      title: "Website design",
+      desc: "WordPress or fully custom development, tailored to your needs and budget: showcase sites, e-commerce or bespoke platforms, built for the Luxembourg market.",
+      tags: ["Showcase", "E-commerce", "Custom-built"],
+      Icon: IconSite,
+      bg: "bg-mint",
       text: "text-ink",
       rotate: -1,
     },
@@ -120,7 +120,7 @@ function Card({ s, i, total, progress }) {
   const scale = useTransform(progress, [i / total, 1], [1, targetScale]);
 
   return (
-    <div className="sticky top-24 md:top-28 flex justify-center px-4" style={{ zIndex: i + 1 }}>
+    <div className="sticky top-24 md:top-28 flex justify-center px-4" style={{ zIndex: i + 1, willChange: "transform" }}>
       <MotionLink
         to={s.to}
         data-cursor={t("Découvrir", "Discover")}

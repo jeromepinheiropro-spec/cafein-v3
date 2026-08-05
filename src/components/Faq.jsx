@@ -16,6 +16,14 @@ export const FAQS = [
     q: "En combien de temps peut-on être visible sur Google ?",
     a: "Le SEO est un travail de fond : comptez généralement 3 à 6 mois pour des résultats significatifs sur des mots-clés locaux. Certaines optimisations techniques donnent des effets plus rapides, et on suit les positions ensemble, mois après mois.",
   },
+  {
+    q: "Gérez-vous toute la communication 360° d'une entreprise ?",
+    a: "Oui : on peut piloter l'ensemble de votre communication, du digital à l'offline. Réseaux sociaux, contenus, campagnes publicitaires, identité de marque, print… Une seule équipe, une image cohérente partout, et un vrai fil conducteur au lieu de dix prestataires qui ne se parlent pas.",
+  },
+  {
+    q: "Pouvez-vous aussi améliorer mon référencement et ma présence sur Google ?",
+    a: "C'est notre cœur de métier. SEO local pour ressortir sur Google et Google Maps, optimisation technique, contenus qui répondent aux vraies recherches, et même la visibilité sur les IA (ChatGPT, Perplexity). On vous place là où vos clients cherchent, durablement.",
+  },
 ];
 
 const FAQS_EN = [
@@ -30,6 +38,14 @@ const FAQS_EN = [
   {
     q: "How long before we show up on Google?",
     a: "SEO is a long game: expect 3 to 6 months for meaningful results on local keywords. Some technical optimisations pay off faster, and we track your rankings together, month after month.",
+  },
+  {
+    q: "Do you handle a company's full 360° communication?",
+    a: "Yes: we can run your entire communication, from digital to offline. Social media, content, ad campaigns, brand identity, print… One team, a consistent image everywhere, and a real through-line instead of ten providers who never talk to each other.",
+  },
+  {
+    q: "Can you also improve my SEO and my presence on Google?",
+    a: "That's our core business. Local SEO to stand out on Google and Google Maps, technical optimisation, content that answers real searches, and even AI visibility (ChatGPT, Perplexity). We put you where your customers are looking, for the long run.",
   },
 ];
 
