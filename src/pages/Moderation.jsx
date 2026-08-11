@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /*
@@ -320,8 +320,8 @@ function Messages({ contacts, setContacts, k, setMsg }) {
   }
   function exportCsv() {
     const esc = (v) => `"${String(v ?? "").replace(/"/g, '""').replace(/\n/g, " ")}"`;
-    const rows = [["date", "type", "nom", "entreprise", "email", "traité", "perf", "seo", "a11y", "best", "message"],
-      ...contacts.map((c) => [c.date, c.source === "audit" ? "audit" : "contact", c.nom, c.entreprise ?? "", c.email, c.handled ? "oui" : "non",
+    const rows = [["date", "type", "nom", "email", "traité", "perf", "seo", "a11y", "best", "message"],
+      ...contacts.map((c) => [c.date, c.source === "audit" ? "audit" : "contact", c.nom, c.email, c.handled ? "oui" : "non",
         c.scores?.performance ?? "", c.scores?.seo ?? "", c.scores?.accessibility ?? "", c.scores?.bestPractices ?? "", c.message])];
     const csv = rows.map((r) => r.map(esc).join(",")).join("\n");
     const a = document.createElement("a");
@@ -335,7 +335,7 @@ function Messages({ contacts, setContacts, k, setMsg }) {
       if (filter === "audit" && c.source !== "audit") return false;
       if (filter === "contact" && c.source === "audit") return false;
       if (filter === "todo" && c.handled) return false;
-      if (q && !`${c.nom} ${c.entreprise || ""} ${c.email} ${c.message}`.toLowerCase().includes(q)) return false;
+      if (q && !`${c.nom} ${c.email} ${c.message}`.toLowerCase().includes(q)) return false;
       return true;
     });
   }, [contacts, filter, query]);
@@ -368,7 +368,6 @@ function Messages({ contacts, setContacts, k, setMsg }) {
                       <span className={`rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[9px] font-bold tracking-widest uppercase ${isAudit ? "bg-caramel" : "bg-mint"} text-ink`}>{isAudit ? "Audit" : "Contact"}</span>
                       {c.handled && <span className="rounded-full border-2 border-ink bg-cream-2 px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-ink/60">Traité</span>}
                       <span className="font-display font-bold text-ink">{c.nom}</span>
-                      {c.entreprise && <span className="rounded-full border-2 border-ink bg-cream-2 px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-ink/70">{c.entreprise}</span>}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <a href={`mailto:${c.email}`} className="text-sm font-medium text-mint-dark hover:underline break-all">{c.email}</a>
@@ -624,49 +623,35 @@ function Field({ label, children }) {
    d'aperçu / de repère. Un champ laissé vide = valeur par défaut conservée. */
 const SEO_PAGES = [
   { path: "/", name: "Accueil",
-    title: "Cafein | Agence web & communication digitale au Luxembourg",
-    titleEn: "Cafein | Web & Digital Marketing Agency in Luxembourg",
-    description: "Cafein, agence de marketing web au Luxembourg : création de sites internet sur mesure, référencement SEO & GEO, réseaux sociaux et communication digitale. Devis gratuit, conseils francs.",
-    descriptionEn: "Cafein, a web marketing agency in Luxembourg: custom website design, SEO & GEO, social media and digital communication. Free quote, straight-talking advice." },
+    title: "Cafein, agence web & marketing digital à Luxembourg", titleEn: "Cafein, web & digital marketing agency in Luxembourg",
+    description: "Agence web à Luxembourg : création de sites, SEO/GEO et communication digitale. On transforme votre présence en ligne en clients. Devis gratuit.", descriptionEn: "Web agency in Luxembourg: website design, SEO/GEO and digital communication. We turn your online presence into customers. Get a free quote." },
   { path: "/creation-site-web", name: "Création de site",
-    title: "Création de site internet au Luxembourg : vitrine, e-commerce, sur mesure | Cafein",
-    titleEn: "Website Design in Luxembourg: Showcase, E-commerce, Custom | Cafein",
-    description: "Cafein crée votre site internet au Luxembourg : site vitrine, boutique e-commerce ou plateforme sur mesure. Design soigné, SEO intégré dès le départ, RGPD, un mois de support inclus.",
-    descriptionEn: "Cafein builds your website in Luxembourg: showcase sites, e-commerce stores or custom platforms. Polished design, SEO built in from day one, GDPR-ready, one month of support included." },
+    title: "Création de site web à Luxembourg | Cafein", titleEn: "Web Design & Website Creation in Luxembourg | Cafein",
+    description: "Création de sites web sur mesure à Luxembourg : vitrine ou e-commerce, rapides et pensés pour convertir. Design soigné, SEO intégré. Parlons de votre projet.", descriptionEn: "Custom website creation in Luxembourg: showcase sites and e-commerce, fast and built to convert. Polished design, SEO-ready. Let's talk about your project." },
   { path: "/seo-geo", name: "SEO & GEO",
-    title: "Agence SEO & GEO au Luxembourg : référencement Google et IA | Cafein",
-    titleEn: "SEO & GEO Agency in Luxembourg: Google and AI Ranking | Cafein",
-    description: "Référencement naturel (SEO) et visibilité dans les IA (GEO) au Luxembourg : audit, optimisation technique, contenus et suivi des positions. Être trouvé sur Google comme dans ChatGPT.",
-    descriptionEn: "Search engine optimization (SEO) and visibility in AI engines (GEO) in Luxembourg: audit, technical optimization, content and rank tracking. Get found on Google and in ChatGPT." },
+    title: "SEO & GEO à Luxembourg : Google + IA | Cafein", titleEn: "SEO & GEO in Luxembourg: rank on Google + AI | Cafein",
+    description: "Agence SEO à Luxembourg : référencement naturel Google et optimisation IA (ChatGPT, Perplexity). Plus de trafic qualifié, durablement. Audit SEO offert.", descriptionEn: "Luxembourg SEO agency: organic Google ranking and AI optimization (ChatGPT, Perplexity). More qualified traffic, built to last. Free SEO audit." },
   { path: "/communication", name: "Communication",
-    title: "Communication digitale & réseaux sociaux au Luxembourg | Cafein",
-    titleEn: "Digital Communication & Social Media in Luxembourg | Cafein",
-    description: "Stratégie, réseaux sociaux, contenus et campagnes publicitaires au Luxembourg : Cafein gère votre communication digitale de A à Z. LinkedIn, Instagram, Facebook, sans jargon.",
-    descriptionEn: "Strategy, social media, content and ad campaigns in Luxembourg: Cafein handles your digital communication from A to Z. LinkedIn, Instagram, Facebook, no jargon." },
+    title: "Communication digitale à Luxembourg | Cafein", titleEn: "Digital Communication in Luxembourg | Cafein",
+    description: "Agence de communication digitale à Luxembourg : réseaux sociaux, contenus, branding et campagnes. Une marque cohérente qui attire et fidélise. Discutons-en.", descriptionEn: "Digital communication agency in Luxembourg: social media, content, branding and ad campaigns. A consistent brand that attracts and retains. Let's talk." },
   { path: "/notre-expertise", name: "Notre expertise",
-    title: "Nos 12 expertises web & digital au Luxembourg | Cafein",
-    titleEn: "Our 12 Web & Digital Areas of Expertise in Luxembourg | Cafein",
-    description: "Sites vitrine, e-commerce, SEO, GEO, réseaux sociaux, branding, data… Les 12 expertises de Cafein, agence digitale au Luxembourg, un seul interlocuteur du premier appel au suivi.",
-    descriptionEn: "Showcase sites, e-commerce, SEO, GEO, social media, branding, data… The 12 areas of expertise of Cafein, a digital agency in Luxembourg, one contact from first call to follow-up." },
+    title: "Nos expertises web & SEO à Luxembourg | Cafein", titleEn: "Web, SEO & communication in Luxembourg | Cafein",
+    description: "Toutes les expertises Cafein au Luxembourg : création de site, SEO/GEO, publicité, réseaux sociaux, branding, emailing, data. Une équipe pour tous vos besoins.", descriptionEn: "All of Cafein's expertise in Luxembourg: web design, SEO/GEO, ads, social media, branding, emailing and data. One team for all your digital needs." },
   { path: "/lexique", name: "Lexique",
-    title: "Lexique du web : SEO, GEO, sites & social media expliqués simplement | Cafein",
-    titleEn: "Web Glossary: SEO, GEO, Websites & Social Media Made Simple | Cafein",
-    description: "69 termes du web enfin clairs : SEO, GEO, backlink, CMS, Core Web Vitals, taux de conversion… Le jargon du digital traduit en français simple par Cafein, agence web au Luxembourg.",
-    descriptionEn: "69 web terms finally made clear: SEO, GEO, backlink, CMS, Core Web Vitals, conversion rate… Digital jargon translated into plain English by Cafein, a web agency in Luxembourg." },
+    title: "Lexique web, SEO & marketing à Luxembourg | Cafein", titleEn: "Web, SEO & marketing glossary in Luxembourg | Cafein",
+    description: "69 termes du web, SEO, GEO et marketing digital expliqués simplement. Le glossaire Cafein pour comprendre votre projet, sans jargon.", descriptionEn: "69 web, SEO, GEO and digital marketing terms explained simply. Cafein's glossary to understand your project, without the jargon." },
   { path: "/equipe", name: "Équipe",
-    title: "L'équipe Cafein : trois cofondateurs, un percolateur | Agence web Luxembourg",
-    titleEn: "The Cafein Team: Three Cofounders, One Coffee Machine | Web Agency Luxembourg",
-    description: "Stan, Pinoo et Flo : les trois cofondateurs de Cafein, agence web au Luxembourg. Stratégie, création de sites, SEO et communication, une équipe resserrée qui s'occupe de tout.",
-    descriptionEn: "Stan, Pinoo and Flo: the three cofounders of Cafein, a web agency in Luxembourg. Strategy, website design, SEO and communication, a tight-knit team that handles everything." },
+    title: "L'équipe Cafein : Stan, Pinoo & Flo | Luxembourg", titleEn: "Meet the Cafein team: Stan, Pinoo & Flo | Luxembourg",
+    description: "Rencontrez l'équipe Cafein : trois passionnés du web au Luxembourg qui conçoivent sites, SEO et communication avec exigence et bonne humeur.", descriptionEn: "Meet the Cafein team: three web enthusiasts in Luxembourg crafting websites, SEO and communication with high standards and good vibes." },
   { path: "/mentions-legales", name: "Mentions légales",
-    title: "Mentions légales | Cafein", titleEn: "",
-    description: "Mentions légales du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+    title: "Mentions légales | Cafein", titleEn: "Legal Notice | Cafein",
+    description: "Mentions légales du site Cafein, agence web et marketing digital au Luxembourg.", descriptionEn: "Legal notice for Cafein, a web and digital marketing agency in Luxembourg." },
   { path: "/confidentialite", name: "Confidentialité",
-    title: "Politique de confidentialité | Cafein", titleEn: "",
-    description: "Politique de confidentialité du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+    title: "Politique de confidentialité (RGPD) | Cafein", titleEn: "Privacy Policy (GDPR) | Cafein",
+    description: "Comment Cafein protège vos données personnelles : politique de confidentialité conforme au RGPD.", descriptionEn: "How Cafein protects your personal data: GDPR-compliant privacy policy." },
   { path: "/politique-cookies", name: "Politique de cookies",
-    title: "Politique de cookies | Cafein", titleEn: "",
-    description: "Politique de cookies du site Cafein, agence web au Luxembourg.", descriptionEn: "" },
+    title: "Politique de cookies | Cafein", titleEn: "Cookie Policy | Cafein",
+    description: "Gestion des cookies sur le site Cafein et vos choix de consentement.", descriptionEn: "How cookies are used on the Cafein website and how to manage your consent." },
 ];
 
 function CharCount({ value, rec }) {
@@ -939,28 +924,14 @@ function Comments({ comments, setComments, k, setMsg }) {
 }
 
 /* ══════════════ Analytics (Google Analytics 4) ══════════════ */
-function fmtGaDate(ymd) {
-  const s = String(ymd || "");
-  if (s.length !== 8) return s;
-  return `${s.slice(6, 8)}/${s.slice(4, 6)}/${s.slice(0, 4)}`;
-}
-
 function Analytics({ k }) {
   const [data, setData] = useState(undefined);
-  const [loading, setLoading] = useState(false);
-  const [fetchedAt, setFetchedAt] = useState(null);
-
-  const load = useCallback(() => {
-    setLoading(true);
-    /* cache:no-store → on force une lecture fraîche de GA à chaque clic. */
-    api("/api/admin/analytics", k, { cache: "no-store" })
+  useEffect(() => {
+    api("/api/admin/analytics", k)
       .then((r) => r.json())
-      .then((d) => { setData(d); setFetchedAt(new Date()); })
-      .catch(() => setData({ configured: true, error: "Connexion impossible." }))
-      .finally(() => setLoading(false));
+      .then(setData)
+      .catch(() => setData({ configured: true, error: "Connexion impossible." }));
   }, [k]);
-
-  useEffect(() => { load(); }, [load]);
 
   if (data === undefined) {
     return (
@@ -1007,33 +978,10 @@ function Analytics({ k }) {
 
   const days = (data.byDay || []).map((d) => ({ label: d.date.slice(6), v: d.v }));
   const maxP = Math.max(1, ...(data.pages || []).map((p) => p.v));
-  const lastDay = (data.byDay || []).length ? data.byDay[data.byDay.length - 1].date : null;
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
-        <button
-          onClick={load}
-          disabled={loading}
-          className="inline-flex items-center gap-2 rounded-full bg-white text-ink font-display font-bold text-sm px-4 py-2 border-[3px] border-ink shadow-[3px_3px_0_#0A0F0D] hover:bg-mint transition-colors disabled:opacity-60"
-        >
-          <svg viewBox="0 0 24 24" className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6" />
-          </svg>
-          {loading ? "Actualisation…" : "Rafraîchir"}
-        </button>
-      </div>
-      <p className="mt-1 font-medium text-ink/50">
-        Google Analytics · 28 derniers jours
-        {lastDay && <> · dernière donnée&nbsp;: <strong className="text-ink/70">{fmtGaDate(lastDay)}</strong></>}
-        {fetchedAt && <> · lu à {fetchedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</>}
-      </p>
-      <div className="mt-3 flex items-start gap-2 rounded-xl bg-cream-2 border-2 border-ink/15 px-3.5 py-2.5">
-        <span className="text-base leading-none mt-0.5">☕</span>
-        <p className="text-[13px] font-medium text-ink/70 leading-snug">
-          GA ne compte que les visiteurs ayant <strong>accepté les cookies</strong>, et met souvent <strong>quelques heures</strong> (parfois 24–48&nbsp;h) à consolider les données récentes. Tes propres visites de test ne comptent pas si tu as refusé le bandeau.
-        </p>
-      </div>
+      <h1 className="font-display font-extrabold text-3xl md:text-4xl text-ink tracking-tight">Analytics</h1>
+      <p className="mt-1 font-medium text-ink/50">Google Analytics · 28 derniers jours.</p>
 
       <div className="mt-6 grid grid-cols-3 gap-3">
         <StatCard label="Utilisateurs" value={Number(data.users).toLocaleString("fr-FR")} />
