@@ -19,14 +19,14 @@ export default function Preloader({ onDone }) {
     }
     let raf;
     const start = performance.now();
-    const DURATION = 1800;
+    const DURATION = 900;
     const tick = (now) => {
       const p = Math.min(1, (now - start) / DURATION);
       // easing gourmand : accélère puis ralentit
       const eased = 1 - Math.pow(1 - p, 3);
       setCount(Math.round(eased * 100));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(onDone, 450);
+      else setTimeout(onDone, 225);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
