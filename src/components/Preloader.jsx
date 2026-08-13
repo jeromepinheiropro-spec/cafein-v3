@@ -18,6 +18,12 @@ export default function Preloader({ onDone }) {
       return;
     }
     let raf;
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      onDone();
+    };
     const start = performance.now();
     const DURATION = 900;
     const tick = (now) => {
@@ -26,10 +32,20 @@ export default function Preloader({ onDone }) {
       const eased = 1 - Math.pow(1 - p, 3);
       setCount(Math.round(eased * 100));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(onDone, 225);
+      else setTimeout(finish, 225);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    /* Filet de sécurité : requestAnimationFrame est gelé quand l'onglet est
+       en arrière-plan (lien ouvert dans un nouvel onglet, etc.). Sans ça, le
+       préloader pourrait rester bloqué. On garantit la sortie dans tous les cas. */
+    const safety = setTimeout(() => {
+      setCount(100);
+      finish();
+    }, 1600);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(safety);
+    };
   }, [onDone, reduce]);
 
   const fill = count / 100;
