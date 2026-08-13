@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Steps, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import Proof from "../components/Proof.jsx";
 import SiteBuilder from "../components/SiteBuilder.jsx";
 import { Spark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -508,6 +509,30 @@ export default function CreationSite() {
                 { n: "04", title: "Lancement", desc: "Mise en ligne, puis accompagnement pour le référencement et la suite." },
               ]
         }
+      />
+
+      <Proof
+        kicker={t("Ce qu'on livre, concrètement", "What we actually deliver")}
+        title={lang === "en"
+          ? (<>Websites we're <span className="text-mint-dark">proud to show</span></>)
+          : (<>Des sites qu'on est <span className="text-mint-dark">fiers de montrer</span></>)}
+        study={{
+          client: "Efluenz",
+          sector: t("Agence d'influence · Europe", "Influencer agency · Europe"),
+          to: "/realisations/efluenz",
+          accent: "bg-mint",
+          quote: t(
+            "Un site multilingue à double entrée : d'un côté les marques, de l'autre les créateurs de contenu. Chacun trouve son chemin en quelques secondes, à l'image d'un positionnement résolument européen.",
+            "A multilingual, dual-entry site: brands on one side, content creators on the other. Each finds their way in seconds, matching a resolutely European positioning."
+          ),
+          stats: [
+            { plain: "100%", label: t("sur-mesure, jamais de template revendu", "custom-built, never a resold template") },
+            { plain: "2–4 sem.", label: t("de la maquette à la mise en ligne (site vitrine)", "from mockup to launch (showcase site)") },
+            { plain: "+1 mois", label: t("de support inclus après le lancement", "of support included after launch") },
+          ],
+        }}
+        rosterLabel={t("Ils nous ont confié leur site", "They trusted us with their site")}
+        roster={["Kinteraction", "Efluenz", "Xucom", "Agria", "Cerberion", "Le 101"]}
       />
 
       <MiniFaq items={FAQ[lang]} />

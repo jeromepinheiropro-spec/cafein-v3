@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import Proof from "../components/Proof.jsx";
 import { CountUp } from "../components/Stats.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -291,6 +292,30 @@ export default function SeoGeo() {
           </div>
         </div>
       </section>
+
+      <Proof
+        kicker={t("La preuve par les chiffres", "Proof in numbers")}
+        title={lang === "en"
+          ? (<>Rankings that actually <span className="text-mint-dark">moved</span></>)
+          : (<>Des positions qui <span className="text-mint-dark">décollent</span> vraiment</>)}
+        study={{
+          client: "Le 101",
+          sector: t("Galerie d'art · Bordeaux", "Art gallery · Bordeaux"),
+          to: "/realisations/le-101",
+          accent: "bg-mint",
+          quote: t(
+            "L'objectif : faire de cette galerie un lieu incontournable sur Google. En quatre mois de SEO ciblé sur les expositions, les artistes et les œuvres, le trafic organique a décollé, sans dépenser un centime en publicité.",
+            "The goal: make this gallery a must-see on Google. In four months of SEO focused on exhibitions, artists and artworks, organic traffic took off, without spending a cent on ads."
+          ),
+          stats: [
+            { to: 119, prefix: "+", suffix: "%", label: t("d'impressions dans Google en 4 mois", "more Google impressions in 4 months") },
+            { to: 67, prefix: "+", label: t("nouveaux mots-clés indexés", "new keywords indexed") },
+            { to: 6, prefix: "+", label: t("mots-clés en position n°1", "keywords ranking at no.1") },
+          ],
+        }}
+        rosterLabel={t("Ils nous font confiance", "They trust us")}
+        roster={["Le 101", "Xucom", "Kinteraction", "Efluenz", "Agria", "Cerberion"]}
+      />
 
       <MiniFaq items={FAQ[lang]} />
 

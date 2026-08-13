@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
+import Proof from "../components/Proof.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { LeafMark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -346,6 +347,30 @@ export default function Communication() {
           </div>
         </div>
       </section>
+
+      <Proof
+        kicker={t("La preuve par les chiffres", "Proof in numbers")}
+        title={lang === "en"
+          ? (<>Campaigns that actually <span className="text-mint-dark">pay off</span></>)
+          : (<>Des campagnes qui <span className="text-mint-dark">rapportent</span> vraiment</>)}
+        study={{
+          client: "7 Plis",
+          sector: t("Boutique éco-responsable", "Eco-responsible shop"),
+          to: "/realisations/7-plis",
+          accent: "bg-sun",
+          quote: t(
+            "Un budget maîtrisé de 200 €/mois, une image street et écoresponsable, et des campagnes Google Ads ajustées en continu pendant neuf mois. La preuve qu'un petit budget bien piloté fait de grandes choses.",
+            "A controlled €200/month budget, a street, eco-responsible image, and Google Ads campaigns tuned continuously over nine months. Proof that a small, well-managed budget can do big things."
+          ),
+          stats: [
+            { to: 400, prefix: "+", label: t("conversions générées sur la boutique", "conversions generated for the shop") },
+            { plain: "0,13 €", label: t("de coût par clic moyen", "average cost per click") },
+            { plain: "×2,38", label: t("de retour sur investissement (ROAS)", "return on ad spend (ROAS)") },
+          ],
+        }}
+        rosterLabel={t("Ils nous font confiance", "They trust us")}
+        roster={["7 Plis", "Kinteraction", "Efluenz", "Le 101", "Cerberion", "Agria"]}
+      />
 
       <MiniFaq items={FAQ[lang]} />
 
