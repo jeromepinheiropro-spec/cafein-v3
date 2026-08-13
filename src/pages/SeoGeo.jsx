@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Proof from "../components/Proof.jsx";
+import Statement from "../components/Statement.jsx";
 import { CountUp } from "../components/Stats.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -210,6 +211,20 @@ export default function SeoGeo() {
       </section>
 
       <Marquee words={["SEO", "GEO", "Google", "ChatGPT", "Perplexity"]} />
+
+      <Statement
+        bg="bg-espresso"
+        text="text-cream"
+        accent="#FFD166"
+        lines={lang === "en"
+          ? [["Get", "found"], ["or", "don't", { w: "exist.", hl: true }]]
+          : [["Être", "trouvé"], ["ou", "ne", "pas", { w: "exister.", hl: true }]]}
+        sub={t(
+          "La plupart des décisions d'achat commencent par une recherche. Sur Google comme dans les IA, on vous met sur le chemin de vos clients.",
+          "Most buying decisions start with a search. On Google and in AI, we put you on your clients' path."
+        )}
+        cta={{ to: "/#contact", label: t("Demander un audit", "Request an audit") }}
+      />
 
       {/* SEO + GEO */}
       <section className="bg-cream py-20 md:py-28">

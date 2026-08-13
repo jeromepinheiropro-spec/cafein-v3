@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Proof from "../components/Proof.jsx";
+import Statement from "../components/Statement.jsx";
 import Seo, { faqLd, serviceLd, breadcrumbLd } from "../lib/seo.jsx";
 import { LeafMark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -277,6 +278,20 @@ export default function Communication() {
       <Marquee words={lang === "en"
         ? ["Strategy", "Social media", "Content", "Campaigns", "Luxembourg"]
         : ["Stratégie", "Social media", "Contenus", "Campagnes", "Luxembourg"]} />
+
+      <Statement
+        bg="bg-espresso"
+        text="text-cream"
+        accent="#F4A259"
+        lines={lang === "en"
+          ? [["A", "brand", "people", "see."], ["A", "brand", "people", { w: "talk about.", hl: true }]]
+          : [["Une", "marque", "qu'on", "voit."], ["Une", "marque", "dont", "on", { w: "parle.", hl: true }]]}
+        sub={t(
+          "Réseaux sociaux, contenus, campagnes, identité : une seule voix, cohérente partout, qui fait grandir votre communauté et vos ventes.",
+          "Social media, content, campaigns, identity: one consistent voice everywhere that grows your community and your sales."
+        )}
+        cta={{ to: "/#contact", label: t("Parlons-en", "Let's talk") }}
+      />
 
       {/* Ce qu'on gère pour vous */}
       <section className="bg-cream py-20 md:py-28">

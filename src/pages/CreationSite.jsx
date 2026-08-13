@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PageHero, CtaBand, MiniFaq, Steps, Edito } from "../lib/page.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Proof from "../components/Proof.jsx";
+import Statement from "../components/Statement.jsx";
 import SiteBuilder from "../components/SiteBuilder.jsx";
 import { Spark } from "../lib/ui.jsx";
 import { useEggSpeed } from "../components/EasterEggs.jsx";
@@ -323,6 +324,20 @@ export default function CreationSite() {
       </PageHero>
 
       <Marquee words={lang === "en" ? ["Showcase", "E-commerce", "Platform", "WordPress", "Custom"] : ["Vitrine", "E-commerce", "Plateforme", "WordPress", "Sur mesure"]} />
+
+      <Statement
+        bg="bg-espresso"
+        text="text-cream"
+        accent="#1FCE8A"
+        lines={lang === "en"
+          ? [["A", "website", "isn't", "décor."], ["It's", "your", "best", { w: "salesperson.", hl: true }]]
+          : [["Un", "site,", "ce", "n'est", "pas", "un", "décor."], ["C'est", "votre", "meilleur", { w: "commercial.", hl: true }]]}
+        sub={t(
+          "Design soigné, structure SEO, vitesse : chaque détail sert un seul objectif — transformer vos visiteurs en clients.",
+          "Polished design, SEO structure, speed: every detail serves one goal — turning your visitors into clients."
+        )}
+        cta={{ to: "/diagnostic", label: t("Tester mon site", "Test my site") }}
+      />
 
       {/* Types de projets */}
       <section className="bg-cream py-20 md:py-28">
