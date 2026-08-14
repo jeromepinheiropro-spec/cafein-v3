@@ -100,27 +100,95 @@ export default function Hero({ started }) {
         transition={{ repeat: Infinity, duration: (11) / eggSpeed, ease: "easeInOut" }}
       />
 
-      {/* Grains flottants */}
+      {/* Grains flottants — nuée dense (piste 1) */}
       <motion.div aria-hidden style={{ y: yBeans }} className="absolute inset-0 pointer-events-none">
-        <motion.div style={beanStyle(40, 30)} className="absolute top-[15%] left-[40%] hidden sm:block">
+        {/* zone haute */}
+        <motion.div style={beanStyle(40, 30)} className="absolute top-[14%] left-[40%] hidden sm:block">
           <motion.div animate={{ y: [0, -14, 0], rotate: [0, 14, 0] }} transition={{ repeat: Infinity, duration: (5) / eggSpeed }}>
             <Bean className="w-9 h-9 md:w-12 md:h-12 opacity-90" />
           </motion.div>
         </motion.div>
-        <motion.div style={beanStyle(-55, 45)} className="absolute top-[26%] right-[12%]">
+        <motion.div style={beanStyle(48, -26)} className="absolute top-[11%] right-[30%] hidden md:block">
+          <motion.div animate={{ y: [0, 12, 0], rotate: [0, -20, 0] }} transition={{ repeat: Infinity, duration: (6.2) / eggSpeed }}>
+            <Bean className="w-7 h-7 opacity-70" fill="#17A46E" />
+          </motion.div>
+        </motion.div>
+        <motion.div style={beanStyle(-55, 45)} className="absolute top-[20%] right-[9%]">
           <motion.div animate={{ y: [0, 16, 0], rotate: [0, -18, 0] }} transition={{ repeat: Infinity, duration: (6.5) / eggSpeed }}>
-            <Bean className="w-7 h-7 md:w-10 md:h-10 opacity-80" fill="#F4A259" />
+            <Bean className="w-8 h-8 md:w-11 md:h-11 opacity-85" fill="#F4A259" />
           </motion.div>
         </motion.div>
-        <motion.div style={beanStyle(30, -40)} className="absolute bottom-[30%] right-[22%] hidden md:block">
-          <motion.div animate={{ y: [0, -10, 0], rotate: [0, 24, 0] }} transition={{ repeat: Infinity, duration: (7) / eggSpeed }}>
-            <Bean className="w-8 h-8 opacity-70" fill="#FFD166" />
+        <motion.div style={beanStyle(34, 26)} className="absolute top-[37%] right-[31%] hidden md:block">
+          <motion.div animate={{ y: [0, -12, 0], rotate: [0, 22, 0] }} transition={{ repeat: Infinity, duration: (7.4) / eggSpeed }}>
+            <Bean className="w-6 h-6 opacity-60" fill="#FFD166" />
           </motion.div>
         </motion.div>
+        {/* arc de grains qui descend vers la tasse (piste 2) */}
+        <motion.div style={beanStyle(-40, 34)} className="absolute top-[48%] right-[38%] hidden lg:block">
+          <motion.div animate={{ y: [0, 14, 0], rotate: [0, -14, 0] }} transition={{ repeat: Infinity, duration: (5.8) / eggSpeed }}>
+            <Bean className="w-7 h-7 opacity-80" fill="#1FCE8A" />
+          </motion.div>
+        </motion.div>
+        <motion.div style={beanStyle(28, -30)} className="absolute top-[64%] right-[32%] hidden lg:block">
+          <motion.div animate={{ y: [0, -10, 0], rotate: [0, 18, 0] }} transition={{ repeat: Infinity, duration: (6.8) / eggSpeed }}>
+            <Bean className="w-6 h-6 opacity-70" fill="#F4A259" />
+          </motion.div>
+        </motion.div>
+        {/* bas gauche : étoile + grain */}
         <motion.div style={beanStyle(-35, -25)} className="absolute bottom-[22%] left-[16%] hidden md:block">
           <motion.div animate={{ rotate: [0, 360] }} transition={{ repeat: Infinity, duration: (16) / eggSpeed, ease: "linear" }}>
             <Spark className="w-6 h-6 text-mint" />
           </motion.div>
+        </motion.div>
+        <motion.div style={beanStyle(26, 22)} className="absolute bottom-[14%] left-[31%] hidden lg:block">
+          <motion.div animate={{ y: [0, -8, 0], rotate: [0, -16, 0] }} transition={{ repeat: Infinity, duration: (7) / eggSpeed }}>
+            <Bean className="w-6 h-6 opacity-50" fill="#17A46E" />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Tasse fumante (piste 2) — bas droite, elle « reçoit » les grains */}
+      <motion.div
+        aria-hidden
+        style={beanStyle(-22, -18)}
+        className="absolute bottom-[8%] right-[27%] hidden lg:block pointer-events-none z-[1]"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 34 }}
+          animate={started ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.15, type: "spring", stiffness: 120, damping: 16 }}
+        >
+          <div className="relative w-40 h-40 lg:w-52 lg:h-52">
+            <div className="absolute inset-0 rounded-full bg-mint/10 blur-2xl" />
+            <svg viewBox="0 0 120 120" className="relative w-full h-full" fill="none">
+              <defs>
+                <clipPath id="heroCup">
+                  <path d="M22 44h56v22c0 15.5-12.5 28-28 28S22 81.5 22 66V44z" />
+                </clipPath>
+              </defs>
+              {/* café qui ondule */}
+              <g clipPath="url(#heroCup)">
+                <motion.path
+                  d="M4 63 Q 18 55 32 63 T 60 63 T 88 63 T 116 63 V 106 H 4 Z"
+                  fill="#1FCE8A"
+                  animate={{ x: [-12, 0, -12] }}
+                  transition={{ repeat: Infinity, duration: (2.6) / eggSpeed, ease: "easeInOut" }}
+                />
+              </g>
+              {/* contour tasse */}
+              <path d="M22 44h56v22c0 15.5-12.5 28-28 28S22 81.5 22 66V44z" stroke="#0A0F0D" strokeWidth="3.5" strokeLinejoin="round" />
+              <path d="M78 50h9a11 11 0 0 1 0 22h-9" stroke="#0A0F0D" strokeWidth="3.5" strokeLinecap="round" />
+              {/* soucoupe */}
+              <path d="M14 104h72" stroke="#0A0F0D" strokeWidth="3.5" strokeLinecap="round" />
+              {/* vapeur */}
+              <motion.path d="M40 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
+                animate={{ opacity: [0, 0.7, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut" }} />
+              <motion.path d="M54 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
+                animate={{ opacity: [0, 0.7, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut", delay: 0.4 }} />
+              <motion.path d="M68 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
+                animate={{ opacity: [0, 0.6, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut", delay: 0.8 }} />
+            </svg>
+          </div>
         </motion.div>
       </motion.div>
 
