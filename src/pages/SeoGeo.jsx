@@ -332,8 +332,6 @@ export default function SeoGeo() {
         roster={["Le 101", "Xucom", "Kinteraction", "Efluenz", "Agria", "Cerberion"]}
       />
 
-      <MiniFaq items={FAQ[lang]} />
-
       <Edito
         kicker={t("Le référencement, expliqué simplement", "SEO, explained simply")}
         title={lang === "en"
@@ -361,6 +359,8 @@ export default function SeoGeo() {
         sub={t("Parlons de votre situation actuelle et de vos objectifs.", "Let's talk about your current situation and your goals.")}
         label={t("Demander un audit", "Request an audit")}
       />
+
+      <MiniFaq items={FAQ[lang]} />
     </>
   );
 }

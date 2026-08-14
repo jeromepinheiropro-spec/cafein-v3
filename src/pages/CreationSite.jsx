@@ -550,8 +550,6 @@ export default function CreationSite() {
         roster={["Kinteraction", "Efluenz", "Xucom", "Agria", "Cerberion", "Le 101"]}
       />
 
-      <MiniFaq items={FAQ[lang]} />
-
       <Edito
         kicker={t("Créer un site au Luxembourg", "Building a website in Luxembourg")}
         title={
@@ -584,6 +582,8 @@ export default function CreationSite() {
         sub={t("Discutons-en, sans engagement.", "Let's talk it over, no strings attached.")}
         label={t("Demander un devis", "Request a quote")}
       />
+
+      <MiniFaq items={FAQ[lang]} />
     </>
   );
 }

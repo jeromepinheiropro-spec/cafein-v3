@@ -387,8 +387,6 @@ export default function Communication() {
         roster={["7 Plis", "Kinteraction", "Efluenz", "Le 101", "Cerberion", "Agria"]}
       />
 
-      <MiniFaq items={FAQ[lang]} />
-
       <Edito
         kicker={t("Communiquer au Luxembourg", "Communicating in Luxembourg")}
         title={lang === "en"
@@ -415,6 +413,8 @@ export default function Communication() {
         sub={t("Parlons de votre communication, sans engagement.", "Let's talk about your communication, no commitment.")}
         label={t("Parlons-en", "Let's talk")}
       />
+
+      <MiniFaq items={FAQ[lang]} />
     </>
   );
 }
