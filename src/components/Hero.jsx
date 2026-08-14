@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -52,6 +52,55 @@ export default function Hero({ started }) {
   const { collect, curious } = useEgg();
   const { lang } = useLang();
   const t = useT();
+
+  /* Preuve sociale tournante : à chaque visite, une réalisation réelle
+     différente, avec sa propre couleur. Aucune donnée inventée. */
+  const PROOF = [
+    {
+      client: "Le 101",
+      kicker: t("Résultat vérifié · SEO/GEO", "Verified result · SEO/GEO"),
+      metric: "+119%",
+      label: t("d'impressions Google · 4 mois", "Google impressions · 4 months"),
+      sector: t("Galerie d'art · Bordeaux", "Art gallery · Bordeaux"),
+      to: "/realisations/le-101",
+      from: "#1FCE8A", toc: "#17A46E", head: "#F5EFE2", // vert
+    },
+    {
+      client: "7 Plis",
+      kicker: t("Résultat vérifié · Publicité", "Verified result · Ads"),
+      metric: "+400",
+      label: t("conversions · Google Ads", "conversions · Google Ads"),
+      sector: t("Boutique éco-responsable", "Eco-responsible shop"),
+      to: "/realisations/7-plis",
+      from: "#F4A259", toc: "#E08636", head: "#0A0F0D", // orange
+    },
+    {
+      client: "Efluenz",
+      kicker: t("Création de site", "Website build"),
+      metric: "100%",
+      label: t("sur-mesure · jamais de template", "custom-built · never a template"),
+      sector: t("Agence d'influence · Europe", "Influencer agency · Europe"),
+      to: "/realisations/efluenz",
+      from: "#FFD166", toc: "#F5B92E", head: "#0A0F0D", // jaune
+    },
+    {
+      client: "Cerberion",
+      kicker: t("Réalisation complète", "Full build"),
+      metric: "360°",
+      label: t("site + identité + SEO/GEO + plugin", "site + brand + SEO/GEO + plugin"),
+      sector: t("Sécurité · Luxembourg", "Security · Luxembourg"),
+      to: "/realisations/cerberion",
+      from: "#F2A0AE", toc: "#E1738A", head: "#F5EFE2", // rose
+    },
+  ];
+  const [proofIdx] = useState(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get("proof");
+      if (q !== null && q !== "") return Math.abs(parseInt(q, 10)) % PROOF.length;
+    } catch (e) {}
+    return Math.floor(Math.random() * PROOF.length);
+  });
+  const proof = PROOF[proofIdx];
 
   function onBeanClick(e) {
     e.stopPropagation();
@@ -148,52 +197,50 @@ export default function Hero({ started }) {
         </motion.div>
       </motion.div>
 
-      {/* Preuve sociale (piste 3) — carte réalisation, chiffre réel & vérifiable */}
+      {/* Preuve sociale tournante (piste 3) — réalisation réelle, couleur variable */}
       <motion.div
         style={beanStyle(-16, -14)}
-        className="absolute bottom-[10%] right-[25%] hidden lg:block z-[2]"
+        className="absolute bottom-[11%] right-[25%] hidden lg:block z-[2]"
       >
         <motion.div
-          initial={{ opacity: 0, y: 34, rotate: -5 }}
+          key={proofIdx}
+          initial={{ opacity: 0, y: 30, rotate: -5 }}
           animate={started ? { opacity: 1, y: 0, rotate: -2.5 } : {}}
           transition={{ delay: 1.1, type: "spring", stiffness: 120, damping: 15 }}
           whileHover={{ rotate: 0, y: -5 }}
         >
           <Link
-            to="/realisations/le-101"
+            to={proof.to}
             data-cursor={t("Voir le cas", "See the case")}
-            className="group block w-[17rem] rounded-2xl border-[3px] border-ink bg-white shadow-[7px_7px_0_#0A0F0D] overflow-hidden"
+            className="group block w-[13.5rem] rounded-2xl border-[3px] border-ink bg-white shadow-[6px_6px_0_#0A0F0D] overflow-hidden"
           >
-            {/* bandeau coloré */}
-            <div className="relative px-4 py-3 bg-gradient-to-br from-mint to-mint-dark text-cream">
+            {/* bandeau coloré (couleur = réalisation) */}
+            <div
+              className="relative px-3.5 py-2.5"
+              style={{ background: `linear-gradient(135deg, ${proof.from}, ${proof.toc})`, color: proof.head }}
+            >
               <div className="flex items-center justify-between">
-                <span className="font-display font-extrabold text-lg leading-none">Le&nbsp;101</span>
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream opacity-70" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cream" />
+                <span className="font-display font-extrabold text-[15px] leading-none">{proof.client}</span>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-70" style={{ background: proof.head }} />
+                  <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: proof.head }} />
                 </span>
               </div>
-              <span className="font-mono text-[9px] tracking-[0.16em] uppercase text-cream/80">
-                {t("Résultat vérifié · SEO/GEO", "Verified result · SEO/GEO")}
+              <span className="font-mono text-[8px] tracking-[0.14em] uppercase" style={{ color: proof.head, opacity: 0.85 }}>
+                {proof.kicker}
               </span>
             </div>
-            {/* chiffre */}
-            <div className="px-4 py-3.5">
-              <div className="flex items-baseline gap-2">
-                <span className="font-display font-extrabold text-[2.6rem] leading-none text-mint-dark">+119%</span>
-                <span className="text-[12px] font-semibold text-ink/70 leading-tight">
-                  {t("d'impressions Google", "of Google impressions")}
-                  <br />
-                  {t("en 4 mois", "in 4 months")}
-                </span>
+            {/* chiffre / punch */}
+            <div className="px-3.5 py-2.5">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display font-extrabold text-[1.9rem] leading-none text-ink">{proof.metric}</span>
+                <span className="text-[10px] font-semibold text-ink/65 leading-tight">{proof.label}</span>
               </div>
             </div>
-            {/* pied : confiance + flèche */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-cream-2 border-t-[3px] border-ink">
-              <span className="font-mono text-[10px] tracking-wide text-ink/60">
-                {t("Ils nous font confiance", "They trust us")}
-              </span>
-              <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform duration-300" />
+            {/* pied : secteur + flèche */}
+            <div className="flex items-center justify-between px-3.5 py-2 bg-cream-2 border-t-[3px] border-ink">
+              <span className="font-mono text-[8.5px] tracking-wide text-ink/55 truncate pr-2">{proof.sector}</span>
+              <ArrowUpRight className="w-3.5 h-3.5 shrink-0 group-hover:rotate-45 transition-transform duration-300" />
             </div>
           </Link>
         </motion.div>
