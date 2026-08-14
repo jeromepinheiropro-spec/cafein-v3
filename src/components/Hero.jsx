@@ -7,6 +7,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { Magnetic, Bean, Spark, ArrowUpRight, Cup } from "../lib/ui.jsx";
+import { Link } from "../lib/link.jsx";
 import { useEgg, useEggSpeed } from "./EasterEggs.jsx";
 import { useLang, useT } from "../lib/lang.jsx";
 
@@ -147,48 +148,54 @@ export default function Hero({ started }) {
         </motion.div>
       </motion.div>
 
-      {/* Tasse fumante (piste 2) — bas droite, elle « reçoit » les grains */}
+      {/* Preuve sociale (piste 3) — carte réalisation, chiffre réel & vérifiable */}
       <motion.div
-        aria-hidden
-        style={beanStyle(-22, -18)}
-        className="absolute bottom-[8%] right-[27%] hidden lg:block pointer-events-none z-[1]"
+        style={beanStyle(-16, -14)}
+        className="absolute bottom-[10%] right-[25%] hidden lg:block z-[2]"
       >
         <motion.div
-          initial={{ opacity: 0, y: 34 }}
-          animate={started ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.15, type: "spring", stiffness: 120, damping: 16 }}
+          initial={{ opacity: 0, y: 34, rotate: -5 }}
+          animate={started ? { opacity: 1, y: 0, rotate: -2.5 } : {}}
+          transition={{ delay: 1.1, type: "spring", stiffness: 120, damping: 15 }}
+          whileHover={{ rotate: 0, y: -5 }}
         >
-          <div className="relative w-40 h-40 lg:w-52 lg:h-52">
-            <div className="absolute inset-0 rounded-full bg-mint/10 blur-2xl" />
-            <svg viewBox="0 0 120 120" className="relative w-full h-full" fill="none">
-              <defs>
-                <clipPath id="heroCup">
-                  <path d="M22 44h56v22c0 15.5-12.5 28-28 28S22 81.5 22 66V44z" />
-                </clipPath>
-              </defs>
-              {/* café qui ondule */}
-              <g clipPath="url(#heroCup)">
-                <motion.path
-                  d="M4 63 Q 18 55 32 63 T 60 63 T 88 63 T 116 63 V 106 H 4 Z"
-                  fill="#1FCE8A"
-                  animate={{ x: [-12, 0, -12] }}
-                  transition={{ repeat: Infinity, duration: (2.6) / eggSpeed, ease: "easeInOut" }}
-                />
-              </g>
-              {/* contour tasse */}
-              <path d="M22 44h56v22c0 15.5-12.5 28-28 28S22 81.5 22 66V44z" stroke="#0A0F0D" strokeWidth="3.5" strokeLinejoin="round" />
-              <path d="M78 50h9a11 11 0 0 1 0 22h-9" stroke="#0A0F0D" strokeWidth="3.5" strokeLinecap="round" />
-              {/* soucoupe */}
-              <path d="M14 104h72" stroke="#0A0F0D" strokeWidth="3.5" strokeLinecap="round" />
-              {/* vapeur */}
-              <motion.path d="M40 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
-                animate={{ opacity: [0, 0.7, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut" }} />
-              <motion.path d="M54 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
-                animate={{ opacity: [0, 0.7, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut", delay: 0.4 }} />
-              <motion.path d="M68 30c0-6 6-6 6-12" stroke="#0A0F0D" strokeWidth="3" strokeLinecap="round"
-                animate={{ opacity: [0, 0.6, 0], y: [4, -4] }} transition={{ repeat: Infinity, duration: (1.8) / eggSpeed, ease: "easeOut", delay: 0.8 }} />
-            </svg>
-          </div>
+          <Link
+            to="/realisations/le-101"
+            data-cursor={t("Voir le cas", "See the case")}
+            className="group block w-[17rem] rounded-2xl border-[3px] border-ink bg-white shadow-[7px_7px_0_#0A0F0D] overflow-hidden"
+          >
+            {/* bandeau coloré */}
+            <div className="relative px-4 py-3 bg-gradient-to-br from-mint to-mint-dark text-cream">
+              <div className="flex items-center justify-between">
+                <span className="font-display font-extrabold text-lg leading-none">Le&nbsp;101</span>
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream opacity-70" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cream" />
+                </span>
+              </div>
+              <span className="font-mono text-[9px] tracking-[0.16em] uppercase text-cream/80">
+                {t("Résultat vérifié · SEO/GEO", "Verified result · SEO/GEO")}
+              </span>
+            </div>
+            {/* chiffre */}
+            <div className="px-4 py-3.5">
+              <div className="flex items-baseline gap-2">
+                <span className="font-display font-extrabold text-[2.6rem] leading-none text-mint-dark">+119%</span>
+                <span className="text-[12px] font-semibold text-ink/70 leading-tight">
+                  {t("d'impressions Google", "of Google impressions")}
+                  <br />
+                  {t("en 4 mois", "in 4 months")}
+                </span>
+              </div>
+            </div>
+            {/* pied : confiance + flèche */}
+            <div className="flex items-center justify-between px-4 py-2.5 bg-cream-2 border-t-[3px] border-ink">
+              <span className="font-mono text-[10px] tracking-wide text-ink/60">
+                {t("Ils nous font confiance", "They trust us")}
+              </span>
+              <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform duration-300" />
+            </div>
+          </Link>
         </motion.div>
       </motion.div>
 
