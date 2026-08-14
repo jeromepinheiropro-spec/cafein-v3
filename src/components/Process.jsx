@@ -143,7 +143,7 @@ export default function Process() {
               </motion.div>
             </div>
 
-            <div className="mt-4 grid grid-cols-4 text-center">
+            <div className="mt-4 grid grid-cols-4 gap-x-2 text-center">
               {weeks.map((k, i) => (
                 <motion.div
                   key={k.w}
@@ -151,9 +151,10 @@ export default function Process() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
+                  className="px-0.5"
                 >
-                  <p className="font-mono text-[10px] md:text-xs tracking-[0.25em] uppercase text-mint-dark font-bold">{k.w}</p>
-                  <p className="font-display font-bold text-sm md:text-lg text-ink">{k.label}</p>
+                  <p className="font-mono text-[9px] md:text-xs tracking-[0.18em] md:tracking-[0.25em] uppercase text-mint-dark font-bold">{k.w}</p>
+                  <p className="font-display font-bold text-[9px] leading-tight break-words hyphens-auto sm:text-sm md:text-lg text-ink">{k.label}</p>
                 </motion.div>
               ))}
             </div>
